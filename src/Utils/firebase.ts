@@ -1,0 +1,27 @@
+
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByo2LkLYbSf0tw6G-ynBGOuNqDhTlikFE",
+  authDomain: "nutrition-tracker-45168.firebaseapp.com",
+  projectId: "nutrition-tracker-45168",
+  storageBucket: "nutrition-tracker-45168.firebasestorage.app",
+  messagingSenderId: "652371815139",
+  appId: "1:652371815139:web:59bada9aa8fb9c18fb33d6"
+};
+
+export default firebaseConfig;
+  
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase services
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+const db = getStorage(app);
+
+export { auth, firestore, db };
