@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
@@ -17,10 +18,14 @@
     "firebase": "^11.1.0",
     "fontawesome": "^5.6.3",
     "formik": "^2.4.6",
+    "helmet": "^8.0.0",
     "lodash": "^4.17.21",
+    "path-to-regexp": "^8.2.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
+    "react-error-boundary": "^5.0.0",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^5.4.0",
     "react-loader-spinner": "^6.1.6",
     "react-modal": "^3.16.1",

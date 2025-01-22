@@ -1,21 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import api from '../../api';
 
-export const foodApi = createApi({
-  reducerPath: "foodApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://trackapi.nutritionix.com/v2/",
-    prepareHeaders: (headers: Headers) => {
-      headers.set("x-app-id", import.meta.env.VITE_NUTRITIONIX_APP_ID as string);
-      headers.set("x-app-key", import.meta.env.VITE_NUTRITIONIX_APP_KEY as string);
-      headers.set("Content-Type", "application/json");
-      return headers;
-    },
-  }),
-  endpoints: (builder) => ({
-    fetchSuggestions: builder.query({
+export const userApi = api.injectEndpoints({
+  endpoints: (build :any) => ({
+    fetchSuggestions: build.query({
       query: (query: string) => `search/instant/?query=${query}`,
     }),
-    addMeal: builder.mutation({
+    addMeal: build.mutation({
       query: (select: string) => ({
         url: `natural/nutrients`,
         method: "POST",
@@ -23,6 +13,8 @@ export const foodApi = createApi({
       }),
     }),
   }),
+  overrideExisting: false,
 });
 
-export const { useFetchSuggestionsQuery, useAddMealMutation } = foodApi;
+
+export const { useFetchSuggestionsQuery, useAddMealMutation } = userApi;

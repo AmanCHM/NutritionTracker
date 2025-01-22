@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
+    // "target": "ES6",
+    // "module": "commonjs",
     "jsx": "react",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "module": "es2020",
+    "target": "esnext",  
+    "moduleResolution": "node",
   },
   "include": ["src"]
 }

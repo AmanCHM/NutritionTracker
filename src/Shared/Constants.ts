@@ -11,10 +11,10 @@ const ROUTES = {
     CONTACT: '/contact',
     DASHBOARD: '/dashboard',
     REPORTS: '/reports',
-    IMAGE_SEARCH: '/image-search',
+    IMAGE_SEARCH: '/image-search',  
+    RESET_PASSWORD: '/reset-password',
   };
   
-
 
 const WILDCARD_ROUTES = {
     PUBLIC: ROUTES.HOMEPAGE,
@@ -74,7 +74,10 @@ const WILDCARD_ROUTES = {
       path: ROUTES.IMAGE_SEARCH,
       title: 'Image Search',
     },
-  };
-  
+    RESET_PASSWORD: {
+      path: ROUTES.RESET_PASSWORD,
+      title: 'Reset Password',
+  },
+} 
   export { WILDCARD_ROUTES, ROUTES_CONFIG };
 
