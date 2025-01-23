@@ -1,26 +1,29 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, useFormik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Signup.css";
-// import { hideLoader, showLoader } from "../../Redux/loaderSlice";
 import { useDispatch } from "react-redux";
-// import Navbar from "../Page-Components/Navbar";
 import { toast } from "react-toastify";
-// import { loggedin, setSignup } from "../../Redux/logSlice";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
 import googleLogo from "../../assets/images/google.png"; 
-import { auth, db } from "../../Utils/firebase";
+
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../../../Utils/firebase";
+
 
 interface SignupFormValues {
   email: string;
   password: string;
   confirmPassword: string;
 }
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 
 const Signup: React.FC = () => {

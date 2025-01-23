@@ -81,3 +81,9 @@ const WILDCARD_ROUTES = {
 } 
   export { WILDCARD_ROUTES, ROUTES_CONFIG };
 
+  export interface User {
+    id: number;
+    email: string;
+    isActive: boolean;
+  }
+  

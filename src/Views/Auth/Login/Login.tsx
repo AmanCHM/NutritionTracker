@@ -10,13 +10,10 @@ import { toast } from "react-toastify";
 import { useFormik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-// import { loggedin } from "../../Redux/logSlice";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
-// import { hideLoader, showLoader } from "../../Redux/loaderSlice";
-// import Navbar from "../Page-Components/Navbar";
 import googleLogo from "../../assets/images/google.png";
-import { auth } from "../../Utils/firebase";
+import { auth } from "../../../Utils/firebase";
 
 interface RootState {
   loaderReducer: {

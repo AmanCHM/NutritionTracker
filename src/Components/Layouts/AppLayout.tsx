@@ -1,6 +1,7 @@
+import React from 'react';
+import { AppLayoutProps } from './AppLayout.d';
 import PrivateLayout from './Private/PrivateLayout';
 import PublicLayout from './Public/PublicLayout';
-import { AppLayoutProps } from './AppLayout.d';
 
 function AppLayout({ isAuthenticated, children }: AppLayoutProps) {
   return isAuthenticated ? (

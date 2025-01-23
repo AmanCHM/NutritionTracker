@@ -8,3 +8,13 @@ export const firstLetterUpperCase = (message: string) => {
     }
     return '';
   };
+
+  export const debounce = (func: (...args: any[]) => void, limit: number) => {
+    let inDebounce: NodeJS.Timeout | null;
+    return function(this: any, ...args: any[]) {
+      if (inDebounce) {
+        clearTimeout(inDebounce);
+      }
+      inDebounce = setTimeout(() => func.apply(this, args), limit);
+    };
+  };

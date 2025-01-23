@@ -1,0 +1,60 @@
+.custom-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .custom-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  /* Size Variants */
+  .custom-button.small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .custom-button.medium {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+  
+  .custom-button.large {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+  }
+  
+  /* Primary Variant */
+  .custom-button.primary {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .custom-button.primary:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Secondary Variant */
+  .custom-button.secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .custom-button.secondary:hover {
+    background-color: #565e64;
+  }
+  
+  /* Danger Variant */
+  .custom-button.danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .custom-button.danger:hover {
+    background-color: #a71d2a;
+  }
+  
