@@ -87,3 +87,10 @@ const WILDCARD_ROUTES = {
     isActive: boolean;
   }
   
+
+
+  export  const  CONTAINEROPTION ={
+           SMALLGLASS:'Small Glass (100ml)',
+           MEDIUMGLASS:'Medium Glass (175ml)',
+           LARGEGLASS :'Large Glass (250ml)'
+  }

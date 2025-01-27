@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import Select, { ActionMeta, OnChangeValue, SingleValue } from "react-select";
 import "./Dashboard.css";
 import {
   arrayUnion,
@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Progress from "rsuite/Progress";
 import "rsuite/Progress/styles/index.css";
-import { Notification } from "rsuite";
+import { Modal, Notification } from "rsuite";
 import "rsuite/Notification/styles/index.css";
 
 import { toast } from "react-toastify";
@@ -38,6 +38,8 @@ import { string } from "yup";
 import { Dispatch } from "@reduxjs/toolkit";
 import { IMAGES } from "../../../Shared";
 import { isArray } from "lodash";
+import DrinkModal from "./Modals/Drink/DrinkModal";
+import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
 
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -56,11 +58,12 @@ interface Drink {
 
 
 interface MealItem {
+  //  id:string ;
   calories: number;
   proteins: number;
   carbs: number;
   fats: number;
-  [key: string]: string | number;
+  [key: string]:  number;
   servingQuantity: number;
 }
 
@@ -99,7 +102,7 @@ interface SelectItem {
 }
 
 interface Data {
-  id: number;
+  id: number |string ;
   name: string;
   calories: number;
   proteins: number;
@@ -110,9 +113,12 @@ interface Data {
 }
 
 
-interface SelectedOption {
+interface OptionType {
+  value: string;
   label: string;
 }
+
+
 
 
 interface MealId {
@@ -177,19 +183,24 @@ interface DrinkData {
 }
 
 
+interface ValidDailyCalorie {
+  calorie: number | null;
+}
+
 const Dashboard = () =>
    
 {
  const [inputValue, setInputValue] = useState<string | null>(null);
- const [selectItem, setSelectItem] = useState<any>(undefined); // Replace `any` with the specific type of your item
+ const [selectItem, setSelectItem] = useState<string | string[] | undefined>(undefined);
  const [modal, setModal] = useState<boolean>(false);
  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
  const [quantity, setQuantity] = useState<number>(1);
  const [selectquantity, setSelectquantity] = useState<number>(1);
  const [selectCategory, setSelectCategory] = useState<string>("");
- const [logData, setLogdata] = useState<any>(undefined); // Replace `any` with the specific type of log data
+ const [logData, setLogdata] = useState<any>(undefined); 
  const [isloading, setloading] = useState<boolean>(false);
  const [dailyCalorie, setDailyCalorie] = useState<{ calorie: number | null } | null>(null);
+
  
  const [editModal, setEditModal] = useState<boolean>(false);
  const [selectedId, setSelectedId] = useState<number | string | undefined>(undefined);
@@ -199,15 +210,15 @@ const Dashboard = () =>
  const [drinkUpdateModal, setDrinkUpdateModal] = useState<boolean>(false);
  const [imageData, setImageData] = useState<string | ArrayBuffer | null>(null);
  
- const [drinkData, setDrinkData] = useState<any>(undefined); // Replace `any` with the specific type of drink data
+ const [drinkData, setDrinkData] = useState<any>(undefined); 
  const [totalWater, setTotalWater] = useState<number | undefined>(undefined);
  const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(undefined);
  const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(undefined);
  const [dataUpdated, setDataUpdated] = useState<boolean>(false);
  const [energyModal, setEnergyModal] = useState<boolean>(false);
- const [requiredWater, setRequiredWater] = useState<number | undefined>(undefined);
- const [requiredAlcohol, setRequiredAlcohol] = useState<number | undefined>(undefined);
- const [requiredCaffeine, setRequiredCaffeine] = useState<number | undefined>(undefined);
+ const [requiredWater, setRequiredWater] = useState<{ Water: number }>();
+ const [requiredAlcohol, setRequiredAlcohol] = useState<{ Alcohol: number }>();
+ const [requiredCaffeine, setRequiredCaffeine] = useState<{ Caffeine: number }>();
  const [updateDrinkName, setUpdateDrinkName] = useState<string>('');
  const [editDrinkModal, setEditDrinkModal] = useState<boolean>(false);
  const [drinkId, setDrinkId] = useState<number | string | undefined>(undefined);
@@ -252,16 +263,22 @@ const Dashboard = () =>
         category: "Branded",
       })),
     },
-  ];
+  ];    
   
   // Fetch Selected food details
-  const [addMeal, { data: selectedFoodData }] = useAddMealMutation();
+  const [addMeal, { data }] = useAddMealMutation();
 
+
+  const selectedFoodData = data as SelectedFoodData;
    //set selected item by user 
-  const handleSelect = (selectedOption:SelectedOption) => {
+   
+   const handleSelect = (newValue: OnChangeValue<OptionType, boolean>, actionMeta: ActionMeta<OptionType>) => {
+    // Your implementation here
+    const selectedOption = newValue ? (isArray(newValue) ? newValue : [newValue]) : [];
+
     setSelectItem(selectedOption);
-    if (selectedOption) {
-      addMeal(selectedOption?.label);
+    if (selectedOption.length > 0) {
+      addMeal(selectedOption[0]?.label);  
     }
     setModal(true);
   };
@@ -410,10 +427,10 @@ const Dashboard = () =>
    const handleEditLog = (
     meal: keyof LogData,
     name: string,
-    id: string,
+    id: number |string,
     logData: LogData,
     handleGetData: (user: any) => void,
-    setSelectedId: (id: string) => void,
+    setSelectedId: (id: number |string) => void,
     setQuantity: (quantity: number) => void,
     setEditMealName: (meal: string) => void,
     setSelectquantity: (quantity: number) => void,
@@ -428,7 +445,7 @@ const Dashboard = () =>
     setQuantity(1);
     setEditMealName(meal);
     
-    const selectedLog = logData[meal]?.find((item) => item.id === id);
+    const selectedLog = logData[meal]?.find((item:MealItem) => item.id === id);
     if (selectedLog) {
       setSelectquantity(selectedLog.servingQuantity);
     }
@@ -450,7 +467,7 @@ const handleEditModalData = async (
   altMeasure: string,
   selectquantity: number,
   editMealName: keyof LogData,
-  selectedId: string,
+  selectedId: number |string,
   selectCategory: string,
   setLogdata: (data: LogData) => void,
   setEditModal: (value: boolean) => void,
@@ -475,7 +492,7 @@ const handleEditModalData = async (
     const docRef = doc(db, "users", userId, "dailyLogs", date);
     const getData = (await getDoc(docRef)).data() as LogData;
     const mealdata = getData[editMealName]?.filter(
-      (meal) => meal.id !== selectedId
+      (meal:MealItem) => meal.id !== selectedId
     );
     await updateDoc(docRef, { [editMealName]: mealdata });
 
@@ -503,9 +520,9 @@ const handleEditModalData = async (
 
   // Set the required meal and drinks details of user
   const dailyRequiredCalorie = async (
-    setRequiredWater:(data :{water:number})=> void ,
-    setRequiredCaffeine:(data:{caffeine:number})=> void, 
-    setRequiredAlcohol:(data:{alcohol:number})=> void,
+    setRequiredWater:(data :{Water:number})=> void ,
+    setRequiredCaffeine:(data:{Caffeine:number})=> void, 
+    setRequiredAlcohol:(data:{Alcohol:number})=> void,
     setDailyCalorie:(data:{calorie:number | null})=> void
 
   ) :Promise<void>=> {
@@ -654,14 +671,14 @@ const handleEditModalData = async (
 
 
   
-  const calculateNutrients = (dailyCalorie: number | null) => {
+  const calculateNutrients = (dailyCalorie: number) => {
     // Ensure dailyCalorie is not null
-    const validDailyCalorie = dailyCalorie ?? 0;
+    // const validDailyCalorie = dailyCalorie ?? 0;
   
     // Calculate calories
-    const proteinCalories: number = validDailyCalorie * proteinPercent;
-    const carbsCalories: number = validDailyCalorie * carbsPercent;
-    const fatsCalories: number = validDailyCalorie * fatsPercent;
+    const proteinCalories: number = dailyCalorie * proteinPercent;
+    const carbsCalories: number = dailyCalorie * carbsPercent;
+    const fatsCalories: number = dailyCalorie * fatsPercent;
   
     // Convert calories to grams
     const proteinGrams: number = Math.round(proteinCalories / 4);
@@ -675,14 +692,17 @@ const handleEditModalData = async (
     };
   };
   
+// Safely access `dailyCalorie.calorie` with null checks
+const validDailyCalorie = dailyCalorie?.calorie ?? 0;
 
-  const validDailyCalorie = dailyCalorie ?? 0;
+
+
 
   const { proteinGrams, carbsGrams, fatsGrams } = calculateNutrients(totalCalories);
   
-  const requiredCalorie: number = validDailyCalorie ? validDailyCalorie - totalCalories : 0;
+  const requiredCalorie = validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
   
-  const progressPercent: number = validDailyCalorie ? Math.floor((totalCalories / validDailyCalorie) * 100) : 0;
+  const progressPercent: number = dailyCalorie ? Math.floor((totalCalories / validDailyCalorie) * 100) : 0;
   const proteinPercentage: number = Math.floor((totalProtein / proteinGrams) * 100);
   const carbsPercentage: number = Math.floor((totalCarbs / carbsGrams) * 100);
   const fatsPercentage: number = Math.floor((totalFats / fatsGrams) * 100);
@@ -896,7 +916,7 @@ const handleEditModalData = async (
         <div style={{ margin: "20px 20px" }}>
           <label htmlFor="">
             <strong> Energy : </strong>
-            {totalCalories}/{dailycalorie} kcal
+            {totalCalories}/{dailyCalorie} kcal
           </label>
 
           <Progress.Line
@@ -1015,12 +1035,12 @@ const handleEditModalData = async (
           </span>
         </button>
 
-        {/* <Modal isOpen={showDrinkModal}>
+        <Modal isOpen={showDrinkModal}>
           <DrinkModal
             setShowDrinkModal={setShowDrinkModal}
             onDataUpdated={handleDataUpdated}
           />
-        </Modal> */}
+        </Modal>
 
         {/* Drinks Table */}
         <div style={{ width: "100%", margin: "20px auto" }}>
