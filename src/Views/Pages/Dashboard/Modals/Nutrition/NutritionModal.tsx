@@ -1,22 +1,23 @@
 import React from "react";
 import "./MealModal.css";
+import { SelectedFoodData } from "../../Dashboard";
 
 // Define the types for the props
-interface Food {
-  food_name: string;
-  nf_calories: number;
-  nf_protein: number;
-  nf_total_carbohydrate: number;
-  nf_total_fat: number;
-  serving_unit: string;
-  photo: {
-    thumb: string;
-  };
-}
+// interface Food {
+//   food_name: string;
+//   nf_calories: number;
+//   nf_protein: number;
+//   nf_total_carbohydrate: number;
+//   nf_total_fat: number;
+//   serving_unit: string;
+//   photo: {
+//     thumb: string;
+//   };
+// }
 
-interface SelectedFoodData {
-  foods: Food[];
-}
+// interface SelectedFoodData {
+//   foods: Food[];
+// }
 
 
 interface NutritionModalProps {
@@ -26,35 +27,35 @@ interface NutritionModalProps {
 
 const NutritionModal: React.FC<NutritionModalProps> = ({ onClose, selectedFoodData }) => {
   // Fetch the details of selected item
-  const calculateCalories =
+  const calculateCalories  :number =
     selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].nf_calories
-      : "no data";
+      ? selectedFoodData?.foods[0].nf_calories : 0;
+      
 
   const protein =
     selectedFoodData?.foods?.length > 0
       ? selectedFoodData?.foods[0].nf_protein
-      : "no data";
+      : 0;
 
   const carbs =
     selectedFoodData?.foods?.length > 0
       ? selectedFoodData?.foods[0].nf_total_carbohydrate
-      : "no data";
+      : 0;
 
   const fats =
     selectedFoodData?.foods?.length > 0
       ? selectedFoodData?.foods[0].nf_total_fat
-      : "no data";
+      : 0;
 
   const serving =
     selectedFoodData?.foods?.length > 0
       ? selectedFoodData?.foods[0].serving_unit
-      : "no data";
+      : 0;
 
   const image =
     selectedFoodData?.foods?.length > 0
       ? selectedFoodData?.foods[0]?.photo?.thumb
-      : "no data";
+      : " ";
 
   return (
     <>
@@ -83,7 +84,8 @@ const NutritionModal: React.FC<NutritionModalProps> = ({ onClose, selectedFoodDa
           <tbody>
             <tr>
               <td style={{ padding: "8px" }}>Serving Size</td>
-              <td style={{ padding: "8px" }}>{calculateCalories > 0 ? `${serving}` : ""}</td>
+              <td style={{ padding: "8px" }}>{(calculateCalories ) > 0 ? `${serving}` : ""}
+</td>
             </tr>
             <tr>
               <td style={{ padding: "8px" }}>Calories</td>
@@ -94,19 +96,19 @@ const NutritionModal: React.FC<NutritionModalProps> = ({ onClose, selectedFoodDa
             <tr>
               <td style={{ padding: "8px" }}>Total Fat</td>
               <td style={{ padding: "8px" }}>
-                {calculateCalories > 0 ? Math.floor(fats) : 0} g
+                {calculateCalories  > 0 ? Math.floor(fats ) : 0} g
               </td>
             </tr>
             <tr>
               <td style={{ padding: "8px" }}>Total Carbohydrate</td>
               <td style={{ padding: "8px" }}>
-                {calculateCalories > 0 ? Math.floor(carbs) : 0} g
+                {calculateCalories  > 0 ? Math.floor(carbs  ) : 0} g
               </td>
             </tr>
             <tr>
               <td style={{ padding: "8px" }}>Protein</td>
               <td style={{ padding: "8px" }}>
-                {calculateCalories > 0 ? Math.floor(protein) : 0} g
+                {calculateCalories  > 0 ? Math.floor(protein ) : 0} g
               </td>
             </tr>
           </tbody>

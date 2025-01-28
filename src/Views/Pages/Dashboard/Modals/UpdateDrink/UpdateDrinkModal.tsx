@@ -16,8 +16,8 @@ interface UpdateDrinkModalProps {
   onDataUpdated: () => void;
   setEditDrinkModal: React.Dispatch<React.SetStateAction<boolean>>;
   editDrinkModal: boolean;
-  setDrinkId: React.Dispatch<React.SetStateAction<string | undefined>>;
-  setDrinkName: React.Dispatch<React.SetStateAction<string>>;
+  setDrinkId: React.Dispatch<React.SetStateAction<string | number |undefined>>;
+  setDrinkName: React.Dispatch<React.SetStateAction<string |undefined>>;
 }
 
 interface DrinkDetails {

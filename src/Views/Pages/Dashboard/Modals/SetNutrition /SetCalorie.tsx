@@ -7,8 +7,13 @@ import { RootState } from "../../../../../Store";
 import { auth, db } from "../../../../../Utils/firebase";
 import { closeCalorieModal, resetGoal } from "../../../../../Store/Nutrition";
 import { setSignout } from "../../../../../Store/Auth";
+import { ROUTES_CONFIG } from "../../../../../Shared/Constants";
 
-const SetCalorieModal = ({ setEnergyModal }) => {
+interface SetCalorieModalProps {
+  setEnergyModal: (value: boolean) => void; 
+}
+
+const SetCalorieModal :React.FC<SetCalorieModalProps> = ({ setEnergyModal }) => {
 
 
   const user = useSelector((state:RootState)=>state.Nutrition.userName);
@@ -48,7 +53,7 @@ const SetCalorieModal = ({ setEnergyModal }) => {
         dispatch(closeCalorieModal())
         dispatch(setSignout())
         dispatch(resetGoal());
-        setEnergyModal(false);
+        setEnergyModal(false); 
       }
     }
   };
@@ -57,7 +62,7 @@ const SetCalorieModal = ({ setEnergyModal }) => {
     setEnergyModal(false);
     dispatch(setSignout())
     
-    navigate('/calorie-calculator')
+    navigate(ROUTES_CONFIG.CALORIE_CALCULATOR.path)
 
   }
 

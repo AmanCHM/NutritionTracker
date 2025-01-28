@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Select, { ActionMeta, OnChangeValue, SingleValue } from "react-select";
 import "./Dashboard.css";
@@ -21,18 +20,19 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { FaTrashAlt, FaEdit, FaSearch } from "react-icons/fa";
 
 import { useDispatch, useSelector } from "react-redux";
-;
-
 import Progress from "rsuite/Progress";
 import "rsuite/Progress/styles/index.css";
 import { Modal, Notification } from "rsuite";
 import "rsuite/Notification/styles/index.css";
 
 import { toast } from "react-toastify";
-import { useAddMealMutation, useFetchSuggestionsQuery } from "../../../Services/Api/module/foodApi";
+import {
+  useAddMealMutation,
+  useFetchSuggestionsQuery,
+} from "../../../Services/Api/module/foodApi";
 import { debounce } from "../../../Helpers/function";
 import { hideLoader, showLoader } from "../../../Store/Loader";
-import firebaseConfig, {  } from "../../../Utils/firebase";
+import firebaseConfig from "../../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { string } from "yup";
 import { Dispatch } from "@reduxjs/toolkit";
@@ -40,22 +40,27 @@ import { IMAGES } from "../../../Shared";
 import { isArray } from "lodash";
 import DrinkModal from "./Modals/Drink/DrinkModal";
 import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
-
+import CustomModal from "../../../Components/Shared/CustomModal/CustomModal";
+import ImageSearch from "./Modals/ImageSearch/ImageSearch";
+import MealModal from "./Modals/Meal/MealModal";
+import Table from "../../../Components/Shared/Table/Table";
+import UpdateMeal from "./Modals/UpdateMeal/UpdateMeal";
+import NutritionModal from "./Modals/Nutrition/NutritionModal";
+import UpdateDrinkModal from "./Modals/UpdateDrink/UpdateDrinkModal";
+import UpdateDrinkPage from "./Modals/UpdateDrinkPage/UpdateDrinkPage";
+import DrinkProgress from "./Components/DrinkProgress/DrinkProgress";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
 interface Drink {
   drinklabel: string;
-  id: number;
-  totalAmount: number;
+  id?: number;
+  totalAmount?: number;
 }
-
 
 interface MealItem {
   //  id:string ;
@@ -63,23 +68,19 @@ interface MealItem {
   proteins: number;
   carbs: number;
   fats: number;
-  [key: string]:  number;
+  [key: string]: number;
   servingQuantity: number;
+
 }
 
-interface LogData {
+export interface LogData {
   Breakfast?: MealItem[];
   Lunch?: MealItem[];
   Snack?: MealItem[];
   Dinner?: MealItem[];
-  
-  }
-  
-
+}
 
 type mealData = MealItem[];
-
-
 
 interface CommonFood {
   tag_id: string;
@@ -102,7 +103,7 @@ interface SelectItem {
 }
 
 interface Data {
-  id: number |string ;
+  id: number | string;
   name: string;
   calories: number;
   proteins: number;
@@ -112,34 +113,26 @@ interface Data {
   servingQuantity: number;
 }
 
-
 interface OptionType {
   value: string;
   label: string;
 }
 
-
-
-
 interface MealId {
-  id: string;  
+  id: string;
 }
 
-
-
-interface FoodData {
+export interface FoodData {
   foods: { food_name: string }[];
 }
 
-interface FoodDetail {
-   
+ export interface FoodDetail {
   name: string;
   calories: number;
   proteins: number;
   carbs: number;
   fats: number;
 }
-
 
 interface LogDataItem {
   id: string | number;
@@ -152,27 +145,32 @@ interface LogDataItem {
   servingQuantity: number;
 }
 
-
-
 interface Food {
-  nf_calories: number;  
-    nf_protein: number;  
-    nf_total_carbohydrate: number;  
-    nf_total_fat: number;  
-    serving_weight_grams: number; 
+  nf_calories: number;
+  nf_protein: number;
+  nf_total_carbohydrate: number;
+  nf_total_fat: number;
+  serving_weight_grams: number;
+  photo: { thumb: string };
+  food_name: string;
+  alt_measures: Measure[];
+  serving_unit: string;
+}
+interface Measure {
+  serving_weight: string;
+  measure: string;
 }
 
-interface SelectedFoodData {
+export interface SelectedFoodData {
   foods: Food[];
 }
-
 
 interface RootState {
   authReducer: {
     logged: boolean;
   };
 }
-interface DrinkItem{
+interface DrinkItem {
   totalAmount: number;
 }
 
@@ -182,175 +180,201 @@ interface DrinkData {
   Caffeine?: DrinkItem[];
 }
 
-
 interface ValidDailyCalorie {
   calorie: number | null;
 }
 
-const Dashboard = () =>
-   
-{
- const [inputValue, setInputValue] = useState<string | null>(null);
- const [selectItem, setSelectItem] = useState<string | string[] | undefined>(undefined);
- const [modal, setModal] = useState<boolean>(false);
- const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
- const [quantity, setQuantity] = useState<number>(1);
- const [selectquantity, setSelectquantity] = useState<number>(1);
- const [selectCategory, setSelectCategory] = useState<string>("");
- const [logData, setLogdata] = useState<any>(undefined); 
- const [isloading, setloading] = useState<boolean>(false);
- const [dailyCalorie, setDailyCalorie] = useState<{ calorie: number | null } | null>(null);
 
- 
- const [editModal, setEditModal] = useState<boolean>(false);
- const [selectedId, setSelectedId] = useState<number | string | undefined>(undefined);
- const [editMealName, setEditMealName] = useState<string | undefined>(undefined);
- const [foodMeasure, setFoodMeasure] = useState<string | undefined>(undefined);
- const [showDrinkModal, setShowDrinkModal] = useState<boolean>(false);
- const [drinkUpdateModal, setDrinkUpdateModal] = useState<boolean>(false);
- const [imageData, setImageData] = useState<string | ArrayBuffer | null>(null);
- 
- const [drinkData, setDrinkData] = useState<any>(undefined); 
- const [totalWater, setTotalWater] = useState<number | undefined>(undefined);
- const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(undefined);
- const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(undefined);
- const [dataUpdated, setDataUpdated] = useState<boolean>(false);
- const [energyModal, setEnergyModal] = useState<boolean>(false);
- const [requiredWater, setRequiredWater] = useState<{ Water: number }>();
- const [requiredAlcohol, setRequiredAlcohol] = useState<{ Alcohol: number }>();
- const [requiredCaffeine, setRequiredCaffeine] = useState<{ Caffeine: number }>();
- const [updateDrinkName, setUpdateDrinkName] = useState<string>('');
- const [editDrinkModal, setEditDrinkModal] = useState<boolean>(false);
- const [drinkId, setDrinkId] = useState<number | string | undefined>(undefined);
- const [drinkName, setDrinkName] = useState<string | undefined>(undefined);
- const [imageModal, setImageModal] = useState<boolean>(false);
- const [altMeasure, setAltMeasure] = useState<string | null>(null);
 
- const dispatch = useDispatch();
+const Dashboard = () => {
+  const [inputValue, setInputValue] = useState<string | null>(null);
+  const [selectItem, setSelectItem] = useState<string | string[] | undefined>(
+    undefined
+  );
+  const [modal, setModal] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [selectquantity, setSelectquantity] = useState<number | string>(1);
+  const [selectCategory, setSelectCategory] = useState<string>("");
+  const [logData, setLogdata] = useState<LogData | undefined>(undefined);
+  const [isloading, setloading] = useState<boolean>(false);
+  const [dailyCalorie, setDailyCalorie] = useState<{
+    calorie: number | null;
+  } | null>(null);
+
+  const [editModal, setEditModal] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState<number | string | undefined>(
+    undefined
+  );
+  const [editMealName, setEditMealName] = useState<string | undefined>(
+    undefined
+  );
+  const [foodMeasure, setFoodMeasure] = useState<string | undefined>(undefined);
+  const [showDrinkModal, setShowDrinkModal] = useState<boolean>(false);
+  const [drinkUpdateModal, setDrinkUpdateModal] = useState<boolean>(false);
+  const [imageData, setImageData] = useState<string | ArrayBuffer | null>(null);
+
+  const [drinkData, setDrinkData] = useState<any>(undefined);
+  const [totalWater, setTotalWater] = useState<number>();
+  const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(
+    undefined
+  );
+  const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
+    undefined
+  );
+  const [dataUpdated, setDataUpdated] = useState<boolean>(false);
+  const [energyModal, setEnergyModal] = useState<boolean>(false);
+  const [requiredWater, setRequiredWater] = useState<{
+    Water: number | null;
+  }>();
+  const [requiredAlcohol, setRequiredAlcohol] = useState<{
+    Alcohol: number | null;
+  }>();
+  const [requiredCaffeine, setRequiredCaffeine] = useState<{
+    Caffeine: number | null;
+  }>();
+  const [updateDrinkName, setUpdateDrinkName] = useState<string>("");
+  const [editDrinkModal, setEditDrinkModal] = useState<boolean>(false);
+  const [drinkId, setDrinkId] = useState<number | string | undefined>(
+    undefined
+  );
+  const [drinkName, setDrinkName] = useState<string>(); // it may be undefined
+  const [imageModal, setImageModal] = useState<boolean>(false);
+  const [altMeasure, setAltMeasure] = useState<string | null>(null);
+
+  const dispatch = useDispatch();
 
   // const [inputValue, setInputValue] = useState<string>('');
 
-  const debouncedInputValue =  debounce((value: any) => setInputValue(value), 300);
+  const debouncedInputValue = debounce(
+    (value: any) => setInputValue(value),
+    300
+  );
 
   // Food suggestion search bar
   const {
-    data: suggestion  ,
+    data: suggestion,
     isLoading,
     isError,
   } = useFetchSuggestionsQuery(inputValue);
 
-
-  const suggestions = suggestion as Suggestions; 
+  const suggestions = suggestion as Suggestions;
   const handleSearch = (query: string) => {
     debouncedInputValue(query);
   };
 
-
   const groupedOptions = [
     {
       label: "Common Foods",
-      options: suggestions?.common.map((element: CommonFood, index: number) => ({
-        value: element.tag_id + index,
-        label: `${element.food_name}`,
-        category: "common",
-      })),
+      options: suggestions?.common.map(
+        (element: CommonFood, index: number) => ({
+          value: element.tag_id + index,
+          label: `${element.food_name}`,
+          category: "common",
+        })
+      ),
     },
     {
       label: "Branded Foods",
-      options: suggestions?.branded.map((element: BrandedFood, index: number) => ({
-        value: element.nix_item_id + index,
-        label: `${element.brand_name_item_name} - ${element.nf_calories} kcal`,
-        category: "Branded",
-      })),
+      options: suggestions?.branded.map(
+        (element: BrandedFood, index: number) => ({
+          value: element.nix_item_id + index,
+          label: `${element.brand_name_item_name} - ${element.nf_calories} kcal`,
+          category: "Branded",
+        })
+      ),
     },
-  ];    
-  
+  ];
+
   // Fetch Selected food details
   const [addMeal, { data }] = useAddMealMutation();
 
-
   const selectedFoodData = data as SelectedFoodData;
-   //set selected item by user 
-   
-   const handleSelect = (newValue: OnChangeValue<OptionType, boolean>, actionMeta: ActionMeta<OptionType>) => {
+  //set selected item by user
+
+  const handleSelect = (
+    newValue: OnChangeValue<OptionType, boolean>,
+    actionMeta: ActionMeta<OptionType>
+  ) => {
     // Your implementation here
-    const selectedOption = newValue ? (isArray(newValue) ? newValue : [newValue]) : [];
+    const selectedOption = newValue
+      ? isArray(newValue)
+        ? newValue
+        : [newValue]
+      : [];
 
     setSelectItem(selectedOption);
     if (selectedOption.length > 0) {
-      addMeal(selectedOption[0]?.label);  
+      addMeal(selectedOption[0]?.label);
     }
     setModal(true);
   };
-
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
- 
-   const handleModalData = async (
-     selectquantity: number | null,
-     selectCategory: string | null,
-     quantity: number | null,
-     selectItem: SelectItem,
-     calculateCalories: number,
-     protein: number,
-     carbs: number,
-     fats: number,
-     altMeasure: string,
-     handleGetData: (user: any) => Promise<void>,
-     setModal: (value: boolean) => void,
-     setSelectCategory: () => void
-   ) => {
-     const dispatch = useDispatch();
-   
-     if (!selectquantity || !selectCategory) {
-       toast.error("Please Select all the fields");
-       return;
-     }
-     if (!quantity || quantity <= 0) {
-       toast.error("Please Select Quantity");
-       return;
-     }
-     try {
-       dispatch(showLoader());
-       const user = auth.currentUser;
-       const data: Data = {
-         id: Date.now(),
-         name: selectItem.label,
-         calories: Math.round(calculateCalories),
-         proteins: Math.round(protein),
-         carbs: Math.round(carbs),
-         fats: Math.round(fats),
-         serving: altMeasure,
-         servingQuantity: selectquantity,
-       };
-       if (user) {
-         const userId = user.uid;
-         const date = new Date().toISOString().split("T")[0];
-         const docRef = doc(db, "users", userId, "dailyLogs", date);
-         const categorisedData = { [selectCategory]: arrayUnion(data) };
-   
-         await setDoc(docRef, categorisedData, { merge: true });
-         await handleGetData(user);
-   
-         toast.success("Food Saved");
-         setModal(false);
-       }
-     } catch (error) {
-       toast.error("Error in saving Data");
-       console.error("Error saving data:", error);
-     } finally {
-       dispatch(hideLoader());
-       setSelectCategory();
-     }
-   };
+  const handleModalData = async (
+    selectquantity: number | null,
+    selectCategory: string | null,
+    quantity: number | null,
+    selectItem: SelectItem,
+    calculateCalories: number,
+    protein: number,
+    carbs: number,
+    fats: number,
+    altMeasure: string,
+    handleGetData: (user: any) => Promise<void>,
+    setModal: (value: boolean) => void,
+    setSelectCategory: () => void
+  ) => {
+    const dispatch = useDispatch();
+
+    if (!selectquantity || !selectCategory) {
+      toast.error("Please Select all the fields");
+      return;
+    }
+    if (!quantity || quantity <= 0) {
+      toast.error("Please Select Quantity");
+      return;
+    }
+    try {
+      dispatch(showLoader());
+      const user = auth.currentUser;
+      const data: Data = {
+        id: Date.now(),
+        name: selectItem.label,
+        calories: Math.round(calculateCalories),
+        proteins: Math.round(protein),
+        carbs: Math.round(carbs),
+        fats: Math.round(fats),
+        serving: altMeasure,
+        servingQuantity: selectquantity,
+      };
+      if (user) {
+        const userId = user.uid;
+        const date = new Date().toISOString().split("T")[0];
+        const docRef = doc(db, "users", userId, "dailyLogs", date);
+        const categorisedData = { [selectCategory]: arrayUnion(data) };
+
+        await setDoc(docRef, categorisedData, { merge: true });
+        await handleGetData(user);
+
+        toast.success("Food Saved");
+        setModal(false);
+      }
+    } catch (error) {
+      toast.error("Error in saving Data");
+      console.error("Error saving data:", error);
+    } finally {
+      dispatch(hideLoader());
+      setSelectCategory();
+    }
+  };
 
   // Get the Meal details
 
-
-  const handleGetData = async (user:User):Promise<void> => {
+  const handleGetData = async (user: User): Promise<void> => {
     try {
       dispatch(showLoader());
       if (!user) {
@@ -376,21 +400,19 @@ const Dashboard = () =>
     }
   };
 
- 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user:User | null) => {
-         dispatch(showLoader()); 
-    if (user) { 
-      handleGetData(user).then(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      dispatch(showLoader());
+      if (user) {
+        handleGetData(user).then(() => {
+          dispatch(hideLoader());
+        });
+      } else {
         dispatch(hideLoader());
-      });
-    } else {
-      dispatch(hideLoader()); 
-    }
+      }
     });
     return () => unsubscribe();
   }, []);
-
 
   // delete meal details  from database
 
@@ -402,17 +424,17 @@ const Dashboard = () =>
         throw new Error("User not authenticated");
       }
       const userId = user.uid;
-      const date = new Date().toISOString().split("T")[0];  
+      const date = new Date().toISOString().split("T")[0];
       const docRef = doc(db, "users", userId, "dailyLogs", date);
       const getData = (await getDoc(docRef)).data();
       if (!getData || !getData[meal]) {
         throw new Error("Meal data not found");
       }
-      const mealData = getData[meal] as MealId[];  
+      const mealData = getData[meal] as MealId[];
       const updatedMealData = mealData.filter((mealItem) => mealItem.id !== id);
       await updateDoc(docRef, { [meal]: updatedMealData });
       const updatedDoc = (await getDoc(docRef)).data();
-      setLogdata(updatedDoc);  
+      setLogdata(updatedDoc);
       toast.success("Item Deleted Successfully");
     } catch (error) {
       console.error(error);
@@ -422,15 +444,14 @@ const Dashboard = () =>
     }
   };
 
-  
-   // set the details of editable item
-   const handleEditLog = (
+  // set the details of editable item
+  const handleEditLog = (
     meal: keyof LogData,
     name: string,
-    id: number |string,
+    id: number | string,
     logData: LogData,
     handleGetData: (user: any) => void,
-    setSelectedId: (id: number |string) => void,
+    setSelectedId: (id: number | string) => void,
     setQuantity: (quantity: number) => void,
     setEditMealName: (meal: string) => void,
     setSelectquantity: (quantity: number) => void,
@@ -438,97 +459,94 @@ const Dashboard = () =>
     setEditModal: (value: boolean) => void
   ) => {
     const dispatch = useDispatch();
-  
+
     dispatch(showLoader());
     handleGetData(auth.currentUser);
     setSelectedId(id);
     setQuantity(1);
     setEditMealName(meal);
-    
-    const selectedLog = logData[meal]?.find((item:MealItem) => item.id === id);
+
+    const selectedLog = logData[meal]?.find((item: MealItem) => item.id === id);
     if (selectedLog) {
       setSelectquantity(selectedLog.servingQuantity);
     }
-    
+
     addMeal(name);
     setEditModal(true);
     dispatch(hideLoader());
   };
- //Edit Meal details
+  //Edit Meal details
 
+  const handleEditModalData = async (
+    selectedFoodData: FoodData | null,
+    calculateCalories: number,
+    protein: number,
+    carbs: number,
+    fats: number,
+    altMeasure: string,
+    selectquantity: number,
+    editMealName: keyof LogData,
+    selectedId: number | string,
+    selectCategory: string,
+    setLogdata: (data: LogData) => void,
+    setEditModal: (value: boolean) => void,
+    setSelectCategory: () => void
+  ): Promise<void> => {
+    try {
+      dispatch(showLoader());
+      const user: User | null = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+      const userId: string = user.uid;
+      const data: LogDataItem = {
+        id: Date.now(),
+        name: selectedFoodData?.foods[0]?.food_name || "",
+        calories: Math.round(calculateCalories),
+        proteins: Math.round(protein),
+        carbs: Math.round(carbs),
+        fats: Math.round(fats),
+        serving: altMeasure,
+        servingQuantity: selectquantity,
+      };
+      const date: string = new Date().toISOString().split("T")[0];
+      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const getData = (await getDoc(docRef)).data() as LogData;
+      const mealdata = getData[editMealName]?.filter(
+        (meal: MealItem) => meal.id !== selectedId
+      );
+      await updateDoc(docRef, { [editMealName]: mealdata });
 
+      const newData = { [selectCategory]: arrayUnion(data) };
+      await updateDoc(docRef, newData);
+      const updatedDoc = (await getDoc(docRef)).data() as LogData;
+      setLogdata(updatedDoc);
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      setEditModal(false);
+      dispatch(hideLoader());
+      setSelectCategory();
+      toast.success("Item edited successfully");
+    }
+  };
 
-const handleEditModalData = async (
-  selectedFoodData: FoodData | null,
-  calculateCalories: number,
-  protein: number,
-  carbs: number,
-  fats: number,
-  altMeasure: string,
-  selectquantity: number,
-  editMealName: keyof LogData,
-  selectedId: number |string,
-  selectCategory: string,
-  setLogdata: (data: LogData) => void,
-  setEditModal: (value: boolean) => void,
-  setSelectCategory: () => void
-): Promise<void> => {
-  try {
-    dispatch(showLoader());
-    const user: User | null = auth.currentUser;
-    if (!user) throw new Error('User not authenticated');
-    const userId: string = user.uid;
-    const data: LogDataItem = {
-      id: Date.now(),
-      name: selectedFoodData?.foods[0]?.food_name || '',
-      calories: Math.round(calculateCalories),
-      proteins: Math.round(protein),
-      carbs: Math.round(carbs),
-      fats: Math.round(fats),
-      serving: altMeasure,
-      servingQuantity: selectquantity,
-    };
-    const date: string = new Date().toISOString().split("T")[0];
-    const docRef = doc(db, "users", userId, "dailyLogs", date);
-    const getData = (await getDoc(docRef)).data() as LogData;
-    const mealdata = getData[editMealName]?.filter(
-      (meal:MealItem) => meal.id !== selectedId
-    );
-    await updateDoc(docRef, { [editMealName]: mealdata });
-
-    const newData = { [selectCategory]: arrayUnion(data) };
-    await updateDoc(docRef, newData);
-    const updatedDoc = (await getDoc(docRef)).data() as LogData;
-    setLogdata(updatedDoc);
-  } catch (error) {
-    console.log(error);
-    toast.error('Something went wrong');
-  } finally {
-    setEditModal(false);
-    dispatch(hideLoader());
-    setSelectCategory();
-    toast.success('Item edited successfully');
-  }
-};
-
-// interface drinksdata{
-//   water: number;
-//   caffeine: number;
-//   alcohol: number;
-//   calorie: number;
-// }
+  // interface drinksdata{
+  //   water: number;
+  //   caffeine: number;
+  //   alcohol: number;
+  //   calorie: number;
+  // }
 
   // Set the required meal and drinks details of user
   const dailyRequiredCalorie = async (
-    setRequiredWater:(data :{Water:number})=> void ,
-    setRequiredCaffeine:(data:{Caffeine:number})=> void, 
-    setRequiredAlcohol:(data:{Alcohol:number})=> void,
-    setDailyCalorie:(data:{calorie:number | null})=> void
-
-  ) :Promise<void>=> {
+    setRequiredWater: (data: { Water: number }) => void,
+    setRequiredCaffeine: (data: { Caffeine: number }) => void,
+    setRequiredAlcohol: (data: { Alcohol: number }) => void,
+    setDailyCalorie: (data: { calorie: number | null }) => void
+  ): Promise<void> => {
     const currentUser = auth.currentUser;
     const userId = currentUser?.uid;
-     
+
     if (userId) {
       const userDocRef = doc(db, "users", userId);
       try {
@@ -538,16 +556,15 @@ const handleEditModalData = async (
           setRequiredWater(data.water);
           setRequiredCaffeine(data.caffeine);
           setRequiredAlcohol(data.alcohol);
-          setDailyCalorie(data.calorie ??null);
+          setDailyCalorie(data.calorie ?? null);
         } else {
-          setDailyCalorie({calorie:null});
+          setDailyCalorie({ calorie: null });
         }
       } catch (error) {
         console.error("Error fetching calorie data:", error);
-      } 
+      }
     }
   };
-
 
   useEffect(() => {
     dailyRequiredCalorie(
@@ -558,104 +575,98 @@ const handleEditModalData = async (
     );
   }, [handleGetData]);
 
-
-
   const calculateNutrient = (
     selectedFoodData: SelectedFoodData,
     nutrient: keyof Food,
-    selectquantity: number,
+    selectquantity: number | string,
     quantity: number
   ) => {
+    const quantityNumber = Number(selectquantity) || 0;
+
     return selectedFoodData?.foods?.length > 0
-      ? (selectedFoodData?.foods[0][nutrient] /
+      ? ((selectedFoodData?.foods[0][nutrient] as number) /
           selectedFoodData?.foods[0].serving_weight_grams) *
-        selectquantity *
-        quantity
-      : 'no data';
+          quantityNumber *
+          quantity
+      : " ";
   };
-  
- 
- 
+
   const calculateCalories = calculateNutrient(
     selectedFoodData,
     "nf_calories",
     selectquantity,
     quantity
   );
-  
+
   const protein = calculateNutrient(
     selectedFoodData,
     "nf_protein",
     selectquantity,
     quantity
   );
-  
+
   const carbs = calculateNutrient(
     selectedFoodData,
     "nf_total_carbohydrate",
     selectquantity,
     quantity
   );
-  
+
   const fats = calculateNutrient(
     selectedFoodData,
     "nf_total_fat",
     selectquantity,
     quantity
   );
-  
 
-  
-  const calculateMealNutrient = (mealData: mealData, nutrient: string): number => {
+  const calculateMealNutrient = (
+    mealData: mealData,
+    nutrient: string
+  ): number => {
     return mealData.length > 0
-      ? mealData.reduce((total: number, item: MealItem) => total + (item[nutrient] || 0), 0)
+      ? mealData.reduce(
+          (total: number, item: MealItem) => total + (item[nutrient] || 0),
+          0
+        )
       : 0;
   };
-  
+
   const calculateMealCalories = (mealData: mealData): number => {
     return calculateMealNutrient(mealData, "calories");
   };
-  
+
   const calculateMealProtein = (mealData: mealData): number => {
     return calculateMealNutrient(mealData, "proteins");
   };
-  
+
   const calculateMealCarbs = (mealData: mealData): number => {
     return calculateMealNutrient(mealData, "carbs");
   };
-  
+
   const calculateMealFats = (mealData: mealData): number => {
     return calculateMealNutrient(mealData, "fats");
   };
-  
-  // // Assuming logData is defined elsewhere in your component
-  // const logData: LogData = {
-  //   Breakfast: [{ calories: 200, proteins: 10, carbs: 30, fats: 5 }],
-  //   Lunch: [{ calories: 400, proteins: 20, carbs: 50, fats: 10 }],
-  //   Snack: [{ calories: 100, proteins: 5, carbs: 15, fats: 2 }],
-  //   Dinner: [{ calories: 300, proteins: 15, carbs: 40, fats: 8 }],
-  // };
-  
+
+
   const breakfastCalorie = calculateMealCalories(logData?.Breakfast || []);
   const breakfastProtein = calculateMealProtein(logData?.Breakfast || []);
   const breakfastCarbs = calculateMealCarbs(logData?.Breakfast || []);
   const breakfastFats = calculateMealFats(logData?.Breakfast || []);
-  
+
   const lunchCalorie = calculateMealCalories(logData?.Lunch || []);
   const lunchProtein = calculateMealProtein(logData?.Lunch || []);
   const lunchCarbs = calculateMealCarbs(logData?.Lunch || []);
   const lunchFats = calculateMealFats(logData?.Lunch || []);
-  
+
   const snackCalorie = calculateMealCalories(logData?.Snack || []);
   const snackProtein = calculateMealProtein(logData?.Snack || []);
   const snackCarbs = calculateMealCarbs(logData?.Snack || []);
   const snackFats = calculateMealFats(logData?.Snack || []);
-  
+
   const dinnerCalorie = calculateMealCalories(logData?.Dinner || []);
   const dinnerProtein = calculateMealProtein(logData?.Dinner || []);
   const dinnerCarbs = calculateMealCarbs(logData?.Dinner || []);
   const dinnerFats = calculateMealFats(logData?.Dinner || []);
-
 
   // Calculate totals for the day
   const totalCalories =
@@ -669,44 +680,45 @@ const handleEditModalData = async (
   const carbsPercent: number = 0.5;
   const fatsPercent: number = 0.25;
 
-
-  
   const calculateNutrients = (dailyCalorie: number) => {
     // Ensure dailyCalorie is not null
     // const validDailyCalorie = dailyCalorie ?? 0;
-  
+
     // Calculate calories
     const proteinCalories: number = dailyCalorie * proteinPercent;
     const carbsCalories: number = dailyCalorie * carbsPercent;
     const fatsCalories: number = dailyCalorie * fatsPercent;
-  
+
     // Convert calories to grams
     const proteinGrams: number = Math.round(proteinCalories / 4);
     const carbsGrams: number = Math.round(carbsCalories / 4);
     const fatsGrams: number = Math.round(fatsCalories / 9);
-  
+
     return {
       proteinGrams,
       carbsGrams,
       fatsGrams,
     };
   };
-  
-// Safely access `dailyCalorie.calorie` with null checks
-const validDailyCalorie = dailyCalorie?.calorie ?? 0;
 
+  // Safely access `dailyCalorie.calorie` with null checks
+  const validDailyCalorie = dailyCalorie?.calorie ?? 0;
 
+  const { proteinGrams, carbsGrams, fatsGrams } =
+    calculateNutrients(totalCalories);
 
+  const requiredCalorie =
+    validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
 
-  const { proteinGrams, carbsGrams, fatsGrams } = calculateNutrients(totalCalories);
-  
-  const requiredCalorie = validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
-  
-  const progressPercent: number = dailyCalorie ? Math.floor((totalCalories / validDailyCalorie) * 100) : 0;
-  const proteinPercentage: number = Math.floor((totalProtein / proteinGrams) * 100);
+  const progressPercent: number = dailyCalorie
+    ? Math.floor((totalCalories / validDailyCalorie) * 100)
+    : 0;
+  const proteinPercentage: number = Math.floor(
+    (totalProtein / proteinGrams) * 100
+  );
   const carbsPercentage: number = Math.floor((totalCarbs / carbsGrams) * 100);
   const fatsPercentage: number = Math.floor((totalFats / fatsGrams) * 100);
-  
+
   // Doughnut Data
 
   //Doughnut Data
@@ -726,8 +738,8 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
     ],
   };
 
-  const getPercentage = (value :number, total:number ) => {
-    return ((value / total) * 100).toFixed(2);
+  const getPercentage = (value: number, total: number): number => {
+    return (value / total) * 100;
   };
 
   const total = doughnutdata.datasets[0].data.reduce(
@@ -743,9 +755,8 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
     setIsModalOpen(false);
   };
 
-
-  //  Get Drinks 
-  const getDrinkData = async (user:User) => {
+  //  Get Drinks
+  const getDrinkData = async (user: User) => {
     try {
       dispatch(showLoader());
       if (!user) {
@@ -769,7 +780,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user : User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
         getDrinkData(user);
       } else {
@@ -783,12 +794,15 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
     setDataUpdated((prev) => !prev);
   };
 
-
- //Drinks Calculation
+  //Drinks Calculation
   const calculateTotals = () => {
-    const calculateDrinkTotals = (drinkData:DrinkData | undefined) => {
+    const calculateDrinkTotals = (drinkData: DrinkData | undefined) => {
       return isArray(drinkData) && drinkData.length > 0
-        ? drinkData.reduce((total :number, drinkItem:DrinkItem) => total + drinkItem.totalAmount, 0)
+        ? drinkData.reduce(
+            (total: number, drinkItem: DrinkItem) =>
+              total + drinkItem.totalAmount,
+            0
+          )
         : 0;
     };
     setTotalWater(calculateDrinkTotals(drinkData?.Water));
@@ -803,7 +817,6 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
     }
   }, [drinkData]);
 
-
   //energy modal
   const isSignup = useSelector((state: RootState) => state.authReducer.logged);
   useEffect(() => {
@@ -813,15 +826,16 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
     }
   }, []);
 
-
-  
   const handleUpdateDrink = (drinks: Drink): void => {
     setUpdateDrinkName(drinks.drinklabel);
     setDrinkUpdateModal(true);
   };
 
- 
-
+  const drinkType = {
+    water: { drinklabel: "Water" },
+    caffeine: { drinklabel: "Caffeine" },
+    alcohol: { drinklabel: "Alcohol" },
+  };
 
   return (
     <>
@@ -829,7 +843,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
       <div
         className="search"
         style={{ backgroundImage: `url(${IMAGES.bgSelectImage})` }}
-       >
+      >
         <h1 id="header-text">Search Your Meals Below</h1>
 
         <Select
@@ -858,25 +872,22 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
           </span>
           Visual Food Search
         </button>
-        <Modal isOpen={imageModal}>
+        <CustomModal isOpen={imageModal} onClose={() => setImageModal(false)}>
           <ImageSearch
             setImageModal={setImageModal}
             setImageData={setImageData}
-            setSelectCategory={setSelectCategory}
-            // handelImageSearchModal={handelImageSearchModal}
-            handleGetData = {handleGetData}
+            // setSelectCategory={setSelectCategory}
+            handleGetData={handleGetData}
           ></ImageSearch>
-        </Modal>
+        </CustomModal>
       </div>
 
-    {/* Energy Modal */}
-      <div>
-        <Modal isOpen={energyModal}>
-          <SetCalorieModal setEnergyModal={setEnergyModal} />
-        </Modal>
-      </div>
+      {/* Energy Modal */}
+      <CustomModal isOpen={energyModal} onClose={() => setEnergyModal(false)}>
+        <SetCalorieModal setEnergyModal={setEnergyModal} />
+      </CustomModal>
 
-      <Modal isOpen={modal}>
+      <CustomModal isOpen={modal} onClose={() => setModal(false)}>
         <MealModal
           modal={modal}
           setModal={setModal}
@@ -887,16 +898,14 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
           selectedFoodData={selectedFoodData}
           setSelectCategory={setSelectCategory}
           calculateCalories={calculateCalories}
-          selectCategory= {selectCategory}
+          selectCategory={selectCategory}
           handleModalData={handleModalData}
-          setFoodMeasure={setFoodMeasure}
+          // setFoodMeasure={setFoodMeasure}
           setAltMeasure={setAltMeasure}
-
         />
-      </Modal>
+      </CustomModal>
 
-
-  {/* Meal Table  */}
+      {/* Meal Table  */}
       <Table
         logData={logData}
         handleNutritionModal={handleNutritionModal}
@@ -905,7 +914,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
         showFeature={true}
       />
 
-{/* Meal Progress Line Graph  */}
+      {/* Meal Progress Line Graph  */}
       <div
         className="progress-line"
         style={{ height: "auto", width: "50vw", marginLeft: "25%" }}
@@ -916,7 +925,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
         <div style={{ margin: "20px 20px" }}>
           <label htmlFor="">
             <strong> Energy : </strong>
-            {totalCalories}/{dailyCalorie} kcal
+            {totalCalories}/{dailyCalorie?.calorie ?? 0} kcal
           </label>
 
           <Progress.Line
@@ -962,7 +971,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
         </div>
       </div>
 
-  {/* Doughnut Data */}
+      {/* Doughnut Data */}
       <div className="total-calorie">
         <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}>
           {" "}
@@ -987,9 +996,9 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
         </div>
       </div>
 
-    {/* Update Meal Data  */}
-      <Modal isOpen={editModal}>
-        <EditDataModal
+      {/* Update Meal Data  */}
+      <CustomModal isOpen={editModal} onClose={() => setEditModal(false)}>
+        <UpdateMeal
           setModal={setEditModal}
           quantity={quantity}
           setQuantity={setQuantity}
@@ -997,29 +1006,22 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
           selectquantity={selectquantity}
           setSelectquantity={setSelectquantity}
           selectedFoodData={selectedFoodData}
-          selectCategory= {selectCategory}
+          selectCategory={selectCategory}
           setSelectCategory={setSelectCategory}
           calculateCalories={calculateCalories}
           handleEditModalData={handleEditModalData}
         />
-      </Modal>
+      </CustomModal>
 
-{/* Nutrition Details */}
-      <Modal isOpen={isModalOpen}>
+      {/* Nutrition Details */}
+      <CustomModal isOpen={isModalOpen} onClose={handleCloseModal}>
         <NutritionModal
           onClose={handleCloseModal}
           selectedFoodData={selectedFoodData}
-          quantity={quantity}
-          setQuantity={setQuantity}
-          selectquantity={selectquantity}
-          setSelectquantity={setSelectquantity}
-          setSelectCategory={setSelectCategory}
-        
         />
-      </Modal>
+      </CustomModal>
 
-
-  {/* Drink Section */}
+      {/* Drink Section */}
 
       <div className="drink-section">
         <h2 style={{ color: "darkgrey", fontSize: "2.5rem" }}>
@@ -1035,12 +1037,15 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
           </span>
         </button>
 
-        <Modal isOpen={showDrinkModal}>
+        <CustomModal
+          isOpen={showDrinkModal}
+          onClose={() => setShowDrinkModal(false)}
+        >
           <DrinkModal
             setShowDrinkModal={setShowDrinkModal}
             onDataUpdated={handleDataUpdated}
           />
-        </Modal>
+        </CustomModal>
 
         {/* Drinks Table */}
         <div style={{ width: "100%", margin: "20px auto" }}>
@@ -1055,7 +1060,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
               marginLeft: "30%",
               borderRadius: "2px",
             }}
-           >
+          >
             <thead>
               <tr style={{ backgroundColor: "#f4f6f7" }}>
                 <th
@@ -1097,7 +1102,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
               <tr>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    src={Image.water}
+                    // src={Image.water}
                     alt="Water"
                     style={{ height: "60px" }}
                   />
@@ -1108,9 +1113,8 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>
-                  
                     <span
-                      onClick={()=>handleUpdateDrink("Water")}
+                      onClick={() => handleUpdateDrink(drinkType.water)}
                       className="icon-button edit"
                     >
                       <FaEdit />
@@ -1121,7 +1125,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
               <tr style={{ backgroundColor: "#f9f9f9" }}>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    src={Image.beer}
+                    // src={Image.beer}
                     alt="Alcohol"
                     style={{ height: "60px" }}
                   />
@@ -1132,9 +1136,8 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>
-                   
                     <span
-                   onClick={()=>handleUpdateDrink("Alcohol")}
+                      onClick={() => handleUpdateDrink(drinkType.alcohol)}
                       className="icon-button edit"
                     >
                       <FaEdit />
@@ -1145,7 +1148,7 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
               <tr>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    src={Image.coffee}
+                    // src={Image.coffee}
                     alt="Caffeine"
                     style={{ height: "60px" }}
                   />
@@ -1158,9 +1161,8 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>
-                  
                     <span
-                      onClick={()=>handleUpdateDrink("Caffeine")}
+                      onClick={() => handleUpdateDrink(drinkType.caffeine)}
                       className="icon-button edit"
                     >
                       <FaEdit />
@@ -1171,77 +1173,45 @@ const validDailyCalorie = dailyCalorie?.calorie ?? 0;
             </tbody>
           </table>
 
-          <Modal isOpen={drinkUpdateModal}>
-          <UpdateDrinkModal
-            setDrinkUpdateModal={setDrinkUpdateModal}
-            onDataUpdated={handleDataUpdated}
-            updateDrinkName = {updateDrinkName}
-            editDrinkModal={editDrinkModal}
-            setEditDrinkModal={setEditDrinkModal}
-            setDrinkId = {setDrinkId}
-            setDrinkName={setDrinkName}
-          />
-        </Modal>
+          <CustomModal
+            isOpen={drinkUpdateModal}
+            onClose={() => setDrinkUpdateModal(false)}
+          >
+            <UpdateDrinkModal
+              setDrinkUpdateModal={setDrinkUpdateModal}
+              onDataUpdated={handleDataUpdated}
+              updateDrinkName={updateDrinkName}
+              editDrinkModal={editDrinkModal}
+              setEditDrinkModal={setEditDrinkModal}
+              setDrinkId={setDrinkId}
+              setDrinkName={setDrinkName}
+            />
+          </CustomModal>
 
-        <Modal isOpen={editDrinkModal}>
-          <EditDrinkModal
-           setEditDrinkModal={setEditDrinkModal}
-            onDataUpdated={handleDataUpdated}
-            drinkName={drinkName}
-            drinkId={drinkId}
-          />
-         </Modal>
-
+          <CustomModal
+            isOpen={editDrinkModal}
+            onClose={() => setEditDrinkModal(false)}
+          >
+            <UpdateDrinkPage
+              setEditDrinkModal={setEditDrinkModal}
+              onDataUpdated={handleDataUpdated}
+              drinkName={drinkName || ''}
+              drinkId={drinkId}
+            />
+          </CustomModal>
 
           {/* Water Progress Line Graph   */}
-          <div
-            className="progress-line"
-            style={{ height: "auto", width: "50vw", marginLeft: "25%" }}
-          >
-            <h2
-              style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}
-            >
-              Today's Drink Progress Report
-            </h2>
-
-            <div style={{ margin: "20px 20px" }}>
-              <label htmlFor="">
-                <strong> Water : </strong>
-                {totalWater}/{requiredWater} ml
-              </label>
-              <Progress.Line
-                percent={totalWater>0 ? Math.floor((totalWater / requiredWater) * 100):0}
-                status="active"
-                strokeColor="#e15f41"
-              />
-            </div>
-            <div style={{ margin: "20px 20px" }}>
-              <label htmlFor="">
-                <strong> Alcohol: </strong>
-                {totalAlcohol}/{requiredAlcohol}ml
-              </label>
-              <Progress.Line
-                percent={totalAlcohol>0 ? Math.floor((totalAlcohol / requiredAlcohol) * 100):0}
-                status="active"
-                strokeColor="#55a630"
-              />
-            </div>
-            <div style={{ margin: "20px 20px" }}>
-              <label htmlFor="">
-                {" "}
-                <strong> Caffeine: </strong>
-                {totalCaffeine}/{requiredCaffeine} ml
-              </label>
-              <Progress.Line
-                percent={totalCaffeine >0 ?Math.floor((totalCaffeine / requiredCaffeine) * 100):0}
-                status="active"
-                strokeColor="355070"
-              />
-            </div>
-          </div>
+          <DrinkProgress
+            totalWater={totalWater || 0}
+            requiredWater={requiredWater?.Water ?? 0}
+            totalAlcohol={totalAlcohol || 0}
+            requiredAlcohol={requiredAlcohol?.Alcohol ?? 0}
+            totalCaffeine={totalCaffeine || 0}
+            requiredCaffeine={requiredCaffeine?.Caffeine ?? 0}
+          />
         </div>
       </div>
-      <Footer className="footer" />
+      {/* <Footer className="footer" /> */}
     </>
   );
 };

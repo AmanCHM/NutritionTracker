@@ -1,168 +1,202 @@
-import React from "react";
-
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
-
-import { useDispatch } from "react-redux";
-
-import { toast } from "react-toastify";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { hideLoader, showLoader } from "../../../../../Store/Loader";
-import { auth, db } from "../../../../../Utils/firebase";
+import React, { FormEvent, useEffect, useState } from "react";
+import "./NutritionModal.css";
 import CustomSelect from "../../../../../Components/Shared/CustomSelect/CustomSelect";
+import { FoodData, LogData, SelectedFoodData } from "../../Dashboard";
 
-// Define the types for the component props
-interface UpdateMealProps {
-  setEditDrinkModal: React.Dispatch<React.SetStateAction<boolean>>;
-  drinkName: string;
-  drinkId: string;
-  onDataUpdated: () => void;
+
+// Define types for the food data and props
+interface Measure {
+  serving_weight: number;
+  measure: string;
 }
 
-const UpdateMeal: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkName, drinkId, onDataUpdated }) => {
-  const dispatch = useDispatch();
+interface EditDataModalProps {
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
+  selectquantity: number | string;
+  setSelectquantity: React.Dispatch<React.SetStateAction<number | string>>;
+  selectedFoodData: SelectedFoodData;
+  selectCategory: string;
+  setSelectCategory: React.Dispatch<React.SetStateAction<string>>;
+  calculateCalories: number | string;
+  handleEditModalData: (selectedFoodData: FoodData | null,
+    calculateCalories: number,
+    protein: number,
+    carbs: number,
+    fats: number,
+    altMeasure: string,
+    selectquantity: number,
+    editMealName: keyof LogData,
+    selectedId: number |string,
+    selectCategory: string,
+    setLogdata: (data: LogData) => void,
+    setEditModal: (value: boolean) => void,
+    setSelectCategory: () => void) => void;
+  mealName: string |undefined;
+}
 
-  const drinkTypeOptions = [
-    { value: "Water", label: "Water" },
-    { value: "Alcohol", label: "Alcohol" },
-    { value: "Caffeine", label: "Caffeine" },
-  ];
-
-  const containerOptions = [
-    { value: "Small Glass (100ml)", label: "Small Glass (100ml)" },
-    { value: "Medium Glass (175ml)", label: "Medium Glass (175ml)" },
-    { value: "Large Glass (250ml)", label: "Large Glass (250ml)" },
-  ];
-
-  //  Edit drink details 
-  const formik = useFormik({
-    initialValues: {
-      drinkType: drinkName,
-      container: "",
-      quantity: 1,
-    },
-    validationSchema: Yup.object({
-      drinkType: Yup.string().required("Please select a drink type."),
-      container: Yup.string().required("Please select a container type."),
-      quantity: Yup.number()
-        .required("Please enter a quantity.")
-        .positive("Quantity must be a positive number.")
-        .integer("Quantity must be a whole number."),
-    }),
-    onSubmit: async (values) => {
-      const servingSize =
-        values.container === "Small Glass (100ml)"
-          ? 100
-          : values.container === "Medium Glass (175ml)"
-          ? 175
-          : 250;
-
-      const totalAmount = servingSize * values.quantity;
-
-      dispatch(showLoader());
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          throw new Error("User is not authenticated");
-        }
-        const userId = user.uid;
-        const date = new Date().toISOString().split("T")[0];
-        const docRef = doc(db, "users", userId, "dailyLogs", date);
-
-        const existingData = (await getDoc(docRef)).data();
-        if (!existingData || !existingData[drinkName]) {
-          throw new Error("No data found for the specified drink type.");
-        }
-
-        const updatedDrinkData = existingData[drinkName].filter(
-          (item: { id: string }) => item.id !== drinkId
-        );
-
-        // Remove old drink data
-        await updateDoc(docRef, { [drinkName]: updatedDrinkData });
-
-        // Add updated drink data
-        const newDrinkData = {
-          id: Date.now().toString(),
-          totalAmount,
-          drinklabel: values.container,
-        };
-        const newData = { [values.drinkType]: arrayUnion(newDrinkData) };
-        await updateDoc(docRef, newData);
-
-        if (onDataUpdated) onDataUpdated();
-
-        toast.success("Drink details updated successfully!");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to update drink details.");
-      } finally {
-        setEditDrinkModal(false);
-        dispatch(hideLoader());
-      }
-    },
+const UpdateMeal: React.FC<EditDataModalProps> = ({
+  setModal,
+  quantity,
+  setQuantity,
+  selectquantity,
+  setSelectquantity,
+  selectedFoodData,
+  selectCategory,
+  setSelectCategory,
+  calculateCalories,
+  handleEditModalData,
+  mealName
+}) => {
+  const [errors, setErrors] = useState({
+    quantity: "",
+    selectquantity: "",
+    selectCategory: "",
   });
+
+  // Validate Quantity
+  const validateQuantity = (value: number): string => {
+    if (!value || value <= 0) {
+      return "Please enter a valid quantity.";
+    }
+    return "";
+  };
+
+  // Validate Select Quantity
+  const validateSelectQuantity = (value: string | number): string => {
+    if (!value) {
+      return "Please select a quantity.";
+    }
+    return "";
+  };
+
+  // Validate Meal Category
+  const validateMealCategory = (value: string): string => {
+    if (!value) {
+      return "Please choose a meal category.";
+    }
+    return "";
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>): void => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+
+    // Trigger validation on blur
+    if (name === "quantity") {
+      newErrors.quantity = validateQuantity(Number(value));
+    }
+    if (name === "selectquantity") {
+      newErrors.selectquantity = validateSelectQuantity(value);
+    }
+    if (name === "selectCategory") {
+      newErrors.selectCategory = validateMealCategory(value);
+    }
+
+    setErrors(newErrors);
+  };
+
+  const handleSubmit =  (e: FormEvent): void => {
+    e.preventDefault();
+
+    const newErrors = {
+      quantity: validateQuantity(quantity),
+      selectquantity: validateSelectQuantity(selectquantity),
+      selectCategory: validateMealCategory(selectCategory),
+    };
+
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).every((error) => !error)) {
+      handleEditModalData();
+    }
+  };
+
+  const mealOptions = [
+    { value: "Breakfast", label: "Breakfast" },
+    { value: "Lunch", label: "Lunch" },
+    { value: "Snack", label: "Snack" },
+    { value: "Dinner", label: "Dinner" },
+  ];
+
+  const sliceOptions = selectedFoodData?.foods.flatMap((food, foodIndex) =>
+    food.alt_measures.map((measure, index) => ({
+      value: measure.serving_weight,
+      label: measure.measure,
+      key: `${foodIndex}-${index}`,
+    }))
+  );
+  useEffect(() => {
+    if (mealName) {
+      setSelectCategory(mealName);
+    }
+  }, [mealName, setSelectCategory]);
 
   return (
     <>
-      <button className="close-button" onClick={() => setEditDrinkModal(false)}>
-        X
-      </button>
-      <h2 className="modal-title" style={{ color: "black" }}>
-        Update Drink Details
-      </h2>
+      <div>
+        <button className="close-button" onClick={() => setModal(false)}>
+          X
+        </button>
+        <h2 className="modal-title" style={{ color: "black" }}>
+          Update Meal
+        </h2>
 
-      <form onSubmit={formik.handleSubmit}>
-    
-        <div className="input-group">
-          <label htmlFor="drinkType">Drink Type:</label>
-          <CustomSelect
-            options={drinkTypeOptions}
-            value={drinkTypeOptions.find((opt) => opt.value === formik.values.drinkType)||null}
-            onChange={(selected) => formik.setFieldValue("drinkType", selected?.value || "")}
-            onBlur={() => formik.setFieldTouched("drinkType", true)}
-            placeholder="Select a drink type"
-          />
-          {formik.touched.drinkType && formik.errors.drinkType && (
-            <p className="error-message">{formik.errors.drinkType}</p>
-          )}
-        </div>
+        <h3 style={{ color: "#063970", textAlign: 'center', paddingTop: '10px' }}>
+          {selectedFoodData?.foods[0]?.food_name?.charAt(0).toUpperCase() +
+            selectedFoodData?.foods[0]?.food_name?.slice(1)}
+        </h3>
 
-        
-        <div className="input-group">
-          <label htmlFor="container">Container Type:</label>
-          <CustomSelect
-            options={containerOptions}
-            value={containerOptions.find((opt) => opt.value === formik.values.container)||null}
-            onChange={(selected) => formik.setFieldValue("container", selected?.value || "")}
-            onBlur={() => formik.setFieldTouched("container", true)}
-            placeholder="Select a container type"
-          />
-          {formik.touched.container && formik.errors.container && (
-            <p className="error-message">{formik.errors.container}</p>
-          )}
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="quantity">Quantity:</label>
+        <div className="input-container">
+          <label>Choose Quantity</label>
           <input
             type="number"
-            id="quantity"
+            name="quantity"
             min="1"
-            value={formik.values.quantity}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            placeholder="Enter quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            onBlur={handleBlur}
+            step="1"
           />
-          {formik.touched.quantity && formik.errors.quantity && (
-            <p className="error-message">{formik.errors.quantity}</p>
-          )}
+          {errors.quantity && <div style={{ color: "red" }}>{errors.quantity}</div>}
         </div>
 
-        <button type="submit" className="submit-button">
-          Submit
+        <div className="select-container">
+          <label>Select Serving Size</label>
+          <CustomSelect
+            options={sliceOptions}
+            value={
+              selectquantity
+                ? {
+                    value: selectquantity,
+                    label: selectedFoodData?.foods
+                      .flatMap((food) => food.alt_measures)
+                      .find((measure) => measure.serving_weight === selectquantity)?.measure,
+                  }
+                : 0 
+            }
+            onChange={(selectedOption) => setSelectquantity(selectedOption?.value || '' )}
+            onBlur={handleBlur}
+          />
+          {errors.selectquantity && <div style={{ color: "red" }}>{errors.selectquantity}</div>}
+        </div>
+
+        <label className="meal-label">Choose Meal</label>
+        <CustomSelect
+          options={mealOptions}
+          value={mealOptions.find((option) => option.value === selectCategory) || null}
+          onChange={(selectedOption) => setSelectCategory(selectedOption?.value || '') }
+          onBlur={handleBlur}
+        />
+        {errors.selectCategory && <div style={{ color: "red" }}>{errors.selectCategory}</div>}
+
+        <p className="calorie-info">Calorie Served: {Math.round(calculateCalories)}</p>
+
+        <button className="add-meal-button" onClick={handleSubmit}>
+          Update Meal
         </button>
-      </form>
+      </div>
     </>
   );
 };

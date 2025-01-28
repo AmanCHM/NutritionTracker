@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface OptionType {
+export interface OptionType {
   value: string ; 
   label: string;
   key?: string;

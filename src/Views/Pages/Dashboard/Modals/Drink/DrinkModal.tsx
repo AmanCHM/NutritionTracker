@@ -130,11 +130,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
             value={drinkTypeOptions?.find((opt) => opt.value === formik.values.drinkType) || null}
             onChange={(selected) => formik.setFieldValue("drinkType", selected?.value || "" ) }
             onBlur={() => formik.setFieldTouched("drinkType", true)}
-            // placeholder="Select a drink type"
-            // error={formik.touched.drinkType && formik.errors.drinkType ? formik.errors.drinkType : ""} 
-            // className="custom-select-wrapper"
-            // name="drinkType"
-            // placeholder="Select a drink type"
+
           />
           {formik.touched.drinkType && formik.errors.drinkType && (
             <p className="error-message">{formik.errors.drinkType}</p>
