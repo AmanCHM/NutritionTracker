@@ -1,5 +1,5 @@
 import React from 'react';
-// import './Footer.css';       
+import './Footer.css';       
 import { useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {

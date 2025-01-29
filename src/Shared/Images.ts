@@ -1,22 +1,23 @@
-
-import  mobile from '../../assets/images/mobile.svg';
-import  aiImage from '../../assets/images/AiPhone.png';
-import  goals from '../../assets/images/Goals.png';
-import  water from '../../assets/images/glass-of-water.png';
-import beer  from  '../../assets/images/beer.png';
-import  coffee from '../../assets/images/coffee.png';
-import  bgSelectImage from '../../assets/images/Vector.png';
-import  bgSelectDate from '../assets/Images/BgDashBoard.avif';
-
+import mobile from '../assets/Images/mobile.svg'
+import aiImage from '../assets/Images/AIFeaturePhone.png'
+//  import goals from '../assets/Images/'
+import  water from '../assets/Icons/glass-of-water.png';
+import beer  from  '../assets/Icons/beer.png';
+import  coffee from '../assets/Icons/coffee.png';
+import  bgSelectImage from '../assets/Images/bdDashBoard.svg'
+import bgSelectDate from '../assets/Images/background.png'
+import googleLogo from '../assets/Icons/google.png'
+import feature from '../assets/Images/AppFeature.png'
 export  const   IMAGES ={
   
     mobile ,
     aiImage,
-    goals,
+    feature,
     water,
     beer,
     coffee,
     bgSelectImage,
-    bgSelectDate
+    bgSelectDate,
+   googleLogo
 
 }

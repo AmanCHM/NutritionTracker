@@ -10,7 +10,7 @@ const ContactUs: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null); 
   const dispatch = useDispatch();
   const apiUrl =
-    "https://script.google.com/macros/s/AKfycbzCFn9Lm5wQNLldsTlD90y3268-hcK03-SHW-BfaxVYT3R4OM7OOT4drQajjqpeQdQB/exec";
+    import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

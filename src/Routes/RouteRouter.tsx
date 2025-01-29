@@ -11,8 +11,10 @@ import AppLayout from '../Components/Layouts/AppLayout';
 function RootRouter() {
   const guest = useRoutes(publicRoutes);
   const authenticated = useRoutes(authenticatedRoutes);
-  const token = useSelector((state: RootState) => state?.Auth?.logged);
+  const token = useSelector((state: RootState) => state.Auth.logged);
   const isAuthenticated = !!token;
+
+ console.log(isAuthenticated);
   return (
     <>
       <DocumentTitle isAuthenticated={isAuthenticated} />

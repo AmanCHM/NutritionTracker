@@ -1,24 +1,6 @@
 import React from "react";
-import "./MealModal.css";
+import "../Meal/MealModal.css";
 import { SelectedFoodData } from "../../Dashboard";
-
-// Define the types for the props
-// interface Food {
-//   food_name: string;
-//   nf_calories: number;
-//   nf_protein: number;
-//   nf_total_carbohydrate: number;
-//   nf_total_fat: number;
-//   serving_unit: string;
-//   photo: {
-//     thumb: string;
-//   };
-// }
-
-// interface SelectedFoodData {
-//   foods: Food[];
-// }
-
 
 interface NutritionModalProps {
   onClose: () => void;

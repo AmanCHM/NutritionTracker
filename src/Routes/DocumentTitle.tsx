@@ -14,17 +14,18 @@ function DocumentTitle({ isAuthenticated = false }) {
     isAuthenticated ? PRIVATE_ROUTES : AUTH_ROUTES
   );
   
-//   const matchedRoute: CustomRouter | undefined = ROUTES.find(
-//       (route: CustomRouter) =>
+  // const matchedRoute: CustomRouter | undefined = ROUTES.find(
+  //     (route: CustomRouter) =>
        
-//         route.path !== '*' &&
-//       pathToRegexp(route.path as Path).test(location.pathname)
-//   );
+  //       route.path !== '*' &&
+  //     pathToRegexp(route.path as Path).test(location.pathname)
+  // );
 
 const matchedRoute: CustomRouter | undefined = ROUTES.find(
   (route: CustomRouter) => {
     if (route.path === '*' || !route.path) return false; 
     try {
+      
       const { regexp } = pathToRegexp(route.path as Path); 
       return regexp.test(location.pathname); 
     } catch (error) {

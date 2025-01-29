@@ -49,12 +49,11 @@ import NutritionModal from "./Modals/Nutrition/NutritionModal";
 import UpdateDrinkModal from "./Modals/UpdateDrink/UpdateDrinkModal";
 import UpdateDrinkPage from "./Modals/UpdateDrinkPage/UpdateDrinkPage";
 import DrinkProgress from "./Components/DrinkProgress/DrinkProgress";
+import { RootState } from "../../../Store";
+import MealProgress from "./Components/MealProgress/MealProgress";
+
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 interface Drink {
   drinklabel: string;
@@ -62,13 +61,14 @@ interface Drink {
   totalAmount?: number;
 }
 
-interface MealItem {
-  //  id:string ;
+export interface MealItem {
+ id : string ;
+   name: string;
   calories: number;
   proteins: number;
   carbs: number;
   fats: number;
-  [key: string]: number;
+  [key: string]: string|number;
   servingQuantity: number;
 
 }
@@ -165,11 +165,7 @@ export interface SelectedFoodData {
   foods: Food[];
 }
 
-interface RootState {
-  authReducer: {
-    logged: boolean;
-  };
-}
+
 interface DrinkItem {
   totalAmount: number;
 }
@@ -416,7 +412,7 @@ const Dashboard = () => {
 
   // delete meal details  from database
 
-  const handleDeleteLog = async (meal: string, id: string) => {
+  const handleDeleteLog = async (meal: string, id: string |number) => {
     dispatch(showLoader());
     try {
       const user = auth.currentUser;
@@ -581,7 +577,7 @@ const Dashboard = () => {
     selectquantity: number | string,
     quantity: number
   ) => {
-    const quantityNumber = Number(selectquantity) || 0;
+    const quantityNumber = selectquantity as number || 0;
 
     return selectedFoodData?.foods?.length > 0
       ? ((selectedFoodData?.foods[0][nutrient] as number) /
@@ -619,13 +615,16 @@ const Dashboard = () => {
     quantity
   );
 
+
+
+
   const calculateMealNutrient = (
     mealData: mealData,
-    nutrient: string
+    nutrient: string 
   ): number => {
     return mealData.length > 0
       ? mealData.reduce(
-          (total: number, item: MealItem) => total + (item[nutrient] || 0),
+          (total: number, item: MealItem) => total + (item[nutrient] as number),
           0
         )
       : 0;
@@ -747,8 +746,8 @@ const Dashboard = () => {
     0
   );
 
-  const handleNutritionModal = (foodDetail: FoodDetail, id: string): void => {
-    addMeal(foodDetail);
+  const handleNutritionModal = (foodDetail:FoodDetail): void => {
+    addMeal(foodDetail?.name);
     setIsModalOpen(true);
   };
   const handleCloseModal = () => {
@@ -818,7 +817,7 @@ const Dashboard = () => {
   }, [drinkData]);
 
   //energy modal
-  const isSignup = useSelector((state: RootState) => state.authReducer.logged);
+  const isSignup = useSelector((state:RootState ) => state.Auth.signedup);
   useEffect(() => {
     if (isSignup === true) {
       setEnergyModal(true);
@@ -918,7 +917,7 @@ const Dashboard = () => {
       <div
         className="progress-line"
         style={{ height: "auto", width: "50vw", marginLeft: "25%" }}
-      >
+       >
         <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
           Today Meal Progress Report
         </h2>
@@ -970,7 +969,21 @@ const Dashboard = () => {
           />
         </div>
       </div>
-
+       <MealProgress
+       totalCalories={totalCalories}
+      
+       dailyCalorie={dailyCalorie?.calorie ?? 0}
+        progressPercent= {progressPercent}
+        totalProtein= {totalProtein}
+        proteinGrams ={proteinGrams}
+        proteinPercentage = {proteinPercentage}
+        totalCarbs = {totalCarbs}
+        carbsGrams = {carbsGrams}
+        carbsPercentage= {carbsPercentage}
+        totalFats= {totalFats}
+        fatsGrams=  {fatsGrams}
+        fatsPercentage= {fatsPercentage}
+       />
       {/* Doughnut Data */}
       <div className="total-calorie">
         <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}>
@@ -1102,7 +1115,7 @@ const Dashboard = () => {
               <tr>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    // src={Image.water}
+                    src={IMAGES.water}
                     alt="Water"
                     style={{ height: "60px" }}
                   />
@@ -1125,7 +1138,7 @@ const Dashboard = () => {
               <tr style={{ backgroundColor: "#f9f9f9" }}>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    // src={Image.beer}
+                    src={IMAGES.beer}
                     alt="Alcohol"
                     style={{ height: "60px" }}
                   />
@@ -1148,7 +1161,7 @@ const Dashboard = () => {
               <tr>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
                   <img
-                    // src={Image.coffee}
+                    src={IMAGES.coffee}
                     alt="Caffeine"
                     style={{ height: "60px" }}
                   />

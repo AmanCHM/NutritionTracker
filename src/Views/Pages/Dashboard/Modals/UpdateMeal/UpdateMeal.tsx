@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import "./NutritionModal.css";
+import "../Nutrition/NutritionModal.css";
 import CustomSelect from "../../../../../Components/Shared/CustomSelect/CustomSelect";
 import { FoodData, LogData, SelectedFoodData } from "../../Dashboard";
 

@@ -1,7 +1,7 @@
 const ROUTES = {
     HOMEPAGE: '/',
     LOGIN: '/login',
-    REGISTER: '/register',
+    REGISTER: '/signup',
     ABOUT: '/about-us',
     CALORIE_CALCULATOR: '/calorie-calculator',
     USER_INFO: '/userinfo',
@@ -87,10 +87,10 @@ const WILDCARD_ROUTES = {
     isActive: boolean;
   }
   
-
-
   export  const  CONTAINEROPTION ={
            SMALLGLASS:'Small Glass (100ml)',
            MEDIUMGLASS:'Medium Glass (175ml)',
            LARGEGLASS :'Large Glass (250ml)'
   }
+
+  export  const COLSPAN_VALUE = 6;

@@ -1,21 +1,17 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { FoodDetail, LogData } from "../../../Views/Pages/Dashboard/Dashboard";
+import {  FoodDetail, LogData, MealItem } from "../../../Views/Pages/Dashboard/Dashboard";
+import { COLSPAN_VALUE } from "../../../Shared/Constants";
 
   interface TableProps {
     logData: LogData;
-    handleNutritionModal: (foodDetail: MealItem , id:string ) => void;
+    handleNutritionModal: (foodDetail: FoodDetail) => void;
+
     handleEditLog: ( meal: keyof LogData,
       name: string,
       id: number | string,
-      logData: LogData,
-      handleGetData: (user: any) => void,
-      setSelectedId: (id: number | string) => void,
-      setQuantity: (quantity: number) => void,
-      setEditMealName: (meal: string) => void,
-      setSelectquantity: (quantity: number) => void,
-      addMeal: (name: string) => void,
-      setEditModal: (value: boolean) => void) => void;
+      // logData: LogData,
+    ) => void;
 
     handleDeleteLog: (meal: string, id: string) => void;
     showFeature: boolean;
@@ -66,7 +62,7 @@ const Table: React.FC<TableProps> = ({
                         <td>
                           <span
                             onClick={() =>
-                              handleNutritionModal(item, item.id)
+                              handleNutritionModal(item)
                             }
                           >
                             <strong>
@@ -106,7 +102,7 @@ const Table: React.FC<TableProps> = ({
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="6">No breakfast items</td>
+                      <td colSpan={COLSPAN_VALUE}>No breakfast items</td>
                     </tr>
                   )}
                 </tbody>
@@ -130,13 +126,13 @@ const Table: React.FC<TableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {logData?.Lunch?.length > 0 ? (
+                {logData?.Lunch && logData?.Lunch?.length > 0 ? (
                   logData.Lunch.map((item, index) => (
                     <tr key={`lunch-${index}`}>
                       <td>
                         <span
                           // style={{ backgroundColor: "#0077b6" }}
-                          onClick={() => handleNutritionModal(item.name)}
+                          onClick={() => handleNutritionModal(item)}
                         >
                           <strong>
                             {" "}
@@ -174,7 +170,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No lunch items</td>
+                    <td colSpan={COLSPAN_VALUE}>No lunch items</td>
                   </tr>
                 )}
               </tbody>
@@ -198,13 +194,13 @@ const Table: React.FC<TableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {logData?.Snack?.length > 0 ? (
+                {logData?.Snack && logData?.Snack?.length > 0 ? (
                   logData.Snack.map((item, index) => (
                     <tr key={`snack-${index}`}>
                       <td>
                         <span
                           // style={{ backgroundColor: "#0077b6" }}
-                          onClick={() => handleNutritionModal(item.name)}
+                          onClick={() => handleNutritionModal(item)}
                         >
                           <strong>
                             {" "}
@@ -241,7 +237,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No snack items</td>
+                    <td colSpan={COLSPAN_VALUE}>No snack items</td>
                   </tr>
                 )}
               </tbody>
@@ -266,13 +262,13 @@ const Table: React.FC<TableProps> = ({
                 </tr>
               </thead>
               <tbody>
-                {logData?.Dinner?.length > 0 ? (
+                {logData?.Dinner && logData?.Dinner?.length > 0 ? (
                   logData.Dinner.map((item, index) => (
                     <tr key={`dinner-${index}`}>
                       <td>
                         <span
                           // style={{ backgroundColor: "#0077b6" }}/
-                          onClick={() => handleNutritionModal(item.name)}
+                          onClick={() => handleNutritionModal(item)}
                         >
                           <strong>
                             {" "}
@@ -309,7 +305,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No dinner items</td>
+                    <td colSpan={COLSPAN_VALUE}>No dinner items</td>
                   </tr>
                 )}
               </tbody>

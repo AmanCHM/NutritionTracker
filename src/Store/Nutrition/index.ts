@@ -2,25 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserInfo {
   userName: string;
-  height: string;
+  height: number;
   gender: string;
-  age: string;
+  age: number;
 }
 
 interface GoalInfo {
-  currentWeight: string;
-  targetWeight: string;
+  currentWeight: number;
+  targetWeight: number;
   goal: string;
   weightDifference: number;
 }
 
 interface CalorieGoalState {
   userName: string;
-  currentWeight: string;
-  targetWeight: string;
-  height: string;
+  currentWeight: number;
+  targetWeight: number;
+  height: number;
   gender: string;
-  age: string;
+  age: number;
   activity: string;
   requiredCalorie: number;
   goal: string;
@@ -31,11 +31,11 @@ interface CalorieGoalState {
 
 const initialState: CalorieGoalState = {
   userName: "",
-  currentWeight: "",
-  targetWeight: "",
-  height: "",
+  currentWeight: 0,
+  targetWeight: 0,
+  height: 0,
   gender: "",
-  age: "",
+  age: 0,
   activity: "",
   requiredCalorie: 0,
   goal: "",

@@ -76,7 +76,7 @@ const MealModal: React.FC<MealModalProps> = ({
   );
 
 
-  const  selectedOption : OptionType | null = selectquantity
+  const  selectedOption  = selectquantity
   ? {
       value: selectquantity,
       label: selectedFoodData?.foods

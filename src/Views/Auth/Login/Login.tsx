@@ -12,14 +12,14 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
-import googleLogo from "../../assets/images/google.png";
-import { auth } from "../../../Utils/firebase";
 
-interface RootState {
-  loaderReducer: {
-    loading: boolean;
-  };
-}
+import { auth } from "../../../Utils/firebase";
+import { IMAGES } from "../../../Shared";
+import { RootState } from "../../../Store";
+import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { hideLoader, showLoader } from "../../../Store/Loader";
+import { loggedin } from "../../../Store/Auth";
+
 
 interface MyFormValues {
   email: string;
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const loader = useSelector((state: RootState) => state.loaderReducer.loading);
+  const loader = useSelector((state: RootState) => state.Loader.loading);
 
   // Handle Google Sign-In
   const handleGoogleSignIn = async () => {
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
       const user = result.user;
 
       // dispatch(loggedin());
-      navigate("/dashboard");
+      navigate(ROUTES_CONFIG.DASHBOARD.path);
       toast.success("Google Logged in successful");
     } catch (error: any) {
       const errorCode = error.code;
@@ -66,15 +66,15 @@ const Login: React.FC = () => {
       password: Yup.string().min(8, "Must be 8 characters").required("Required"),
     }),
     onSubmit: async (values: MyFormValues, { setSubmitting }: FormikHelpers<MyFormValues>) => {
-      // dispatch(showLoader());
+      dispatch(showLoader());
       const { email, password } = values;
 
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         toast.success("Logged in Successfully");
-        // dispatch(loggedin());
-        navigate("/dashboard");
+        dispatch(loggedin());
+        navigate(ROUTES_CONFIG.DASHBOARD.path);
       } catch (error: any) {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
         console.log(errorCode, errorMessage);
       } finally {
         setSubmitting(false);
-        // dispatch(hideLoader());
+        dispatch(hideLoader());
       }
     },
   });
@@ -142,7 +142,7 @@ const Login: React.FC = () => {
             <p className="login-footer">Or</p>
 
             <button className="google-login-button" type="button" onClick={handleGoogleSignIn}>
-              <img src={googleLogo} alt="Google logo" className="google-logo" />
+              <img src={IMAGES.googleLogo} alt="Google logo" className="google-logo" />
               Sign in with Google
             </button>
 

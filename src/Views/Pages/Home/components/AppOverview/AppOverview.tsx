@@ -1,5 +1,5 @@
 import React from "react";
-import "./Overview.css";
+import "./AppOverview.css";
 import OverviewCards from "../Cards/OverviewCard/OverviewCards";
 
 interface OverviewCardsProps {
@@ -9,7 +9,7 @@ interface OverviewCardsProps {
   }
 
 
-const Overview = () => {
+const AppOverview = () => {
   return (
     <>
       <div className="overview">
@@ -70,4 +70,4 @@ const Overview = () => {
   );
 };
 
-export default Overview;
+export default AppOverview;

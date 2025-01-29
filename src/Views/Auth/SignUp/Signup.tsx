@@ -9,10 +9,14 @@ import "./Signup.css";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
-import googleLogo from "../../assets/images/google.png"; 
+
 
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
+import { IMAGES } from "../../../Shared";
+import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { hideLoader, showLoader } from "../../../Store/Loader";
+import { loggedin, setSignup } from "../../../Store/Auth";
 
 
 interface SignupFormValues {
@@ -47,7 +51,7 @@ const Signup: React.FC = () => {
         .required("Required"),
     }),
     onSubmit: async (values, { setSubmitting }: FormikHelpers<SignupFormValues>) => {
-    //   dispatch(showLoader());
+      dispatch(showLoader());
       const { email, password } = values;
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -57,14 +61,14 @@ const Signup: React.FC = () => {
         await setDoc(userDocRef, { calorie: 2000, water: 3000, alcohol: 600, caffeine: 850 });
 
         toast.success("SignUp Successful");
-        // dispatch(loggedin());
-        navigate("/dashboard");
+        dispatch(loggedin());
+        navigate(ROUTES_CONFIG.DASHBOARD.path);
       } catch (error: any) {
         console.log(error.message);
         toast.error("SignUp not successful");
       } finally {
-        // dispatch(setSignup());a
-        // dispatch(hideLoader());
+        dispatch(setSignup());
+        dispatch(hideLoader());
         setSubmitting(false);
       }
     },
@@ -72,7 +76,7 @@ const Signup: React.FC = () => {
 
   const handleGoogleSignup = async () => {
     formik.setValues({ email: "", password: "", confirmPassword: "" });
-    // dispatch(showLoader());
+    dispatch(showLoader());
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -83,12 +87,12 @@ const Signup: React.FC = () => {
 
       toast.success("Google Sign-Up Successful");
     //   dispatch(loggedin());
-      navigate("/dashboard");
+      navigate(ROUTES_CONFIG.DASHBOARD.path);
     } catch (error: any) {
       toast.error("Google Sign-Up Failed");
       console.error("Error with Google Sign-Up: ", error.message);
     } finally {
-    //   dispatch(hideLoader());
+      dispatch(hideLoader());
     }
   };
 
@@ -160,7 +164,7 @@ const Signup: React.FC = () => {
         </form>
         <p className="login-footer">Or</p>
         <button className="signup-button" onClick={handleGoogleSignup}>
-          <img src={googleLogo} alt="Google Logo" className="google-logo" />
+          <img src={IMAGES.googleLogo} alt="Google Logo" className="google-logo" />
           Sign Up with Google
         </button>
 

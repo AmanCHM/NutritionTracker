@@ -4,9 +4,10 @@ import { sendPasswordResetEmail } from "firebase/auth";
 
 import { toast } from "react-toastify";
 import { auth } from "../../../Utils/firebase";
+import { ROUTES_CONFIG } from "../../../Shared/Constants";
 
 const ResetPassword: React.FC = () => {
-  const [email, setEmail] = useState<string>(""); // Type the state explicitly as a string
+  const [email, setEmail] = useState<string>(""); 
   const navigate = useNavigate();
 
   // Function to handle form submission
@@ -16,7 +17,7 @@ const ResetPassword: React.FC = () => {
     try {
       await sendPasswordResetEmail(auth, email);
       toast.success("Email sent");
-      navigate("/login");
+      navigate(ROUTES_CONFIG.LOGIN.path);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -25,7 +26,7 @@ const ResetPassword: React.FC = () => {
     }
   };
 
-  // Function to handle email input change
+  
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };

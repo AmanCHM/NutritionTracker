@@ -6,12 +6,12 @@ import { getStorage } from 'firebase/storage';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyByo2LkLYbSf0tw6G-ynBGOuNqDhTlikFE",
-  authDomain: "nutrition-tracker-45168.firebaseapp.com",
-  projectId: "nutrition-tracker-45168",
-  storageBucket: "nutrition-tracker-45168.firebasestorage.app",
-  messagingSenderId: "652371815139",
-  appId: "1:652371815139:web:59bada9aa8fb9c18fb33d6"
+  apiKey:import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 export default firebaseConfig;

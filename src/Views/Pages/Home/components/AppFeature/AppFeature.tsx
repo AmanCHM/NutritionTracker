@@ -1,9 +1,10 @@
 import React from "react";
 
-import "./Feature.css";
+import "./AppFeature.css";
 import FeatureCards from "../Cards/FeatureCard/FeatureCards";
+import { IMAGES } from "../../../../../Shared";
 
-const Feature = () => {
+const AppFeature = () => {
   return (
     <div> 
        <div className="feature">
@@ -20,7 +21,7 @@ const Feature = () => {
       <div className="feature-component">
         <img
           id="feature-image"
-        //   src={Image.goals}
+          src={IMAGES.feature}
           alt="feature"
         />
         <div id="feature-card">
@@ -46,4 +47,4 @@ const Feature = () => {
   );
 };
 
-export default Feature;
+export default AppFeature;

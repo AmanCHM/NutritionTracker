@@ -1,9 +1,9 @@
 import React from "react";
-import "./AboutUs.css";
+import "./About.css";
 // import Footer from "../Page-Components/Footer";
 // import Navbar from "../Page-Components/Navbar";
 
-const AboutUs: React.FC = () => {
+const About: React.FC = () => {
   return (
     <div className="about-us">
       {/* <Navbar /> */}
@@ -60,4 +60,4 @@ const AboutUs: React.FC = () => {
   );
 };
 
-export default AboutUs;
+export default About;

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css";
-// import Modal from "react-modal";
-// import { loggedin, loggedout } from "../../Redux/logSlice";
 import { RiAccountCircleFill } from "react-icons/ri";
-// import LogoutModal from "../Modals/LogoutModal";
 import { toast } from "react-toastify";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../Store";
@@ -21,17 +18,6 @@ const Navbar: React.FC = () => {
   const islogged = useSelector((state: RootState) => state.Auth.logged);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string | undefined>();
-
-  // const customStyles: Modal.Styles = {
-  //   content: {
-  //     top: "50%",
-  //     left: "50%",
-  //     right: "auto",
-  //     bottom: "auto",
-  //     marginRight: "-50%",
-  //     transform: "translate(-50%, -50%)",
-  //   },
-  // };
 
   useEffect(() => {
     if (islogged) {

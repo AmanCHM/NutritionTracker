@@ -1,21 +1,24 @@
 import React, { useState } from "react";
-import "./LandingPage.css";
+import "./Home.css";
 
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { resetGoal } from "../../../Store/Nutrition";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { RootState } from "../../../Store";
+import { IMAGES } from "../../../Shared";
+import Feature from "./components/AppFeature/AppFeature";
+import AppFeature from "./components/AppFeature/AppFeature";
+import AppOverview from "./components/AppOverview/AppOverview";
+import AIFeature from "./components/AIFeature/AIFeature";
+import Footer from "../../../Components/Layouts/Public/Footer";
 
 
-interface RootState {
-    loaderReducer: {
-      loading: boolean;
-    };
-  }
+
 
 const Home = () => {
-  const islogged =  useSelector((state: RootState) => state.loaderReducer.loading);
+  const islogged =  useSelector((state: RootState) => state.Auth.logged);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -55,23 +58,23 @@ const Home = () => {
               </button>
             )}
           </div>
-          {/* <div>
+          <div>
             <img
               id="front-image"
             
               src={
-               Image.mobile
+               IMAGES.mobile
               }
               alt=""
             />
-          </div> */}
+          </div>
         </section>
       </div>
 
-      {/* <Feature />
-      <Overview />
+       <AppFeature />
+      <AppOverview/>
       <AIFeature />
-      <Footer /> */}
+      {/* <Footer />   */}
     </>
   );
 };

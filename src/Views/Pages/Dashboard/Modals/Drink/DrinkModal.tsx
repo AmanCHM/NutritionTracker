@@ -36,8 +36,7 @@ interface FormValues {
 const DrinkModal: React.FC<DrinkModalProps> = ({
   setShowDrinkModal,
   onDataUpdated,
-  // editDataModal,
-  // editToggle,
+
 }) => {
   const dispatch = useDispatch();
 

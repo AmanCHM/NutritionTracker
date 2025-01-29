@@ -27,6 +27,9 @@ import "./Reports.css";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../../Utils/firebase";
 import { initializeApp } from "firebase/app";
+import { RootState } from "../../../Store";
+import { IMAGES } from "../../../Shared";
+import Table from "../../../Components/Shared/Table";
 
 // Define interfaces for data
 interface LogData {
@@ -36,18 +39,12 @@ interface LogData {
   Dinner?: { calories: number }[];
 }
 
-interface WeeklyData {
-  calories: number[];
-  proteins: number[];
-  carbs: number[];
-  fats: number[];
-}
-
-interface RootState {
-  loaderReducer: {
-    loading: boolean;
-  };
-}
+// interface WeeklyData {
+//   calories: number[];
+//   proteins: number[];
+//   carbs: number[];
+//   fats: number[];
+// }
 
 const Reports: React.FC = () => {
   const navigate = useNavigate();
@@ -56,19 +53,19 @@ const Reports: React.FC = () => {
   const [selectDate, setSelectDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
-  const [weeklyData, setWeeklyData] = useState<WeeklyData>({
-    calories: [],
-    proteins: [],
-    carbs: [],
-    fats: [],
-  });
+  // const [weeklyData, setWeeklyData] = useState<WeeklyData>({
+  //   calories: [],
+  //   proteins: [],
+  //   carbs: [],
+  //   fats: [],
+  // });
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  // const app = initializeApp(firebaseConfig);
+  // const auth = getAuth(app);
+  // const db = getFirestore(app);
 
   // Loader from Redux
-  const loader = useSelector((state: RootState) => state.loaderReducer.loading);
+  const loader = useSelector((state: RootState) => state.Loader.loading);
 
   // Fetch User Data from Firestore
   const handleGetData = async (user: User | null) => {
@@ -148,7 +145,7 @@ const Reports: React.FC = () => {
     <>
       <div
         className="select-date"
-        //   style={{ backgroundImage: `url(${Image.bgSelectDate})` }}
+          style={{ backgroundImage: `url(${IMAGES.bgSelectDate})` }}
       >
         <h3 className="selectDate-header">Select Date</h3>
         <input
@@ -161,10 +158,10 @@ const Reports: React.FC = () => {
         <br />
       </div>
 
-      {/* <Table
+      <Table
       logData={logData}
       showFeature={false}
-      /> */}
+      />
 
       {/* <div className="reports-data"> */}
 
