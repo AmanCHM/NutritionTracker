@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { hideLoader, showLoader } from "../../../../../Store/Loader";
 import { auth, db } from "../../../../../Utils/firebase";
 import CustomSelect from "../../../../../Components/Shared/CustomSelect/CustomSelect";
+import { Throttle } from "../../../../../Helpers/function";
 
 
 interface ImageSearchProps {
@@ -128,7 +129,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     }
   };
 
-  const throttledHandleSaveData = useThrottle((e: React.FormEvent) => {           //call throttle form helper function 
+  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {           //call throttle form helper function 
     handleSaveData(e);
   }, 1000);
 

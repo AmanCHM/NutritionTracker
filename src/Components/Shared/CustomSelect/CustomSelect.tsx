@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface OptionType {
-  value: string ; 
+  value: string |number ; 
   label: string;
   key?: string;
 }
@@ -33,7 +33,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       <label htmlFor={name}>{label}</label>
       <select
         name={name}
-        value={value?.value || ""} 
+        value={value?.label || ""} 
         onChange={(e) => {
           const selectedValue = e.target.value;
           const selectedOption = options.find((opt) => opt.value === selectedValue);

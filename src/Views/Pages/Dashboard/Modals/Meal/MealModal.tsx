@@ -1,12 +1,13 @@
-import React, { useState, ChangeEvent, FocusEvent, FormEvent } from "react";
-import CustomSelect, { OptionType } from "../../../../../Components/Shared/CustomSelect/CustomSelect";
+import React, { useState, ChangeEvent, FocusEvent, FormEvent, useMemo } from "react";
+import CustomSelect, {
+  OptionType,
+} from "../../../../../Components/Shared/CustomSelect/CustomSelect";
 import { SelectedFoodData } from "../../Dashboard";
 
 interface Measure {
-  serving_weight: string;
+  serving_weight: number;
   measure: string;
 }
-
 
 interface SelectItem {
   label: string;
@@ -16,12 +17,13 @@ interface MealModalProps {
   setModal: (modal: boolean) => void;
   quantity: number;
   setQuantity: (quantity: number) => void;
-  selectquantity:   string| number;
-  setSelectquantity: (selectquantity: string | number) => void;
+  selectquantity: number;
+  setSelectquantity: (selectquantity: number) => void;
   selectedFoodData: SelectedFoodData;
   setSelectCategory: (category: string) => void;
-  calculateCalories:  number | string;
-  handleModalData: (selectquantity: number | null,
+  calculateCalories: number | string;
+  handleModalData: (
+    selectquantity: number | null,
     selectCategory: string | null,
     quantity: number | null,
     selectItem: SelectItem,
@@ -32,18 +34,11 @@ interface MealModalProps {
     altMeasure: string,
     handleGetData: (user: any) => Promise<void>,
     setModal: (value: boolean) => void,
-    setSelectCategory: () => void) => void;
+    setSelectCategory: () => void
+  ) => void;
   selectCategory: string;
   setAltMeasure: (measure: string) => void;
 }
-
-interface SliceOption {
-  value: number;
-  label: string;
-  key: string;
-}
-
-
 
 interface Food {
   alt_measures: Measure[];
@@ -67,23 +62,15 @@ const MealModal: React.FC<MealModalProps> = ({
   selectCategory,
   setAltMeasure,
 }) => {
-  const sliceOptions   = selectedFoodData?.foods.flatMap((food, foodIndex) =>
-    food.alt_measures.map((measure, index) => ({
-      value: measure.serving_weight,
-      label: measure.measure,
-      key: `${foodIndex}-${index}`,
-    }))
-  );
+  const sliceOptions =
+    selectedFoodData?.foods.flatMap((food, foodIndex) =>
+      food.alt_measures.map((measure, index) => ({
+        value: measure.serving_weight,
+        label: measure.measure,
+        key: `${foodIndex}-${index}`,
+      }))
+    ) || [];
 
-
-  const  selectedOption  = selectquantity
-  ? {
-      value: selectquantity,
-      label: selectedFoodData?.foods
-        .flatMap((food) => food.alt_measures)
-        .find((measure) => measure.serving_weight === selectquantity)?.measure || "",
-    }
-  : null;
   const mealOptions = [
     { value: "Breakfast", label: "Breakfast" },
     { value: "Lunch", label: "Lunch" },
@@ -91,6 +78,8 @@ const MealModal: React.FC<MealModalProps> = ({
     { value: "Dinner", label: "Dinner" },
   ];
 
+
+  // const  memo = useMemo(() => {selectquantity}, [selectquantity]);
   // Fetch image
   const image =
     selectedFoodData?.foods.length > 0
@@ -99,7 +88,7 @@ const MealModal: React.FC<MealModalProps> = ({
 
   const [errors, setErrors] = useState<{
     quantity: string;
-    selectquantity: string ;
+    selectquantity: string;
     selectCategory: string;
   }>({
     quantity: "",
@@ -116,9 +105,9 @@ const MealModal: React.FC<MealModalProps> = ({
   };
 
   // Validate Select Quantity
-  const validateSelectQuantity = (value: string | null): string => {
-    if (!value) {
-      return "Please select a quantity.";
+  const validateSelectQuantity = (value: number): string => {
+    if (!value || value <= 0) {
+      return "Please select serving size.";
     }
     return "";
   };
@@ -137,10 +126,10 @@ const MealModal: React.FC<MealModalProps> = ({
 
     // Trigger validation on blur
     if (name === "quantity") {
-      newErrors.quantity = validateQuantity(Number(value));
+      newErrors.quantity = validateQuantity(quantity);
     }
     if (name === "selectquantity") {
-      newErrors.selectquantity = validateSelectQuantity(value);
+      newErrors.selectquantity = validateSelectQuantity(selectquantity);
     }
     if (name === "selectCategory") {
       newErrors.selectCategory = validateMealCategory(value);
@@ -155,7 +144,7 @@ const MealModal: React.FC<MealModalProps> = ({
 
     const newErrors = {
       quantity: validateQuantity(quantity),
-      selectquantity: validateSelectQuantity(selectquantity as string),
+      selectquantity: validateSelectQuantity(selectquantity),
       selectCategory: validateMealCategory(selectCategory),
     };
 
@@ -166,6 +155,8 @@ const MealModal: React.FC<MealModalProps> = ({
     }
   };
 
+  console.log(selectquantity);
+  // console.log(selectedOption);
   return (
     <>
       <div>
@@ -214,17 +205,41 @@ const MealModal: React.FC<MealModalProps> = ({
             placeholder="Choose a meal"
             options={sliceOptions}
             value={
-             selectedOption
+              selectquantity
+                ? {
+                    value: selectquantity,
+                    label:
+                      selectedFoodData?.foods
+                        .flatMap((food) => food.alt_measures)
+                        .find((measure) => measure.serving_weight === selectquantity)
+                        ?.measure || "No label",
+                  }
+                : null
             }
+            
             onChange={(selectedOption) => {
+              console.log("selectedOption:", selectedOption);
+              if (!selectedOption) {
+                setSelectquantity(1);
+                setAltMeasure('');
+                return;
+              }
+            
+              const selectedValue = selectedOption.value;
+              console.log("selectedValue:", selectedValue);
+            
               const selectedMeasure = selectedFoodData?.foods
                 .flatMap((food) => food.alt_measures)
-                .find(
-                  (measure) => (measure.serving_weight === selectedOption?.value)
-                );
-              setSelectquantity(selectedOption?.value  || 0);
+                .find((measure) => measure.serving_weight === selectedValue);
+            
+              console.log("Selected Measure:", selectedMeasure);
+            
+              setSelectquantity(selectedValue);
               setAltMeasure(selectedMeasure?.measure || '');
             }}
+            
+            
+            
           />
           {errors.selectquantity && (
             <div style={{ color: "red" }}>{errors.selectquantity}</div>
@@ -239,7 +254,7 @@ const MealModal: React.FC<MealModalProps> = ({
             null
           }
           onChange={(selectedOption) =>
-            setSelectCategory(selectedOption?.value || '' )
+            setSelectCategory(selectedOption?.value || "")
           }
           // onBlur={handleBlur}
         />
@@ -259,3 +274,20 @@ const MealModal: React.FC<MealModalProps> = ({
 };
 
 export default MealModal;
+
+
+
+
+  // const foodOptions =
+  //   selectedFoodData?.foods
+  //     .flatMap((food) => food.alt_measures)
+  //     .map((measure) => ({
+  //       value: measure.serving_weight,
+  //       label: measure.measure,
+  //     })) || [];
+
+  // console.log("foodoptions", foodOptions);
+
+  // const selectedOption =
+  //   foodOptions.find((option) => option.value === selectquantity) || null;
+

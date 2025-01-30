@@ -94,3 +94,11 @@ const WILDCARD_ROUTES = {
   }
 
   export  const COLSPAN_VALUE = 6;
+
+
+  export const  MEALTYPE ={
+    BREAKFAST:'Breakfast',
+    LUNCH:'Lunch',
+    DINNER:'Dinner',
+    SNACK:'Snack'
+  }

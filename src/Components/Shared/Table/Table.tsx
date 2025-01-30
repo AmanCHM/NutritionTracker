@@ -1,17 +1,13 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import {  FoodDetail, LogData, MealItem } from "../../../Views/Pages/Dashboard/Dashboard";
-import { COLSPAN_VALUE } from "../../../Shared/Constants";
+import { COLSPAN_VALUE, MEALTYPE } from "../../../Shared/Constants";
 
   interface TableProps {
     logData: LogData;
     handleNutritionModal: (foodDetail: FoodDetail) => void;
 
-    handleEditLog: ( meal: keyof LogData,
-      name: string,
-      id: number | string,
-      // logData: LogData,
-    ) => void;
+    handleEditLog: ( meal: keyof LogData, name: string,id: number | string) => void;
 
     handleDeleteLog: (meal: string, id: string) => void;
     showFeature: boolean;
@@ -89,7 +85,7 @@ const Table: React.FC<TableProps> = ({
                               </span>
                               <span
                                 onClick={() =>
-                                  handleEditLog("Breakfast", item.name, item.id)
+                                  handleEditLog('Breakfast', item.name, item.id)
                                 }
                                 className="icon-button edit"
                               >

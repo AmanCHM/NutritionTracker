@@ -14,25 +14,27 @@ interface EditDataModalProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   quantity: number;
   setQuantity: React.Dispatch<React.SetStateAction<number>>;
-  selectquantity: number | string;
+  selectquantity: number ;
   setSelectquantity: React.Dispatch<React.SetStateAction<number | string>>;
   selectedFoodData: SelectedFoodData;
   selectCategory: string;
   setSelectCategory: React.Dispatch<React.SetStateAction<string>>;
   calculateCalories: number | string;
-  handleEditModalData: (selectedFoodData: FoodData | null,
-    calculateCalories: number,
-    protein: number,
-    carbs: number,
-    fats: number,
-    altMeasure: string,
-    selectquantity: number,
-    editMealName: keyof LogData,
-    selectedId: number |string,
-    selectCategory: string,
-    setLogdata: (data: LogData) => void,
+  handleEditModalData: (
+    // selectedFoodData: FoodData | null,
+    // calculateCalories: number,
+    // protein: number,
+    // carbs: number,
+    // fats: number,
+    // altMeasure: string,
+    // selectquantity: number,
+    // editMealName: keyof LogData,
+    // selectedId: number |string,
+    // selectCategory: string,
+    // setLogdata: (data: LogData) => void,
     setEditModal: (value: boolean) => void,
-    setSelectCategory: () => void) => void;
+    // setSelectCategory: () => void) 
+   ) => void;
   mealName: string |undefined;
 }
 
@@ -126,13 +128,15 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
       label: measure.measure,
       key: `${foodIndex}-${index}`,
     }))
-  );
+  ) || [];
   useEffect(() => {
     if (mealName) {
       setSelectCategory(mealName);
     }
   }, [mealName, setSelectCategory]);
 
+
+  ;
   return (
     <>
       <div>
@@ -174,9 +178,12 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
                       .flatMap((food) => food.alt_measures)
                       .find((measure) => measure.serving_weight === selectquantity)?.measure,
                   }
-                : 0 
+                : 0
             }
-            onChange={(selectedOption) => setSelectquantity(selectedOption?.value || '' )}
+            onChange={(selectedOption) => setSelectquantity(selectedOption?.value || '' )
+
+            
+            }
             onBlur={handleBlur}
           />
           {errors.selectquantity && <div style={{ color: "red" }}>{errors.selectquantity}</div>}
