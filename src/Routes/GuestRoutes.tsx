@@ -2,7 +2,7 @@ import { ROUTES_CONFIG } from "../Shared/Constants";
 import Login from "../Views/Auth/Login";
 import ResetPassword from "../Views/Auth/ResetPassword";
 import SignUp from "../Views/Auth/SignUp";
-import Home from "../Views/Pages/Home/Home";
+import Home from "../Views/Home/Home";
 import { CustomRouter } from "./RootRoutes";
 import React from "react";
 

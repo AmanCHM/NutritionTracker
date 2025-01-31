@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
  // Import RootState type
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
+import { ROUTES_CONFIG } from "../../Shared/Constants";
 
 
 // Define types for Redux state slices
@@ -85,7 +86,7 @@ const ShowCalorie: React.FC = () => {
         </div>
 
         <div style={{ marginTop: "20px", marginLeft: "5%" }}>
-          <button onClick={() => navigate('/input-workout')}>Back</button>
+          <button onClick={() => navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}>Back</button>
           <button
             type="submit"
             style={{

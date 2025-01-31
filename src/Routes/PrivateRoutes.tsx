@@ -3,13 +3,13 @@ import { ROUTES_CONFIG, WILDCARD_ROUTES } from '../Shared/Constants';
 import { CustomRouter } from './RootRoutes';
 import { Navigate } from 'react-router-dom';
 import React from 'react';
-import Dashboard from '../Views/Pages/Dashboard';
-import About from '../Views/Pages/About';
-import CalorieCalculator from '../Views/Pages/CalorieCalculator';
+import Dashboard from '../Views/Dashboard';
+import About from '../Views/About';
+import CalorieCalculator from '../Views/CalorieCalculator';
 
-import Home from '../Views/Pages/Home';
-import Reports from '../Views/Pages/Reports';
-import Contact from '../Views/Pages/Contact';
+import Home from '../Views/Home';
+import Reports from '../Views/Reports';
+import Contact from '../Views/Contact';
 
 
 

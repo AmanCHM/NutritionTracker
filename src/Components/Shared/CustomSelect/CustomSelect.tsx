@@ -1,21 +1,22 @@
-import React from 'react';
+import React from "react";
+import Select from "react-select";
 
 export interface OptionType {
-  value: string |number ; 
+  value: string |number ;
   label: string;
-  key?: string;
 }
 
 interface CustomSelectProps {
   options: OptionType[];
-  value: OptionType | null; 
+  value: OptionType | null;
   onChange: (selected: OptionType | null) => void;
-  onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => void;
   label?: string;
-  name ?: string;
-  placeholder?: string; 
-  error ?:string;
+  name?: string;
+  placeholder?: string;
+  error?: string;
   className?: string;
+  id?: string
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -25,33 +26,24 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   value,
   onChange,
   onBlur,
+  placeholder = "Select an option",
   error,
   className,
 }) => {
   return (
     <div className={className}>
-      <label htmlFor={name}>{label}</label>
-      <select
-        name={name}
-        value={value?.label || ""} 
-        onChange={(e) => {
-          const selectedValue = e.target.value;
-          const selectedOption = options.find((opt) => opt.value === selectedValue);
-          onChange(selectedOption || null); 
-        }}
-        onBlur={onBlur}
+      {label && <label htmlFor={name} className="block font-semibold">{label}</label>}
+      <Select
         id={name}
-        className="custom-select"
-       
-      >
-        <option value="">Select an option</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {error && <div className="error">{error}</div>}
+        name={name}
+        options={options}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        className="mt-1"
+      />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 };

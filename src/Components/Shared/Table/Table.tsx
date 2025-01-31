@@ -1,10 +1,10 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import {  FoodDetail, LogData, MealItem } from "../../../Views/Pages/Dashboard/Dashboard";
+import {  FoodDetail, LogData, MealItem } from "../../../Views/Dashboard/Dashboard";
 import { COLSPAN_VALUE, MEALTYPE } from "../../../Shared/Constants";
 
   interface TableProps {
-    logData: LogData;
+    logData: LogData | undefined;
     handleNutritionModal: (foodDetail: FoodDetail) => void;
 
     handleEditLog: ( meal: keyof LogData, name: string,id: number | string) => void;

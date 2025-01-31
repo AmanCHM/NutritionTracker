@@ -8,6 +8,8 @@ import { RootState } from "../../../../Store";
 import { auth } from "../../../../Utils/firebase";
 import { loggedout } from "../../../../Store/Auth";
 import { ROUTES_CONFIG } from "../../../../Shared/Constants";
+import CustomModal from "../../../Shared/CustomModal/CustomModal";
+import LogoutModal from "./Modal/LogoutModal";
 
 
 const Navbar: React.FC = () => {
@@ -106,16 +108,15 @@ const Navbar: React.FC = () => {
           )}
         </div>
 
-        {/* <Modal isOpen={isModalOpen} style={customStyles}>
-          <LogoutModal
-            onClose={() => setIsModalOpen(false)}
-            onConfirm={() => {
-              handleLogout();
-              setIsModalOpen(false);
-              toast.success("Logged out successfully");
-            }}
-          />
-        </Modal> */}
+        <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <LogoutModal
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={() => {
+            handleLogout();
+            setIsModalOpen(false);
+          }}
+        />
+      </CustomModal>
       </nav>
     </div>
   );

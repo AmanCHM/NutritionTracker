@@ -3,14 +3,14 @@ import { Navigate } from 'react-router-dom';
 
 import { CustomRouter } from './RootRoutes';
 import { ROUTES_CONFIG, WILDCARD_ROUTES } from '../Shared/Constants';
-import Home from '../Views/Pages/Home/Home';
+import Home from '../Views/Home/Home';
 
 
 import Login from '../Views/Auth/Login';
 import SignUp from '../Views/Auth/SignUp';
 import ResetPassword from '../Views/Auth/ResetPassword';
-import About from '../Views/Pages/About';
-import Contact from '../Views/Pages/Contact';
+import About from '../Views/About';
+import Contact from '../Views/Contact';
 import UserInfo from '../Views/Calorie-recommendation/StepOne/UserInfo';
 
 export const PUBLIC_ROUTES: Array<CustomRouter> = [

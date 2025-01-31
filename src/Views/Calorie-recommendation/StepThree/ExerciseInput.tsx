@@ -113,7 +113,7 @@ const Exercise: React.FC = () => {
               <CustomSelect
                 options={activityOptions}
                 value={activityOptions.find((option) => option.value === activity ) || null}
-                onChange={(selectedOption) => setActivity(selectedOption?.value || "")}
+                onChange={(selectedOption) => setActivity(selectedOption?.value as string)}
                 placeholder="Select an Option"
               />
             </div>
