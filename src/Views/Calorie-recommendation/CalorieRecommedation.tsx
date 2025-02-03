@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
 import { ROUTES_CONFIG } from "../../Shared/Constants";
+import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
 
 
 // Define types for Redux state slices
@@ -15,7 +16,7 @@ interface CalorieGoalState {
   weightDifference: number;
 }
 
-const ShowCalorie: React.FC = () => {
+const CalorieRecommendation: React.FC = () => {
   const calories = useSelector((state: RootState) => state.Nutrition.requiredCalorie);
   const goal = useSelector((state: RootState) => state.Nutrition.goal);
   const username = useSelector((state: RootState) => state.Nutrition.userName);
@@ -85,24 +86,44 @@ const ShowCalorie: React.FC = () => {
           </ul>
         </div>
 
-        <div style={{ marginTop: "20px", marginLeft: "5%" }}>
-          <button onClick={() => navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}>Back</button>
-          <button
-            type="submit"
+        {/* <div style={{ marginTop: "20px", marginLeft: "5%" }}> */}
+          {/* <button onClick={() => navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}>Back</button> */}
+
+
+
+          <div
             style={{
-              color: "white",
               marginTop: "20px",
-              marginLeft: "35%",
+              display: "flex",
+              justifyContent: "space-between",
             }}
-            onClick={() => navigate("../signup")}
-          >
-            Create Your Account
-          </button>
+            >
+            {/* <button onClick={() =>  navigate(ROUTES_CONFIG.USER_INFO.path)}>Back</button> */}
+
+
+            <CustomButton
+            type="submit"
+            size={"medium"}
+            onClick={() =>  navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}
+            label={"Back"}
+             >
+            </CustomButton>
+           
+            <CustomButton
+            type="submit"
+            style={{ marginLeft: "20" }}
+            size={"medium"}
+            onClick={() =>  navigate(ROUTES_CONFIG.REGISTER.path)}
+            label={"Create Your Account"}
+             >
+            
+             </CustomButton>
+          </div>
         </div>
-      </div>
+      {/* </div> */}
 
     </>
   );
 };
 
-export default ShowCalorie;
+export default CalorieRecommendation;

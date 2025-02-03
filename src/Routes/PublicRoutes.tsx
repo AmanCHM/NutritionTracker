@@ -12,6 +12,9 @@ import ResetPassword from '../Views/Auth/ResetPassword';
 import About from '../Views/About';
 import Contact from '../Views/Contact';
 import UserInfo from '../Views/Calorie-recommendation/StepOne/UserInfo';
+import CalorieRecommendation from '../Views/Calorie-recommendation/CalorieRecommedation';
+import ExerciseInput from '../Views/Calorie-recommendation/StepThree/ExerciseInput';
+import WeightInput from '../Views/Calorie-recommendation/StepTwo/WeightInput';
 
 export const PUBLIC_ROUTES: Array<CustomRouter> = [
   {
@@ -49,6 +52,21 @@ export const PUBLIC_ROUTES: Array<CustomRouter> = [
     path: `${ROUTES_CONFIG.USER_INFO.path}`,
     title: ROUTES_CONFIG.USER_INFO.title,
     element: <UserInfo />,
+  },
+  {
+    path: `${ROUTES_CONFIG.INPUT_WEIGHT.path}`,
+    title: ROUTES_CONFIG.INPUT_WEIGHT.title,
+    element: <WeightInput/>,
+  },
+  {
+    path: `${ROUTES_CONFIG.INPUT_WORKOUT.path}`,
+    title: ROUTES_CONFIG.INPUT_WORKOUT.title,
+    element: < ExerciseInput/>,
+  },
+  {
+    path: `${ROUTES_CONFIG.CALORIE_NEED.path}`,
+    title: ROUTES_CONFIG.CALORIE_NEED.title,
+    element: <CalorieRecommendation />,
   },
   {
     path: '*',

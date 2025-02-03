@@ -14,9 +14,9 @@ import { ToastContainer } from "react-toastify";
 import RootRouter from "./Routes/RouteRouter";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./Components/Layouts/Public/ErrorFallback/ErrorFallback";
-// import { Loader } from "rsuite";
+import Loader from "./Components/Loader";
 
-// const baseName = import.meta.env.VITE_BASE_NAME;
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(<Route path="*" element={<RootRouter />} />)
@@ -30,7 +30,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
-            {/* <Loader /> */}
+            <Loader />
             <HelmetProvider>
               <ToastContainer limit={3} />
               <RouterProvider router={router} />

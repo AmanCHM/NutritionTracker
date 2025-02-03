@@ -37,12 +37,12 @@ const Login: React.FC = () => {
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
     formik.setValues({ email: "", password: "" });
-    // dispatch(showLoader());
+    dispatch(showLoader());
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // dispatch(loggedin());
+      dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
       toast.success("Google Logged in successful");
     } catch (error: any) {
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
       toast.error("Google Login failed");
       console.error(errorCode, errorMessage);
     } finally {
-      // dispatch(hideLoader());
+      dispatch(hideLoader());
     }
   };
 
@@ -89,11 +89,11 @@ const Login: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
+      
 
       <div className="login-page">
         <div className="login-container">
-          <h2 className="login-title">Log-in Form</h2>
+          <h2 className="login-title">Log-in </h2>
           <form className="login-form" onSubmit={formik.handleSubmit}>
             <label className="login-label" htmlFor="email">
               Email Address
@@ -147,8 +147,8 @@ const Login: React.FC = () => {
             </button>
 
             <p className="login-footer">
-              Forgot password?{" "}
-              <Link className="login-link" to="/reset">
+              Forget your password?{" "}
+              <Link className="login-link" to={ROUTES_CONFIG.RESET_PASSWORD.path}>
                 Reset-Password
               </Link>
             </p>

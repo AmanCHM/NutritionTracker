@@ -10,6 +10,7 @@ import { RootState } from "../../../Store";
 import { updateGoal } from "../../../Store/Nutrition";
 import CustomSelect from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
 
 
 // Define form values type
@@ -19,7 +20,7 @@ interface WeightFormValues {
   targetWeight: number;
 }
 
-const WeightTracker: React.FC = () => {
+const WeightInput: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,8 +46,8 @@ const WeightTracker: React.FC = () => {
   const formik = useFormik<WeightFormValues>({
     initialValues: {
       goal: goalOption || "",
-      currentWeight: currentWeight || 0,
-      targetWeight: targetWeightRedux || 0,
+      currentWeight: currentWeight ,
+      targetWeight: targetWeightRedux ,
     },
     validationSchema: Yup.object({
       goal: Yup.string().required("Please select a goal."),
@@ -97,14 +98,19 @@ const WeightTracker: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <h3 className="text-center mt-3 text-gray-600 text-2xl">
+      <h3
+        style={{
+          fontSize: "2.3rem",
+          color: "#737373",
+          textAlign: "center",
+          marginTop: "3%",
+        }}
+      >
         Thanks! Now for your goals.
       </h3>
-      <h3 className="text-center text-gray-500">
+      <h3 style={{ textAlign: "center", color: "#627373" }}>
         Select your goal and provide your target weights.
       </h3>
-      
       <div className="calorie-container">
         <form onSubmit={formik.handleSubmit}>
           {/* Goal Selection */}
@@ -130,7 +136,7 @@ const WeightTracker: React.FC = () => {
               type="number"
               id="currentWeight"
               min="1"
-              value={formik.values.currentWeight}
+              value={formik.values.currentWeight || ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               placeholder="Enter your current weight"
@@ -147,36 +153,50 @@ const WeightTracker: React.FC = () => {
               type="number"
               id="targetWeight"
               min="1"
-              value={formik.values.targetWeight}
+              value={formik.values.targetWeight || ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               placeholder="Enter your target weight"
-              disabled={formik.values.goal === "Maintain Weight"} // Disable if maintaining
+              disabled={formik.values.goal === "Maintain Weight"}
             />
             {formik.touched.targetWeight && formik.errors.targetWeight && (
               <p className="error-message">{formik.errors.targetWeight}</p>
             )}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="form-buttons">
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => navigate("/userinfo")}
+          {/* Buttons */}
+          <div
+            style={{
+              marginTop: "20px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
             >
-              Back
-            </button>
-            <button type="submit" className="btn-primary">
-              Next
-            </button>
+            {/* <button onClick={() =>  navigate(ROUTES_CONFIG.USER_INFO.path)}>Back</button> */}
+
+
+            <CustomButton
+            type="submit"
+            size={"medium"}
+            onClick={() =>  navigate(ROUTES_CONFIG.USER_INFO.path)}
+            label={"Back"}
+             >
+            </CustomButton>
+           
+            <CustomButton
+            type="submit"
+            style={{ marginLeft: "60%" }}
+            size={"medium"}
+          
+            label={"Next"}
+             >
+            
+             </CustomButton>
           </div>
         </form>
       </div>
-
-      {/* <Footer /> */}
     </>
   );
 };
 
-export default WeightTracker;
+export default WeightInput;

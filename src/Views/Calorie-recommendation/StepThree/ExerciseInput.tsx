@@ -9,6 +9,8 @@ import { RootState } from "../../../Store";
 import { openCalorieModal, setActivityLevel, setRequiredCalorie } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import { Formik } from "formik";
 
 // Define Activity Option Type
 // interface ActivityOption {
@@ -16,7 +18,7 @@ import { ROUTES_CONFIG } from "../../../Shared/Constants";
 //   label: string;
 // }
 
-const Exercise: React.FC = () => {
+const ExerciseInput: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -95,48 +97,62 @@ const Exercise: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <div style={{ height: "430px" }}>
-        <h3 className="text-center text-gray-600 text-2xl mt-5">
+       <div style={{ height: "430px" }}>
+        <h3
+          style={{
+            fontSize: "2.3rem",
+            color: "#737373",
+            textAlign: "center",
+            marginTop: "5%",
+          }}
+        >
           What is your baseline activity level?
         </h3>
-        <h3 className="text-center text-gray-500">
-          Not including workouts – we count that separately.
+        <h3 style={{ textAlign: "center", color: "#627373" }}>
+          Not including workouts–we count that separately
         </h3>
 
         <div className="calorie-container">
           <form onSubmit={handleSubmit}>
             <div className="input-group">
-              <label htmlFor="activity" className="text-lg">
+              <label htmlFor="activity" style={{ fontSize: "1.2rem" }}>
                 Select Activity
               </label>
-              <CustomSelect
+               <CustomSelect
                 options={activityOptions}
                 value={activityOptions.find((option) => option.value === activity ) || null}
                 onChange={(selectedOption) => setActivity(selectedOption?.value as string)}
                 placeholder="Select an Option"
               />
             </div>
+            <div style={{ marginTop: "20px", marginLeft: "5%" }}>
 
-            {/* Navigation Buttons */}
-            <div className="form-buttons mt-5">
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={() => navigate("/input-weight")}
-              >
-                Back
-              </button>
-              <button type="submit" className="btn-primary ml-10">
-                Next
-              </button>
+        
+              <CustomButton
+            type="submit"
+            size={"medium"}
+            onClick={()=>  navigate(ROUTES_CONFIG.INPUT_WEIGHT.path)}
+            label={"Back"}
+          >
+    
+          </CustomButton>
+
+              <CustomButton
+            type="submit"
+            style={{ marginLeft: "60%" }}
+            size={"medium"}
+          
+            label={"Next"}
+          >
+            
+          </CustomButton>
+
             </div>
           </form>
         </div>
       </div>
-      {/* <Footer /> */}
     </>
   );
 };
 
-export default Exercise;
+export default ExerciseInput;

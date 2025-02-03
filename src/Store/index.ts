@@ -22,7 +22,7 @@ import { userApi } from '../Services/Api/module/foodApi';
 const rootPersistConfig = {
   key: 'root',
   storage,
-  whitelist: ['common'],
+  whitelist: ['Auth'],
 };
 const reducers = combineReducers({
      Loader,

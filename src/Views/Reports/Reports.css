@@ -25,12 +25,12 @@ body {
   .date-input{
     display: block;
     width: 25%;
-    height: 5%;
+    height: 4%;
     margin-top: 20px;
     margin-left: 37vw;
     padding: 30px;
     border: 1px solid #ccc;
-    border-radius: 30px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: larger;
   }

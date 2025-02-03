@@ -39,7 +39,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { IMAGES } from "../../Shared";
 import { isArray } from "lodash";
 import DrinkModal from "./Modals/Drink/DrinkModal";
-import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
+
 import CustomModal from "../../Components/Shared/CustomModal/CustomModal";
 import ImageSearch from "./Modals/ImageSearch/ImageSearch";
 import MealModal from "./Modals/Meal/MealModal";
@@ -51,6 +51,9 @@ import UpdateDrinkPage from "./Modals/UpdateDrinkPage/UpdateDrinkPage";
 import DrinkProgress from "./Components/DrinkProgress/DrinkProgress";
 import { RootState } from "../../Store";
 import MealProgress from "./Components/MealProgress/MealProgress";
+import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
+import { setSignout } from "../../Store/Auth";
+// import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -177,22 +180,18 @@ interface ValidDailyCalorie {
   calorie: number | null;
 }
 
+interface SelectItem {
+  label: string;
+}
 const Dashboard = () => {
   const [inputValue, setInputValue] = useState<string | null>(null);
-  const [selectItem, setSelectItem] = useState<string | string[] | undefined>(
-    undefined
-  );
+  const [selectItem, setSelectItem] = useState<SelectItem[] | undefined>(undefined);
   const [modal, setModal] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(1);
   const [selectquantity, setSelectquantity] = useState<number>(1);
   const [selectCategory, setSelectCategory] = useState<string>("");
   const [logData, setLogdata] = useState<LogData | undefined>(undefined);
-
-  const [dailyCalorie, setDailyCalorie] = useState<{
-    calorie: number | null;
-  } | null>(null);
-
   const [editModal, setEditModal] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | string | undefined>(
     undefined
@@ -213,17 +212,16 @@ const Dashboard = () => {
   const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
     undefined
   );
+
+  const [dailyCalorie, setDailyCalorie] =useState<number | null>(
+   null
+  );
+
   const [dataUpdated, setDataUpdated] = useState<boolean>(false);
   const [energyModal, setEnergyModal] = useState<boolean>(false);
-  const [requiredWater, setRequiredWater] = useState<{
-    Water: number | null;
-  }>();
-  const [requiredAlcohol, setRequiredAlcohol] = useState<{
-    Alcohol: number | null;
-  }>();
-  const [requiredCaffeine, setRequiredCaffeine] = useState<{
-    Caffeine: number | null;
-  }>();
+  const [requiredWater, setRequiredWater] = useState<number >();
+  const [requiredAlcohol, setRequiredAlcohol] = useState<number | null>();
+  const [requiredCaffeine, setRequiredCaffeine] = useState<number | null>();
   const [updateDrinkName, setUpdateDrinkName] = useState<string>("");
   const [editDrinkModal, setEditDrinkModal] = useState<boolean>(false);
   const [drinkId, setDrinkId] = useState<number | string | undefined>(
@@ -343,14 +341,6 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
-
-  // useEffect(() => {
-  //   console.log("selectquantity updated:", selectquantity);
-  // }, [selectquantity]);
-//   console.log("updated:",(selectquantity));
-//   console.log(selectCategory);
-//  console.log("selectItem",selectItem[0]?.label);
-
  
   // delete meal details  from database
 
@@ -442,7 +432,7 @@ const Dashboard = () => {
       const docRef = doc(db, "users", userId, "dailyLogs", date);
       const getData = (await getDoc(docRef)).data() as LogData;
       console.log(getData);
-      const mealdata = getData[editMealName]?.filter(
+      const mealdata = (getData as Record<string, MealItem[]>)[editMealName]?.filter(
         (meal: MealItem) => meal.id !== selectedId
       );
       await updateDoc(docRef, { [editMealName]: mealdata });
@@ -464,10 +454,10 @@ const Dashboard = () => {
 
   // Set the required meal and drinks details of user
   const dailyRequiredCalorie = async (
-    setRequiredWater: (data: { Water: number }) => void,
-    setRequiredCaffeine: (data: { Caffeine: number }) => void,
-    setRequiredAlcohol: (data: { Alcohol: number }) => void,
-    setDailyCalorie: (data: { calorie: number | null }) => void
+    setRequiredWater: (Water:number) => void,
+    setRequiredCaffeine: (Caffeine:number) => void,
+    setRequiredAlcohol: (Alcohol:number ) => void,
+    setDailyCalorie: (calorie: number |null) => void
   ): Promise<void> => {
     const currentUser = auth.currentUser;
     const userId = currentUser?.uid;
@@ -481,9 +471,9 @@ const Dashboard = () => {
           setRequiredWater(data.water);
           setRequiredCaffeine(data.caffeine);
           setRequiredAlcohol(data.alcohol);
-          setDailyCalorie(data.calorie ?? null);
+          setDailyCalorie(data.calorie);
         } else {
-          setDailyCalorie({ calorie: null });
+          setDailyCalorie(null);
         }
       } catch (error) {
         console.error("Error fetching calorie data:", error);
@@ -491,14 +481,19 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    dailyRequiredCalorie(
-      setRequiredWater,
-      setRequiredCaffeine,
-      setRequiredAlcohol,
-      setDailyCalorie
-    );
-  }, [handleGetData]);
+
+useEffect(() => {
+  dailyRequiredCalorie(
+    setRequiredWater,
+    setRequiredCaffeine,
+    setRequiredAlcohol,
+    setDailyCalorie
+  );
+}, [handleGetData]);
+
+
+console.log("requiredWater",requiredWater);  
+
 
   const calculateNutrient = (
     selectedFoodData: SelectedFoodData,
@@ -604,10 +599,12 @@ const Dashboard = () => {
   const carbsPercent: number = 0.5;
   const fatsPercent: number = 0.25;
 
-  const calculateNutrients = (dailyCalorie: number) => {
-    // Ensure dailyCalorie is not null
-    // const validDailyCalorie = dailyCalorie ?? 0;
+console.log("totalCalories",totalCalories);
+  console.log("dailyCalorie",dailyCalorie);
+  const calculateNutrients = (dailyCalorie:number) => {
+  
 
+    // console.log(dailyCalorie);
     // Calculate calories
     const proteinCalories: number = dailyCalorie * proteinPercent;
     const carbsCalories: number = dailyCalorie * carbsPercent;
@@ -617,6 +614,7 @@ const Dashboard = () => {
     const proteinGrams: number = Math.round(proteinCalories / 4);
     const carbsGrams: number = Math.round(carbsCalories / 4);
     const fatsGrams: number = Math.round(fatsCalories / 9);
+    // console.log("proteinGrams",proteinGrams);
 
     return {
       proteinGrams,
@@ -625,11 +623,12 @@ const Dashboard = () => {
     };
   };
 
+
   // Safely access `dailyCalorie.calorie` with null checks
-  const validDailyCalorie = dailyCalorie?.calorie ?? 0;
+  const validDailyCalorie = dailyCalorie ?? 0;
 
   const { proteinGrams, carbsGrams, fatsGrams } =
-    calculateNutrients(totalCalories);
+    calculateNutrients(dailyCalorie as number);
 
   const requiredCalorie =
     validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
@@ -746,7 +745,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (isSignup === true) {
       setEnergyModal(true);
-      //  dispatch(setSignout())
+       dispatch(setSignout())
     }
   }, []);
 
@@ -785,7 +784,7 @@ const Dashboard = () => {
       const user = auth.currentUser;
       const data: Data = {
         id: Date.now(),
-        name: selectItem[0]?.label,
+        name: selectItem?.[0]?.label ?? '',
         calories: Math.round(calculateCalories as number),
         proteins: Math.round(protein as number),
         carbs: Math.round(carbs as number ),
@@ -901,7 +900,7 @@ const Dashboard = () => {
 
       <MealProgress
         totalCalories={totalCalories}
-        dailyCalorie={dailyCalorie?.calorie }
+        dailyCalorie={dailyCalorie}
         progressPercent={progressPercent}
         totalProtein={totalProtein}
         proteinGrams={proteinGrams}
@@ -1146,11 +1145,11 @@ const Dashboard = () => {
           {/* Water Progress Line Graph   */}
           <DrinkProgress
             totalWater={totalWater || 0}
-            requiredWater={requiredWater?.Water ?? 0}
+            requiredWater={requiredWater  as number}
             totalAlcohol={totalAlcohol || 0}
-            requiredAlcohol={requiredAlcohol?.Alcohol ?? 0}
+            requiredAlcohol={requiredAlcohol as number}
             totalCaffeine={totalCaffeine || 0}
-            requiredCaffeine={requiredCaffeine?.Caffeine ?? 0}
+            requiredCaffeine={requiredCaffeine as number}
           />
         </div>
       </div>

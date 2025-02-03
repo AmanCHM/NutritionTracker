@@ -17,9 +17,9 @@ import Contact from '../Views/Contact';
 // eslint-disable-next-line import/prefer-default-export
 export const PRIVATE_ROUTES: Array<CustomRouter> = [
   {
-    path: `${ROUTES_CONFIG.HOMEPAGE.path}/:page?`,
+    path: ROUTES_CONFIG.DASHBOARD.path,
     element: <Dashboard />,
-    title: ROUTES_CONFIG.HOMEPAGE.title,
+    title: ROUTES_CONFIG.DASHBOARD.title,
   },
   {
     path: ROUTES_CONFIG.ABOUT.path,
@@ -29,17 +29,17 @@ export const PRIVATE_ROUTES: Array<CustomRouter> = [
   {
     path: ROUTES_CONFIG.CALORIE_CALCULATOR.path,
     element: <CalorieCalculator />,
-    title: ROUTES_CONFIG.ABOUT.title,
+    title: ROUTES_CONFIG.CALORIE_CALCULATOR.title,
   },
   {
     path: ROUTES_CONFIG.REPORTS.path,
     element: <Reports />,
-    title: ROUTES_CONFIG.ABOUT.title,
+    title: ROUTES_CONFIG.REPORTS.title,
   },
   {
     path: ROUTES_CONFIG.HOMEPAGE.path,
     element: <Home />,
-    title: ROUTES_CONFIG.ABOUT.title,
+    title: ROUTES_CONFIG.HOMEPAGE.title,
   },
   {
     path: ROUTES_CONFIG.CONTACT.path,

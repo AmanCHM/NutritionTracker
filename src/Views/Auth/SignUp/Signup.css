@@ -8,7 +8,8 @@
     width: 20vw;
     background-color: #f9f9f9;
     padding: 20px;
-    margin-top: 15vh ;
+    margin-top: 10vh ;
+    margin-bottom: 5vh;
       margin-left: 38vw;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       z-index: 2;
@@ -75,7 +76,7 @@
   }
   
   .signup-footer {
-    font-size: 14px;
+    /* font-size: 14px; */
     color: #555;
     text-align: center;
   }

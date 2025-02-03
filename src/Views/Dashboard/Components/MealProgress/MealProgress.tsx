@@ -4,7 +4,7 @@ import { Progress } from 'rsuite';
 
 type MealProgressProps= {
     totalCalories: number;
-    dailyCalorie:  {calorie: number };
+    dailyCalorie: number |null;
     progressPercent: number;
     totalProtein: number;
     proteinGrams: number;
@@ -17,7 +17,11 @@ type MealProgressProps= {
     fatsPercentage: number;
     
 }
+
+
 const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie, progressPercent,totalProtein,proteinGrams,proteinPercentage,totalCarbs,carbsGrams,carbsPercentage,totalFats,fatsGrams,fatsPercentage}) => {
+
+  // console.log("total Calorires",dailyCalorie)
   return (
    <>
    <div
@@ -30,7 +34,7 @@ const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie,
         <div style={{ margin: "20px 20px" }}>
           <label htmlFor="">
             <strong> Energy : </strong>
-            {totalCalories}/{dailyCalorie?.calorie ?? 0} kcal
+            {totalCalories}/{dailyCalorie} kcal
           </label>
 
           <Progress.Line

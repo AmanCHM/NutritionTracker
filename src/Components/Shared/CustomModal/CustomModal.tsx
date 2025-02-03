@@ -20,9 +20,9 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, title, child
 
       >
         {title && <h2 className="custom-modal-title">{title}</h2>}
-        <button className="custom-modal-close" onClick={onClose}>
-          &times;
-        </button>
+          {/* <button className="custom-modal-close" onClick={onClose}>
+            &times;
+          </button> */}
         <div className="custom-modal-body">{children}</div>
       </div>
     </div>

@@ -30,40 +30,18 @@ import { initializeApp } from "firebase/app";
 import { RootState } from "../../Store";
 import { IMAGES } from "../../Shared";
 import Table from "../../Components/Shared/Table";
+import { LogData } from "../Dashboard/Dashboard";
 
-// Define interfaces for data
-interface LogData {
-  Breakfast?: { calories: number }[];
-  Lunch?: { calories: number }[];
-  Snack?: { calories: number }[];
-  Dinner?: { calories: number }[];
-}
 
-// interface WeeklyData {
-//   calories: number[];
-//   proteins: number[];
-//   carbs: number[];
-//   fats: number[];
-// }
 
 const Reports: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [logData, setLogdata] = useState<LogData | null>(null);
+  const [logData, setLogdata] = useState<LogData | undefined>();
   const [selectDate, setSelectDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
-  // const [weeklyData, setWeeklyData] = useState<WeeklyData>({
-  //   calories: [],
-  //   proteins: [],
-  //   carbs: [],
-  //   fats: [],
-  // });
-
-  // const app = initializeApp(firebaseConfig);
-  // const auth = getAuth(app);
-  // const db = getFirestore(app);
-
+ 
   // Loader from Redux
   const loader = useSelector((state: RootState) => state.Loader.loading);
 
@@ -161,6 +139,9 @@ const Reports: React.FC = () => {
       <Table
       logData={logData}
       showFeature={false}
+      handleNutritionModal={() => {}}
+      handleEditLog={() => {}}
+      handleDeleteLog={() => {}}
       />
 
       {/* <div className="reports-data"> */}

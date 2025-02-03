@@ -13,6 +13,7 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { Throttle } from "../../../../Helpers/function";
+import { IMAGE_ID_API_URL, NUTRI_INFO_API_URL } from "../../../../Shared/Constants";
 
 
 interface ImageSearchProps {
@@ -178,7 +179,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     }
     try {
       const result = await axios.post(
-        `https://api.logmeal.com/v2/image/segmentation/complete`,
+        `${IMAGE_ID_API_URL}`,
         formData,
         {
           headers: {
@@ -208,7 +209,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     const data = { imageId: imageId };
     try {
       const result = await axios.post(
-        `https://api.logmeal.com/v2/nutrition/recipe/nutritionalInfo`,
+        `${NUTRI_INFO_API_URL}`,
         data,
         {
           headers: {
@@ -385,7 +386,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
         <CustomSelect
           options={mealOptions}
           value={mealOptions.find((option) => option.value === mealCategory)|| null}
-          onChange={(selected) => setMealCategory(selected?.value ||  " ")}
+          onChange={(selected) => setMealCategory(selected?.value as string)}
           // onBlur={ handleBlur}
           
         />

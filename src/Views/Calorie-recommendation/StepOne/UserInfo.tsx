@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { RootState } from "../../../Store";
 import { setUserInfo } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
 
 
 
@@ -40,9 +41,9 @@ const UserInfo: React.FC = () => {
   const formik = useFormik<UserInfoForm>({
     initialValues: {
       userName: username || "",
-      height: userheight || 0,
+      height: userheight    ,
       gender: usergender || "",
-      age: userage || 0,
+      age: userage ,
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Name is required."),
@@ -66,20 +67,25 @@ const UserInfo: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <h3 className="text-center mt-3 text-gray-600 text-2xl">
+     
+      <h3
+        style={{
+          fontSize: "2.3rem",
+          color: "#737373",
+          textAlign: "center",
+          marginTop: "3%",
+        }}
+      >
         Welcome to Nutrition Tracker
       </h3>
-      <h3 className="text-center text-gray-500">
+      <h3 style={{ textAlign: "center", color: "#627373" }}>
         We’re happy you’re here. <br />
         Let’s get to know a little about you.
       </h3>
-      
       <div className="calorie-container">
         <form onSubmit={formik.handleSubmit}>
-          {/* Name Input */}
           <div className="input-group">
-            <label htmlFor="userName">Enter Your Name</label>
+            <label>Enter Your Name</label>
             <input
               type="text"
               id="userName"
@@ -91,7 +97,6 @@ const UserInfo: React.FC = () => {
             )}
           </div>
 
-          {/* Height Input */}
           <div className="input-group">
             <label htmlFor="height">Height (cm)</label>
             <input
@@ -99,6 +104,7 @@ const UserInfo: React.FC = () => {
               id="height"
               min="25"
               {...formik.getFieldProps("height")}
+              value={formik.values.height || ""}
               placeholder="Enter your height"
             />
             {formik.touched.height && formik.errors.height && (
@@ -106,10 +112,9 @@ const UserInfo: React.FC = () => {
             )}
           </div>
 
-          {/* Gender Select */}
           <div className="input-group">
             <label htmlFor="gender">Gender:</label>
-            <CustomSelect
+           <CustomSelect
               options={genderOptions}
               value={genderOptions.find(
                 (option) => option.value === formik.values.gender 
@@ -118,13 +123,12 @@ const UserInfo: React.FC = () => {
                 formik.setFieldValue("gender", selectedOption?.value)
               }
               placeholder="-- Select Gender --"
-            />
+            />    
             {formik.touched.gender && formik.errors.gender && (
               <p className="error-message">{formik.errors.gender}</p>
             )}
           </div>
 
-          {/* Age Input */}
           <div className="input-group">
             <label htmlFor="age">Age (years):</label>
             <input
@@ -132,22 +136,30 @@ const UserInfo: React.FC = () => {
               id="age"
               min="1"
               {...formik.getFieldProps("age")}
+              value={formik.values.age || ""}
               placeholder="Enter age in years"
+
             />
             {formik.touched.age && formik.errors.age && (
               <p className="error-message">{formik.errors.age}</p>
             )}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="form-buttons">
-            <button type="submit" className="btn-primary">
-              Next
-            </button>
-          </div>
+          <CustomButton
+            type="submit"
+            style={{
+           
+              marginLeft: "40%",
+            }}
+            size={"medium"}
+            onClick={formik.handleSubmit}
+            label={"Next"}
+          >
+            {/* Next */}
+          </CustomButton>
         </form>
       </div>
-      {/* <Footer /> */}
+     
     </>
   );
 };

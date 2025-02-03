@@ -102,3 +102,7 @@ const WILDCARD_ROUTES = {
     DINNER:'Dinner',
     SNACK:'Snack'
   }
+
+ export const  IMAGE_ID_API_URL   = 'https://api.logmeal.com/v2/image/segmentation/complete'
+
+ export const  NUTRI_INFO_API_URL = 'https://api.logmeal.com/v2/nutrition/recipe/nutritionalInfo'

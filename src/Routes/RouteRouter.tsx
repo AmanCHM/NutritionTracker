@@ -14,7 +14,7 @@ function RootRouter() {
   const token = useSelector((state: RootState) => state.Auth.logged);
   const isAuthenticated = !!token;
 
- console.log(isAuthenticated);
+ console.log("Logged",isAuthenticated);
   return (
     <>
       <DocumentTitle isAuthenticated={isAuthenticated} />

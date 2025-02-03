@@ -4,11 +4,11 @@ import { Progress } from 'rsuite';
 
 type DrinkProgressProps = {
   totalWater: number ;
-  requiredWater: number;
+  requiredWater: number ;
   totalAlcohol: number;
-  requiredAlcohol: number;
+  requiredAlcohol: number ;
   totalCaffeine: number;
-  requiredCaffeine: number;
+  requiredCaffeine: number ;
 };
 
 const DrinkProgress: React.FC<DrinkProgressProps> = ({
@@ -19,6 +19,8 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
   totalCaffeine,
   requiredCaffeine,
 }) => {
+
+  console.log("requiredwater",requiredWater);
   return (
     <div className="progress-line" style={{ height: "auto", width: "50vw", marginLeft: "25%" }}>
       <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
@@ -31,7 +33,7 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
           {totalWater}/{requiredWater} ml
         </label>
         <Progress.Line
-          percent={totalWater > 0 ? Math.floor((totalWater / requiredWater) * 100) : 0}
+          percent={totalWater > 0 ? Math.floor((totalWater / (requiredWater )) * 100) : 0}
           status="active"
           strokeColor="#e15f41"
         />
@@ -42,7 +44,7 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
           {totalAlcohol}/{requiredAlcohol} ml
         </label>
         <Progress.Line
-          percent={totalAlcohol > 0 ? Math.floor((totalAlcohol / requiredAlcohol) * 100) : 0}
+          percent={totalAlcohol > 0 ? Math.floor((totalAlcohol / (requiredAlcohol ) ) * 100) : 0}
           status="active"
           strokeColor="#55a630"
         />
@@ -53,7 +55,7 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
           {totalCaffeine}/{requiredCaffeine} ml
         </label>
         <Progress.Line
-          percent={totalCaffeine > 0 ? Math.floor((totalCaffeine / requiredCaffeine) * 100) : 0}
+          percent={totalCaffeine > 0 ? Math.floor((totalCaffeine / (requiredCaffeine ))  * 100) : 0}
           status="active"
           strokeColor="#007bff"
         />
