@@ -10,7 +10,8 @@ import { toast } from "react-toastify";
 import { hideLoader, showLoader } from "../../../../Store/Loader";
 import {  auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
-import { CONTAINEROPTION } from "../../../../Shared/Constants";
+import {  CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
 
 
 
@@ -42,15 +43,15 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
 
   // Options for the drink type and container type dropdowns
   const drinkTypeOptions:OptionType[] = [
-    { value: 'Water', label: 'Water' },
-    { value: 'Alcohol', label: 'Alcohol' },
-    { value: 'Caffeine', label: 'Caffeine' },
+    { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
+    { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
+    { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
   ];
 
   const containerOptions :OptionType[] = [
-    { value: 'Small Glass (100ml)', label: 'Small Glass (100ml)' },
-    { value: 'Medium Glass (175ml)', label: 'Medium Glass (175ml)' },
-    { value:  CONTAINEROPTION.LARGEGLASS, label: CONTAINEROPTION.LARGEGLASS },
+    { value: CONTAINER_OPTION.SMALLGLASS, label:  CONTAINER_OPTION.SMALLGLASS },
+    { value: CONTAINER_OPTION.MEDIUMGLASS, label:CONTAINER_OPTION.MEDIUMGLASS },
+    { value:  CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
   ];
 
   // handle validation and set drink data
@@ -61,18 +62,20 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
       quantity: 1,
     },
     validationSchema: Yup.object({
-      drinkType: Yup.string().required('Please select a drink type.'),
-      container: Yup.string().required('Please select a container type.'),
+      drinkType: Yup.string().required(FORM_VALIDATION_MESSAGES().DRINK_SELECTOR),
+      container: Yup.string().required(FORM_VALIDATION_MESSAGES().CONTAINER_SELECT),
       quantity: Yup.number()
-        .required('Please enter a quantity.')
-        .positive('Quantity must be a positive number.')
-        .integer('Quantity must be a whole number.'),
+      .required(QUANTITY_VALIDATION.REQUIRED)
+    .positive(QUANTITY_VALIDATION.POSITIVE)
+    .integer(QUANTITY_VALIDATION.INTEGER)
+    .typeError(QUANTITY_VALIDATION.NUMBER),
+   
     }),
     onSubmit: async (values) => {
       const servingSize =
-        values.container === 'Small Glass (100ml)'
+        values.container === CONTAINER_OPTION.SMALLGLASS
           ? 100
-          : values.container === 'Medium Glass (175ml)'
+          : values.container === CONTAINER_OPTION.MEDIUMGLASS
           ? 175
           : 250;
 
@@ -84,7 +87,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
         if (user) {
           const userId = user.uid;
           const date = new Date().toISOString().split('T')[0];
-          const docRef = doc(db, 'users', userId, 'dailyLogs', date);
+          const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
           const data = {
             id: Date.now(),
             totalAmount,
@@ -96,11 +99,11 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
           if (onDataUpdated) {
             onDataUpdated();
           }
-          toast.success('Drink details added successfully!');
+          toast.success(SUCCESS_MESSAGES().SUCCESS_DRINK_ADDED);
         }
       } catch (error) {
         console.error(error);
-        toast.error('Failed to add drink details.');
+        toast.error(ERROR_MESSAGES().FAILED_DRINK_ADD);
       } finally {
         setShowDrinkModal(false);
         dispatch(hideLoader());
@@ -117,11 +120,11 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
         X
       </button>
       <h2 className="modal-title" style={{ color: "black" }}>
-        {/* {editToggle ? "Update Drink Details" : "Add Drink Details"} */}
+       
         Add Drink 
       </h2>
       <form onSubmit={formik.handleSubmit}>
-        {/* Drink Type */}
+       
         <div className="input-group">
           <label htmlFor="drinkType">Drink Type:</label>
           <CustomSelect
@@ -136,7 +139,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
           )}
         </div>
 
-        {/* Container Type */}
+       
         <div className="input-group">
           <label htmlFor="container">Container Type:</label>
           <CustomSelect
@@ -144,7 +147,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
             value={containerOptions.find((opt) => opt.value === formik.values.container) ||null}
             onChange={(selected) => formik.setFieldValue("container", selected?.value || "")}
             onBlur={() => formik.setFieldTouched("container", true)}
-            // placeholder="Select a container type"
+            
           />
           {formik.touched.container && formik.errors.container && (
             <p className="error-message">{formik.errors.container}</p>
@@ -161,7 +164,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
             value={formik.values.quantity}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            placeholder="Enter quantity"
+            placeholder={VALIDATION.ENTER_QUANTITY}
           />
           {formik.touched.quantity && formik.errors.quantity && (
             <p className="error-message">{formik.errors.quantity}</p>
@@ -169,7 +172,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
         </div>
 
         <button type="submit" className="submit-button">
-          {/* {editToggle ? "Update" : "Submit"} */}
+         
           Submit
         </button>
       </form>

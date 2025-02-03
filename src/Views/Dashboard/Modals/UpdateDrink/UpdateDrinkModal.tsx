@@ -8,6 +8,8 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
+import { FIREBASE_DOC_REF } from "../../../../Shared/Constants";
 
 // Define types for props
 interface UpdateDrinkModalProps {
@@ -50,7 +52,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       if (user) {
         const userId = user.uid;
         const date = new Date().toISOString().split("T")[0];
-        const docRef = doc(db, "users", userId, "dailyLogs", date);
+        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
         const getData = (await getDoc(docRef)).data();
         if (getData) {
           const drinkData = getData[drinkType].filter((drink: { id: string }) => drink.id !== id);
@@ -66,7 +68,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       console.error(error);
     } finally {
       dispatch(hideLoader());
-      toast.success("Successfully item deleted");
+      toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
     }
   };
 
@@ -86,7 +88,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       if (user) {
         const userId = user.uid;
         const date = new Date().toISOString().split("T")[0];
-        const docRef = doc(db, "users", userId, "dailyLogs", date);
+        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const getData = docSnap.data();
@@ -96,7 +98,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
         }
       }
     } catch (error) {
-      console.error("Error fetching data", error);
+      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
     } finally {
       dispatch(hideLoader());
     }

@@ -28,9 +28,10 @@ import { hideLoader, showLoader } from "../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { RootState } from "../../Store";
-import { IMAGES } from "../../Shared";
+import { ERROR_MESSAGES, IMAGES } from "../../Shared";
 import Table from "../../Components/Shared/Table";
 import { LogData } from "../Dashboard/Dashboard";
+import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 
 
 
@@ -55,7 +56,7 @@ const Reports: React.FC = () => {
       }
       const userId = user.uid;
       const date = selectDate;
-      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
 
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -65,7 +66,7 @@ const Reports: React.FC = () => {
         setLogdata({});
       }
     } catch (error) {
-      console.error("Error fetching data", error);
+      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
     } finally {
       dispatch(hideLoader());
     }
@@ -78,7 +79,7 @@ const Reports: React.FC = () => {
         dispatch(showLoader());
         handleGetData(user);
       } else {
-        console.log("No user authenticated");
+        
         dispatch(hideLoader());
       }
     });
@@ -88,7 +89,7 @@ const Reports: React.FC = () => {
 
   // Calculate meal calories
   const calculateMealCalories = (mealData?: { calories: number }[]): number => {
-    return mealData?.length
+    return mealData?.length 
       ? mealData.reduce((total, item) => total + item.calories, 0)
       : 0;
   };
@@ -104,7 +105,7 @@ const Reports: React.FC = () => {
 
   // Set the donut chart data
   const chartData = {
-    labels: ["Breakfast", "Lunch", "Snack", "Dinner"],
+    labels: [MEALTYPE.BREAKFAST,MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
     datasets: [
       {
         data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
@@ -144,7 +145,7 @@ const Reports: React.FC = () => {
       handleDeleteLog={() => {}}
       />
 
-      {/* <div className="reports-data"> */}
+
 
       <h2 style={{ marginRight: "1%", marginTop: "5vh", fontSize: "2rem" }}>
         {" "}

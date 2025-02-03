@@ -9,8 +9,9 @@ import * as Yup from "yup";
 import { RootState } from "../../../Store";
 import { updateGoal } from "../../../Store/Nutrition";
 import CustomSelect from "../../../Components/Shared/CustomSelect/CustomSelect";
-import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { GOAL_OPTIONS, ROUTES_CONFIG, WEIGHT } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import { FORM_VALIDATION_MESSAGES } from "../../../Shared";
 
 
 // Define form values type
@@ -37,9 +38,9 @@ const WeightInput: React.FC = () => {
 
   // Goal options
   const goalOptions = [
-    { value: "Loose Weight", label: "Loose Weight" },
-    { value: "Gain Weight", label: "Gain Weight" },
-    { value: "Maintain Weight", label: "Maintain Weight" },
+GOAL_OPTIONS.LOOSE_WEIGHT,
+GOAL_OPTIONS.GAIN_WEIGHT,
+GOAL_OPTIONS.MAINTAIN_WEIGHT
   ];
 
   // Formik setup
@@ -50,7 +51,7 @@ const WeightInput: React.FC = () => {
       targetWeight: targetWeightRedux ,
     },
     validationSchema: Yup.object({
-      goal: Yup.string().required("Please select a goal."),
+      goal: Yup.string().required(FORM_VALIDATION_MESSAGES().REQUIRED),
       currentWeight: Yup.number()
         .typeError("Must be a number")
         .min(1, "Current weight must be at least 1 kg.")
@@ -63,15 +64,15 @@ const WeightInput: React.FC = () => {
     onSubmit: (values) => {
       const weightDifference = Number(values.targetWeight) - Number(values.currentWeight);
 
-      if (values.goal === "Loose Weight" && weightDifference > 0) {
+      if (values.goal === WEIGHT.LOOSE_WEIGHT && weightDifference > 0) {
         toast.error("Target weight must be less than current weight for weight loss.");
         return;
       }
-      if (values.goal === "Gain Weight" && weightDifference < 0) {
+      if (values.goal === WEIGHT.GAIN_WEIGHT && weightDifference < 0) {
         toast.error("Target weight must be greater than current weight for weight gain.");
         return;
       }
-      if (values.goal === "Maintain Weight" && weightDifference !== 0) {
+      if (values.goal === WEIGHT.MAINTAIN_WEIGHT && weightDifference !== 0) {
         toast.error("Target weight must equal current weight for maintenance.");
         return;
       }
@@ -172,8 +173,7 @@ const WeightInput: React.FC = () => {
               justifyContent: "space-between",
             }}
             >
-            {/* <button onClick={() =>  navigate(ROUTES_CONFIG.USER_INFO.path)}>Back</button> */}
-
+           
 
             <CustomButton
             type="submit"

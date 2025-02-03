@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
  // Import RootState type
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
-import { ROUTES_CONFIG } from "../../Shared/Constants";
+import { ROUTES_CONFIG, WEIGHT } from "../../Shared/Constants";
 import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
 
 
@@ -27,15 +27,15 @@ const CalorieRecommendation: React.FC = () => {
   let recommendedCalories = 0;
   let goalDescription = "";
 
-  if (goal === "Loose Weight") {
+  if (goal === WEIGHT.LOOSE_WEIGHT) {
     recommendedCalories = calories;
-    goalDescription = "Lose 0.5 kg weight/week";
-  } else if (goal === "Gain Weight") {
+    goalDescription = WEIGHT.LOOSE_WEIGHT_DESCRPTION;
+  } else if (goal === WEIGHT.GAIN_WEIGHT) {
     recommendedCalories = calories;
-    goalDescription = "Gain 0.5 kg weight/week";
+    goalDescription = WEIGHT.GAIN_WEIGHT_DESCRIPTION;
   } else {
     recommendedCalories = calories;
-    goalDescription = "Maintain weight";
+    goalDescription = WEIGHT.MAINTAIN_WEIGHT;
   }
 
   return (
@@ -86,11 +86,7 @@ const CalorieRecommendation: React.FC = () => {
           </ul>
         </div>
 
-        {/* <div style={{ marginTop: "20px", marginLeft: "5%" }}> */}
-          {/* <button onClick={() => navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}>Back</button> */}
-
-
-
+      
           <div
             style={{
               marginTop: "20px",
@@ -98,9 +94,7 @@ const CalorieRecommendation: React.FC = () => {
               justifyContent: "space-between",
             }}
             >
-            {/* <button onClick={() =>  navigate(ROUTES_CONFIG.USER_INFO.path)}>Back</button> */}
-
-
+           
             <CustomButton
             type="submit"
             size={"medium"}

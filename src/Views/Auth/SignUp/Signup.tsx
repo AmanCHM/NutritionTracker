@@ -13,8 +13,8 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
-import { IMAGES } from "../../../Shared";
-import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../../Shared";
+import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
 
@@ -44,8 +44,8 @@ const Signup: React.FC = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().min(8, "Must be 8 characters").required("Required"),
+      email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL).required(ERROR_MESSAGES().REQUIRED),
+      password: Yup.string().min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD).required(FORM_VALIDATION_MESSAGES().REQUIRED),
       confirmPassword: Yup.string()
         // .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("Required"),
@@ -57,15 +57,15 @@ const Signup: React.FC = () => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        const userDocRef = doc(db, "users", user.uid);
+        const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
         await setDoc(userDocRef, { calorie: 2000, water: 3000, alcohol: 600, caffeine: 850 });
 
-        toast.success("SignUp Successful");
+        toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
         navigate(ROUTES_CONFIG.DASHBOARD.path);
       } catch (error: any) {
         console.log(error.message);
-        toast.error("SignUp not successful");
+        toast.error(SUCCESS_MESSAGES().SIGNED_UP_NOT_SUCCESSFULLY);
       } finally {
         dispatch(setSignup());
         dispatch(hideLoader());
@@ -85,12 +85,12 @@ const Signup: React.FC = () => {
 
       await setDoc(userDocRef, { calorie: 2000 });
 
-      toast.success("Google Sign-Up Successful");
+      toast.success(SUCCESS_MESSAGES().GOOGLE_SIGNEDUP_SUCCESS);
     //   dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
     } catch (error: any) {
-      toast.error("Google Sign-Up Failed");
-      console.error("Error with Google Sign-Up: ", error.message);
+      toast.error(ERROR_MESSAGES().GOOGLE_SIGNEDUP_FAIL)
+   
     } finally {
       dispatch(hideLoader());
     }
@@ -169,7 +169,7 @@ const Signup: React.FC = () => {
         </button>
 
         <p className="signup-footer">
-          Already have an account? <Link className="signup-link" to="/login">Log In</Link>
+          Already have an account? <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>Log In</Link>
         </p>
       </div>
     </>

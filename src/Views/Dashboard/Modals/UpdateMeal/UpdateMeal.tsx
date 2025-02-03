@@ -2,6 +2,8 @@ import React, { FormEvent, useEffect, useState } from "react";
 import "../Nutrition/NutritionModal.css";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { FoodData, LogData, SelectedFoodData } from "../../Dashboard";
+import { FORM_VALIDATION_MESSAGES } from "../../../../Shared";
+import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
 
 
 // Define types for the food data and props
@@ -61,7 +63,7 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
   // Validate Quantity
   const validateQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return "Please enter a valid quantity.";
+      return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
     }
     return "";
   };
@@ -69,7 +71,7 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
   // Validate Select Quantity
   const validateSelectQuantity = (value: string | number): string => {
     if (!value) {
-      return "Please select a quantity.";
+      return FORM_VALIDATION_MESSAGES().SELECT_QUANTITY;
     }
     return "";
   };
@@ -77,7 +79,7 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
   // Validate Meal Category
   const validateMealCategory = (value: string): string => {
     if (!value) {
-      return "Please choose a meal category.";
+      return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
     }
     return "";
   };
@@ -87,13 +89,13 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
     const newErrors = { ...errors };
 
     // Trigger validation on blur
-    if (name === "quantity") {
+    if (name === VALIDATION.QUANTITY) {
       newErrors.quantity = validateQuantity(Number(value));
     }
-    if (name === "selectquantity") {
+    if (name === VALIDATION.SELECT_QUANTITY) {
       newErrors.selectquantity = validateSelectQuantity(value);
     }
-    if (name === "selectCategory") {
+    if (name === VALIDATION.SELECT_CATEGORY) {
       newErrors.selectCategory = validateMealCategory(value);
     }
 
@@ -117,11 +119,12 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
   };
 
   const mealOptions = [
-    { value: "Breakfast", label: "Breakfast" },
-    { value: "Lunch", label: "Lunch" },
-    { value: "Snack", label: "Snack" },
-    { value: "Dinner", label: "Dinner" },
+    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
+    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
+
 
   const sliceOptions = selectedFoodData?.foods.flatMap((food, foodIndex) =>
     food.alt_measures.map((measure, index) => ({

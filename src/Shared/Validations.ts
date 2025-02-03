@@ -4,7 +4,7 @@ export const FORM_VALIDATION_MESSAGES = (...args: string[]) => ({
     MAX_LENGTH: `This input exceeded maxLength (${args[0]})`,
     VALID_EMAIL: 'Please enter the valid email',
     VALID_PASSWORD:
-      'Password must contain atleast 8 characters including one uppercase, one lowercase, one number and one special character.',
+      'Password must contain atleast 8 characters .',
     VALID_USERNAME:
       'Use a username between 5 to 18 lowercase alphanumeric characters, special characters and spaces are not allowed.',
     CONFIRM_PASSWORD: 'Your passwords do not match',
@@ -14,6 +14,17 @@ export const FORM_VALIDATION_MESSAGES = (...args: string[]) => ({
     ANSWER_REQUIRED: 'Please add your answer to join this squad',
     LONDER_ANSWER_REQUIRED: 'Please provide a longer answer',
     MAX_NUMBER: `Maximum value should be less than (${args[0]})`,
+    NAME_REQUIRED:'Name is required.',
+    GENDER_REQUIRED:'Gender is required.',
+    ERROR_OCCURED:'An error occurred. Please try again later.',
+    VALID_QUANTITY:'Please enter a valid quantity.',
+    SELECT_QUANTITY:'Please select a quantity.',
+    VALID_SERVING_SIZE:'Please select serving size.',
+    CHOOSE_MEAL_CATEGORY:'Please choose a meal category.',
+    CONTAINER_SELECT: "Please select a container type",
+    DRINK_SELECTOR: 'Please select a drink type.',
+    USER_NOT_AUTHENTICATED:"User is not authenticated",
+
   });
   
   export const VALIDATION_REGEX = {

@@ -5,6 +5,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../../Utils/firebase";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../../Shared";
 
 const ResetPassword: React.FC = () => {
   const [email, setEmail] = useState<string>(""); 
@@ -16,12 +17,12 @@ const ResetPassword: React.FC = () => {
 
     try {
       await sendPasswordResetEmail(auth, email);
-      toast.success("Email sent");
+      toast.success(SUCCESS_MESSAGES().EMAIL_SENT);
       navigate(ROUTES_CONFIG.LOGIN.path);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      toast.error("Email not registered");
+      toast.error(ERROR_MESSAGES().EMAIL_NOT_REGISTERED);
       console.error(errorCode, errorMessage);
     }
   };

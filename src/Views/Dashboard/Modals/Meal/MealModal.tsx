@@ -4,6 +4,8 @@ import CustomSelect, {
 } from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { SelectedFoodData } from "../../Dashboard";
 import { User } from "firebase/auth";
+import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
+import { FORM_VALIDATION_MESSAGES } from "../../../../Shared";
 
 interface Measure {
   serving_weight: number;
@@ -76,10 +78,10 @@ const MealModal: React.FC<MealModalProps> = ({
     ) || [];
 
   const mealOptions = [
-    { value: "Breakfast", label: "Breakfast" },
-    { value: "Lunch", label: "Lunch" },
-    { value: "Snack", label: "Snack" },
-    { value: "Dinner", label: "Dinner" },
+    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
+    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
 
 
@@ -102,7 +104,7 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Quantity
   const validateQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return "Please enter a valid quantity.";
+      return  FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
     }
     return "";
   };
@@ -110,7 +112,7 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Select Quantity
   const validateSelectQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return "Please select serving size.";
+      return  FORM_VALIDATION_MESSAGES().VALID_SERVING_SIZE;
     }
     return "";
   };
@@ -118,7 +120,7 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Meal Category
   const validateMealCategory = (value: string): string => {
     if (!value) {
-      return "Please choose a meal category.";
+      return  FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
     }
     return "";
   };
@@ -128,13 +130,13 @@ const MealModal: React.FC<MealModalProps> = ({
     const newErrors = { ...errors };
 
     // Trigger validation on blur
-    if (name === "quantity") {
+    if (name === VALIDATION.QUANTITY) {
       newErrors.quantity = validateQuantity(quantity);
     }
-    if (name === "selectquantity") {
+    if (name ===VALIDATION.SELECT_QUANTITY) {
       newErrors.selectquantity = validateSelectQuantity(selectquantity);
     }
-    if (name === "selectCategory") {
+    if (name ===VALIDATION.SELECT_CATEGORY) {
       newErrors.selectCategory = validateMealCategory(value);
     }
 
@@ -158,8 +160,7 @@ const MealModal: React.FC<MealModalProps> = ({
     }
   };
 
-  console.log("selecttquantity",selectquantity);
-  // console.log(selectedOption);
+  
   return (
     <>
       <div>

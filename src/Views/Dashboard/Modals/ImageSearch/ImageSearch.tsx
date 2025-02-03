@@ -13,7 +13,8 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { Throttle } from "../../../../Helpers/function";
-import { IMAGE_ID_API_URL, NUTRI_INFO_API_URL } from "../../../../Shared/Constants";
+import { FIREBASE_DOC_REF, IMAGE_ID_API_URL, MEALTYPE, NUTRI_INFO_API_URL, VALIDATION } from "../../../../Shared/Constants";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
 
 
 interface ImageSearchProps {
@@ -58,7 +59,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const [imageId, setImageId] = useState<string | null>(null);
   const [nutritionInfo, setNutritionInfo] = useState<NutritionInfo | undefined>();
 
-  const apiUrl = `https://api.logmeal.com/v2/image/segmentation/complete`;
   const [errors, setErrors] = useState<{
     quantity: string;
     mealCategory: string;
@@ -70,7 +70,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   // Validate Quantity
   const validateQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return 'Please enter a valid quantity.';
+      return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
     }
     return '';
   };
@@ -78,7 +78,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   // Validate Meal Category
   const validateMealCategory = (value: string | undefined): string => {
     if (!value) {
-      return 'Please choose a meal category.';
+      return  FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
     }
     return '';
   };
@@ -87,11 +87,11 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     const newErrors = { ...errors };
   
     // Trigger validation on blur
-    if (name === 'quantity') {
+    if (name === VALIDATION.QUANTITY) {
       newErrors.quantity = validateQuantity(Number(value));
     }
   
-    if (name === 'selectCategory') {
+    if (name === VALIDATION.SELECT_CATEGORY) {
       newErrors.mealCategory = validateMealCategory(value);
     }
   
@@ -124,13 +124,13 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       handelImageSearchModal(newData);
 
       dispatch(hideLoader());
-      toast.success('Meal Added Successfully');
+      toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
     } else {
       dispatch(hideLoader());
     }
   };
 
-  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {           //call throttle form helper function 
+  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {           
     handleSaveData(e);
   }, 1000);
 
@@ -154,7 +154,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       if (user) {
         const userId = user?.uid;
         const date = new Date().toISOString().split('T')[0];
-        const docRef = doc(db, 'users', userId, 'dailyLogs', date);
+        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
         const categorisedData = { [mealCategory as string]: arrayUnion(data) };
 
         await setDoc(docRef, categorisedData, { merge: true });
@@ -163,7 +163,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
         setImageModal(false);
       }
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error(ERROR_MESSAGES().ERROR_SAVING_DATA, error);
     } finally {
       dispatch(hideLoader());
     }
@@ -191,7 +191,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
 
       setImageId(result.data?.imageId);
     } catch (error) {
-      toast.error('Please upload a valid food image');
+      toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
       console.log(error);
     } finally {
       dispatch(hideLoader());
@@ -220,7 +220,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       );
       setNutritionInfo(result.data);
     } catch (error) {
-      toast.error('Please upload a valid food image');
+      toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
       console.log(error);
     }
   };
@@ -250,11 +250,12 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   }, [nutritionInfo, quantity]);
 
   const mealOptions = [
-    { value: 'Breakfast', label: 'Breakfast' },
-    { value: 'Lunch', label: 'Lunch' },
-    { value: 'Snack', label: 'Snack' },
-    { value: 'Dinner', label: 'Dinner' },
+    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
+    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
+
 
   
 

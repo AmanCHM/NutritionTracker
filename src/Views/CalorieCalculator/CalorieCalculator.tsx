@@ -11,6 +11,8 @@ import { auth, db } from "../../Utils/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { setSignout } from "../../Store/Auth";
 import CustomSelect, { OptionType } from "../../Components/Shared/CustomSelect/CustomSelect";
+import { ACTIVITY_OPTIONS, AGE_VALIDATION, FIREBASE_DOC_REF, HEIGHT_VALIDATION, WEIGHT_VALIDATION } from "../../Shared/Constants";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../Shared";
 
 interface ActivityOption {
   value: number;
@@ -26,11 +28,12 @@ interface FormValues {
 }
 
 const activityOptions = [
-  { value: 1.2, label: "Sedentary (little to no exercise)" },
-  { value: 1.375, label: "Lightly active (light exercise 1-3 days/week)" },
-  { value: 1.55, label: "Moderately active (moderate exercise 3-5 days/week)" },
-  { value: 1.725, label: "Very active (hard exercise 6-7 days/week)" },
-  { value: 1.9, label: "Extra active (very hard exercise or a physical job)" },
+ ACTIVITY_OPTIONS.SEDENTARY,
+ACTIVITY_OPTIONS.LIGHTLY_ACTIVE,
+ACTIVITY_OPTIONS.MODERATELY_ACTIVE,
+ACTIVITY_OPTIONS.VERY_ACTIVE,
+ACTIVITY_OPTIONS.EXTRA_ACTIVE
+
 ];
 
 const CalorieCalculator: React.FC = () => {
@@ -45,21 +48,25 @@ const CalorieCalculator: React.FC = () => {
       age: "",
       gender: "male",
       activityLevel: activityOptions[0],
+    
     },
 
     validationSchema: Yup.object({
       height: Yup.number()
-        .required("Height is required")
-        .positive("Height must be positive")
-        .integer("Height must be a whole number"),
+        .required(HEIGHT_VALIDATION.REQUIRED)
+        .typeError(HEIGHT_VALIDATION.NUMBER)
+        .positive(HEIGHT_VALIDATION.POSITIVE)
+        .integer(HEIGHT_VALIDATION.INTEGER),
       weight: Yup.number()
-        .required("Weight is required")
-        .positive("Weight must be positive")
-        .integer("Weight must be a whole number"),
+      .required(WEIGHT_VALIDATION.REQUIRED)
+      .typeError(WEIGHT_VALIDATION.NUMBER)
+      .positive(WEIGHT_VALIDATION.POSITIVE)
+      .integer(WEIGHT_VALIDATION.INTEGER),
       age: Yup.number()
-        .required("Age is required")
-        .positive("Age must be positive")
-        .integer("Age must be a whole number"),
+      .required(AGE_VALIDATION.REQUIRED)
+      .typeError(AGE_VALIDATION.NUMBER)
+      .positive(AGE_VALIDATION.POSITIVE)
+      .integer(AGE_VALIDATION.INTEGER)
     }),
     onSubmit: (values: FormValues) => {
       const totalCalories = calculateCalorieIntake(values);
@@ -93,26 +100,26 @@ const CalorieCalculator: React.FC = () => {
   const saveCalorieToDatabase = async (totalCalories: number) => {
     if (currentUser) {
       try {
-        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocRef = doc(db, FIREBASE_DOC_REF.USER, currentUser.uid);
         await setDoc(userDocRef, { calorie: totalCalories }, { merge: true });
-        toast.success("Calorie data saved successfully.");
+        toast.success(SUCCESS_MESSAGES().CALORIE_SAVED_SUCCESSFULLY);
         dispatch(setSignout());
       } catch (error) {
-        console.error("Error saving data", error);
-        toast.error("Failed to save calorie data.");
+        // console.error("Error saving data", error);
+        toast.error(ERROR_MESSAGES().ERROR_SAVING_DATA);
       }
     } else {
-      toast.error("User not authenticated. Please log in.");
+      toast.error(ERROR_MESSAGES().USER_NOT_AUTHENTICATED);
     }
   };
 
   const handleSave = async () => {
     if (calculatedCalorie) {
       await saveCalorieToDatabase(calculatedCalorie);
-      toast.success("Your calorie is set");
+      toast.success(SUCCESS_MESSAGES().SET_CALORIE);
       dispatch(setSignout());
     } else {
-      toast.error("No calorie data to save. Please calculate first.");
+      toast.error(ERROR_MESSAGES().CALORIE_NOT_SAVED);
     }
   };
 

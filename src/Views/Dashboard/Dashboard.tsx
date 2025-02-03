@@ -36,7 +36,7 @@ import firebaseConfig, { auth, db } from "../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { string } from "yup";
 import { Dispatch } from "@reduxjs/toolkit";
-import { IMAGES } from "../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../Shared";
 import { isArray } from "lodash";
 import DrinkModal from "./Modals/Drink/DrinkModal";
 
@@ -53,6 +53,7 @@ import { RootState } from "../../Store";
 import MealProgress from "./Components/MealProgress/MealProgress";
 import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
 import { setSignout } from "../../Store/Auth";
+import { DRINK_TYPE, FIREBASE_DOC_REF, GROUP_OPTIONS, MEALTYPE, NUTRIENT, VALIDATION } from "../../Shared/Constants";
 // import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -254,22 +255,22 @@ const Dashboard = () => {
 
   const groupedOptions = [
     {
-      label: "Common Foods",
+      label: GROUP_OPTIONS.COMMON_LABEL,
       options: suggestions?.common.map(
         (element: CommonFood, index: number) => ({
           value: element.tag_id + index,
           label: `${element.food_name}`,
-          category: "common",
+          category: GROUP_OPTIONS.COMMON_LABEL,
         })
       ),
     },
     {
-      label: "Branded Foods",
+      label: GROUP_OPTIONS.BRANDED_LABEL,
       options: suggestions?.branded.map(
         (element: BrandedFood, index: number) => ({
           value: element.nix_item_id + index,
           label: `${element.brand_name_item_name} - ${element.nf_calories} kcal`,
-          category: "Branded",
+          category: GROUP_OPTIONS.BRANDED_LABEL,
         })
       ),
     },
@@ -311,7 +312,7 @@ const Dashboard = () => {
 
       const date = new Date().toISOString().split("T")[0];
 
-      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
 
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -321,7 +322,7 @@ const Dashboard = () => {
         setLogdata({});
       }
     } catch (error) {
-      console.error("error fetching data", error);
+      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
     } finally {
       dispatch(hideLoader());
     }
@@ -349,24 +350,24 @@ const Dashboard = () => {
     try {
       const user = auth.currentUser;
       if (!user) {
-        throw new Error("User not authenticated");
+        throw new Error(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
       }
       const userId = user.uid;
       const date = new Date().toISOString().split("T")[0];
-      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
       const getData = (await getDoc(docRef)).data();
       if (!getData || !getData[meal]) {
-        throw new Error("Meal data not found");
+        throw new Error(ERROR_MESSAGES().MEAL_NOT_FOUND);
       }
       const mealData = getData[meal] as MealId[];
       const updatedMealData = mealData.filter((mealItem) => mealItem.id !== id);
       await updateDoc(docRef, { [meal]: updatedMealData });
       const updatedDoc = (await getDoc(docRef)).data();
       setLogdata(updatedDoc);
-      toast.success("Item Deleted Successfully");
+      toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
     } catch (error) {
       console.error(error);
-      toast.error("Item not Deleted");
+      toast.error(ERROR_MESSAGES().ITEM_NOT_DELETED);
     } finally {
       dispatch(hideLoader());
     }
@@ -377,14 +378,7 @@ const Dashboard = () => {
     meal: keyof LogData,
     name: string,
     id: number | string,
-    // logData: LogData,
-    // handleGetData: (user: User) => void,
-    // setSelectedId: (id: number | string) => void,
-    // setQuantity: (quantity: number) => void,
-    // setEditMealName: (meal: string) => void,
-    // setSelectquantity: (quantity: number) => void,
-    // addMeal: (name: string) => void,
-    // setEditModal: (value: boolean) => void
+  
   ) => {
     //  dispatch = useDispatch();
     const user = auth.currentUser;
@@ -402,7 +396,7 @@ const Dashboard = () => {
         setSelectquantity(selectedLog.servingQuantity);
       }
     } else {
-      console.error('logData is undefined');
+      console.error(ERROR_MESSAGES().NOT_DEFINED);
     }
 
     addMeal(name);
@@ -416,7 +410,7 @@ const Dashboard = () => {
     try {
       dispatch(showLoader());
       const user: User | null = auth.currentUser;
-      if (!user) throw new Error("User not authenticated");
+      if (!user) throw new Error(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
       const userId: string = user.uid;
       const data: LogDataItem = {
         id: Date.now(),
@@ -429,7 +423,7 @@ const Dashboard = () => {
         servingQuantity: selectquantity,
       };
       const date: string = new Date().toISOString().split("T")[0];
-      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
       const getData = (await getDoc(docRef)).data() as LogData;
       console.log(getData);
       const mealdata = (getData as Record<string, MealItem[]>)[editMealName]?.filter(
@@ -443,12 +437,12 @@ const Dashboard = () => {
       setLogdata(updatedDoc);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(ERROR_MESSAGES().SOMETHING_WENT_WRONG);
     } finally {
       setEditModal(false);
       dispatch(hideLoader());
       setSelectCategory("");
-      toast.success("Item edited successfully");
+      toast.success(SUCCESS_MESSAGES().ITEM_EDIT_SUCCESS);
     }
   };
 
@@ -463,7 +457,7 @@ const Dashboard = () => {
     const userId = currentUser?.uid;
 
     if (userId) {
-      const userDocRef = doc(db, "users", userId);
+      const userDocRef = doc(db, FIREBASE_DOC_REF.USER, userId);
       try {
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
@@ -476,7 +470,7 @@ const Dashboard = () => {
           setDailyCalorie(null);
         }
       } catch (error) {
-        console.error("Error fetching calorie data:", error);
+        console.error(ERROR_MESSAGES().ERROR_FETCH, error);
       }
     }
   };
@@ -492,7 +486,7 @@ useEffect(() => {
 }, [handleGetData]);
 
 
-console.log("requiredWater",requiredWater);  
+// console.log("requiredWater",requiredWater);  
 
 
   const calculateNutrient = (
@@ -552,19 +546,19 @@ console.log("requiredWater",requiredWater);
   };
 
   const calculateMealCalories = (mealData: mealData): number => {
-    return calculateMealNutrient(mealData, "calories");
+    return calculateMealNutrient(mealData, NUTRIENT.CALORIE);
   };
 
   const calculateMealProtein = (mealData: mealData): number => {
-    return calculateMealNutrient(mealData, "proteins");
+    return calculateMealNutrient(mealData, NUTRIENT.PROTEIN);
   };
 
   const calculateMealCarbs = (mealData: mealData): number => {
-    return calculateMealNutrient(mealData, "carbs");
+    return calculateMealNutrient(mealData, NUTRIENT.CARBS);
   };
 
   const calculateMealFats = (mealData: mealData): number => {
-    return calculateMealNutrient(mealData, "fats");
+    return calculateMealNutrient(mealData, NUTRIENT.FATS);
   };
 
   const breakfastCalorie = calculateMealCalories(logData?.Breakfast || []);
@@ -599,8 +593,8 @@ console.log("requiredWater",requiredWater);
   const carbsPercent: number = 0.5;
   const fatsPercent: number = 0.25;
 
-console.log("totalCalories",totalCalories);
-  console.log("dailyCalorie",dailyCalorie);
+// console.log("totalCalories",totalCalories);
+//   console.log("dailyCalorie",dailyCalorie);
   const calculateNutrients = (dailyCalorie:number) => {
   
 
@@ -647,7 +641,7 @@ console.log("totalCalories",totalCalories);
   //Doughnut Data
 
   const doughnutdata = {
-    labels: ["Breakfast", "Lunch", "Snack", "Dinner"],
+    labels: [MEALTYPE.BREAKFAST,MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
     datasets: [
       {
         data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
@@ -687,7 +681,7 @@ console.log("totalCalories",totalCalories);
       }
       const userId = user.uid;
       const date = new Date().toISOString().split("T")[0];
-      const docRef = doc(db, "users", userId, "dailyLogs", date);
+      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const getData = docSnap.data();
@@ -696,7 +690,7 @@ console.log("totalCalories",totalCalories);
         setDrinkData({});
       }
     } catch (error) {
-      console.error("error in fetching data", error);
+      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
     } finally {
       dispatch(hideLoader());
     }
@@ -707,7 +701,7 @@ console.log("totalCalories",totalCalories);
       if (user) {
         getDrinkData(user);
       } else {
-        console.log("User not authenticated");
+        console.log(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
       }
     });
     return () => unsubscribe();
@@ -755,32 +749,30 @@ console.log("totalCalories",totalCalories);
   };
 
   const drinkType = {
-    water: { drinklabel: "Water" },
-    caffeine: { drinklabel: "Caffeine" },
-    alcohol: { drinklabel: "Alcohol" },
+    water: { drinklabel: DRINK_TYPE.WATER },
+    caffeine: { drinklabel: DRINK_TYPE.CAFFEINE },
+    alcohol: { drinklabel: DRINK_TYPE.ALCOHOL },
   };
 
 
-   console.log("altmeasure",altMeasure);
+  //  console.log("altmeasure",altMeasure);
   const handleModalData = async (
 
     
   ) => {
-    console.log("selectQuantity at start:", selectquantity);
-    console.log("selectCategory at start:", selectCategory);
-    console.log("quantity at start:", quantity);
+
   
     if (!selectquantity || !selectCategory) {
-      toast.error("Please Select all the fields");
+      toast.error(VALIDATION.SELECT_ALL);
       return;
     }
     if (!quantity || quantity <= 0) {
-      toast.error("Please Select Quantity");
+      toast.error(VALIDATION.SELECT_QUANTITY);
       return;
     }
     try {
       dispatch(showLoader());
-      console.log("inside handleModalData2");
+      // console.log("inside handleModalData2");
       const user = auth.currentUser;
       const data: Data = {
         id: Date.now(),
@@ -795,30 +787,27 @@ console.log("totalCalories",totalCalories);
       if (user) {
         const userId = user.uid;
         const date = new Date().toISOString().split("T")[0];
-        const docRef = doc(db, "users", userId, "dailyLogs", date);
+        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
 
-        console.log("data",data);
+        // console.log("data",data);
         const categorisedData = { [selectCategory]: arrayUnion(data) };
   
         await setDoc(docRef, categorisedData, { merge: true });
         await handleGetData(user);
   
-        toast.success("Food Saved");
+        toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_ADD);
         setModal(false);
       }
     } catch (error) {
-      toast.error("Error in saving Data");
-      console.error("Error saving data:", error);
+      toast.error(ERROR_MESSAGES().ERROR_SAVING_DATA);
+      console.error(ERROR_MESSAGES().ERROR_SAVING_DATA, error);
     } finally {
       dispatch(hideLoader());
       setSelectCategory("");
     }
   };
 
-  console.log(Math.round(calculateCalories as number));
-  console.log(protein);
-  console.log(carbs);
-  console.log(fats);
+ 
   return (
     <>
       {/* <Navbar /> */}

@@ -8,8 +8,9 @@ import * as Yup from "yup";
 import { RootState } from "../../../Store";
 import { setUserInfo } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
-import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import { AGE_VALIDATION, GENDER_OPTION, HEIGHT_VALIDATION, ROUTES_CONFIG } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import { FORM_VALIDATION_MESSAGES } from "../../../Shared";
 
 
 
@@ -33,8 +34,8 @@ const UserInfo: React.FC = () => {
 
   // Gender options
   const genderOptions :OptionType[]= [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
+    { value: GENDER_OPTION.MALE, label: GENDER_OPTION.MALE},
+    { value: GENDER_OPTION.FEMALE, label: GENDER_OPTION.FEMALE },
   ];
 
   // Formik for form handling
@@ -46,18 +47,18 @@ const UserInfo: React.FC = () => {
       age: userage ,
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("Name is required."),
+      userName: Yup.string().required(FORM_VALIDATION_MESSAGES().NAME_REQUIRED),
       height: Yup.number()
-        .typeError("Height must be a number")
-        .required("Height is required.")
-        .positive("Height must be positive.")
-        .integer("Height must be a whole number."),
-      gender: Yup.string().required("Gender is required."),
+      .required(HEIGHT_VALIDATION.REQUIRED)
+      .typeError(HEIGHT_VALIDATION.NUMBER)
+      .positive(HEIGHT_VALIDATION.POSITIVE)
+      .integer(HEIGHT_VALIDATION.INTEGER),
+      gender: Yup.string().required(FORM_VALIDATION_MESSAGES().GENDER_REQUIRED),
       age: Yup.number()
-        .typeError("Age must be a number")
-        .required("Age is required.")
-        .positive("Age must be positive.")
-        .integer("Age must be a whole number."),
+      .required(AGE_VALIDATION.REQUIRED)
+      .typeError(AGE_VALIDATION.NUMBER)
+      .positive(AGE_VALIDATION.POSITIVE)
+      .integer(AGE_VALIDATION.INTEGER)
     }),
     onSubmit: (values) => {
       dispatch(setUserInfo(values));

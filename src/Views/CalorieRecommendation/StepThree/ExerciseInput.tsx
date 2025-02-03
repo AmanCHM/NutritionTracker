@@ -8,15 +8,12 @@ import { toast } from "react-toastify";
 import { RootState } from "../../../Store";
 import { openCalorieModal, setActivityLevel, setRequiredCalorie } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
-import { ROUTES_CONFIG } from "../../../Shared/Constants";
+import {  GENDER_OPTION, ROUTES_CONFIG, VALIDATION, WEIGHT } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
 import { Formik } from "formik";
+import { ERROR_MESSAGES } from "../../../Shared";
 
-// Define Activity Option Type
-// interface ActivityOption {
-//   value: string;
-//   label: string;
-// }
+
 
 const ExerciseInput: React.FC = () => {
   const dispatch = useDispatch();
@@ -51,7 +48,7 @@ const ExerciseInput: React.FC = () => {
     event.preventDefault();
 
     if (!activity) {
-      toast.error("Please select an activity level!");
+      toast.error(ERROR_MESSAGES().SELECT_ACTIVITY_LEVEL);
       return;
     }
 
@@ -68,7 +65,7 @@ const ExerciseInput: React.FC = () => {
   const calculateCalories = () => {
     let bmrCurrent = 0;
 
-    if (gender === "Male") {
+    if (gender === GENDER_OPTION.MALE) {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age + 5;
     } else {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age - 161;
@@ -82,13 +79,13 @@ const ExerciseInput: React.FC = () => {
       "Extra active (very hard exercise or a physical job)": 1.9,
     };
 
-    const activityValue = activityMultipliers[activity] || 1.2; // Default to Sedentary if invalid
+    const activityValue = activityMultipliers[activity] || 1.2; 
     const maintenance = Math.round(bmrCurrent * activityValue);
 
     let recommendedCalories = maintenance;
-    if (goal === "Loose Weight") {
+    if (goal === WEIGHT.LOOSE_WEIGHT) {
       recommendedCalories = maintenance - 550;
-    } else if (goal === "Gain Weight") {
+    } else if (goal === WEIGHT.GAIN_WEIGHT) {
       recommendedCalories = maintenance + 550;
     }
 
@@ -122,7 +119,7 @@ const ExerciseInput: React.FC = () => {
                 options={activityOptions}
                 value={activityOptions.find((option) => option.value === activity ) || null}
                 onChange={(selectedOption) => setActivity(selectedOption?.value as string)}
-                placeholder="Select an Option"
+                placeholder={VALIDATION.SELECT_OPTION}
               />
             </div>
             <div style={{ marginTop: "20px", marginLeft: "5%" }}>

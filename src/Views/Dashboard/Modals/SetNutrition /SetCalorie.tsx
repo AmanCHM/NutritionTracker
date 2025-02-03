@@ -8,6 +8,7 @@ import { auth, db } from "../../../../Utils/firebase";
 import { closeCalorieModal, resetGoal } from "../../../../Store/Nutrition";
 import { setSignout } from "../../../../Store/Auth";
 import { ROUTES_CONFIG } from "../../../../Shared/Constants";
+import { ERROR_MESSAGES } from "../../../../Shared";
 
 interface SetCalorieModalProps {
   setEnergyModal: (value: boolean) => void; 
@@ -48,7 +49,7 @@ const SetCalorieModal :React.FC<SetCalorieModalProps> = ({ setEnergyModal }) => 
         const userDocRef = doc(db, "users", userId);
         await setDoc(userDocRef, { calorie: calories }, { merge: true });
       } catch (error) {
-        console.error("Error saving  data", error);
+        console.error(ERROR_MESSAGES().ERROR_FETCH, error);
       } finally {
         dispatch(closeCalorieModal())
         dispatch(setSignout())
@@ -61,7 +62,6 @@ const SetCalorieModal :React.FC<SetCalorieModalProps> = ({ setEnergyModal }) => 
   const handlePlan  = ()=>{
     setEnergyModal(false);
     dispatch(setSignout())
-    
     navigate(ROUTES_CONFIG.CALORIE_CALCULATOR.path)
 
   }

@@ -74,7 +74,7 @@ const Home = () => {
        <AppFeature />
       <AppOverview/>
       <AIFeature />
-      {/* <Footer />   */}
+     
     </>
   );
 };

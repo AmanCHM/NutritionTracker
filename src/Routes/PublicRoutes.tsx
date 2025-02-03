@@ -11,10 +11,10 @@ import SignUp from '../Views/Auth/SignUp';
 import ResetPassword from '../Views/Auth/ResetPassword';
 import About from '../Views/About';
 import Contact from '../Views/Contact';
-import UserInfo from '../Views/Calorie-recommendation/StepOne/UserInfo';
-import CalorieRecommendation from '../Views/Calorie-recommendation/CalorieRecommedation';
-import ExerciseInput from '../Views/Calorie-recommendation/StepThree/ExerciseInput';
-import WeightInput from '../Views/Calorie-recommendation/StepTwo/WeightInput';
+import UserInfo from '../Views/CalorieRecommendation/StepOne/UserInfo';
+import CalorieRecommendation from '../Views/CalorieRecommendation/CalorieRecommedation';
+import ExerciseInput from '../Views/CalorieRecommendation/StepThree/ExerciseInput';
+import WeightInput from '../Views/CalorieRecommendation/StepTwo/WeightInput';
 
 export const PUBLIC_ROUTES: Array<CustomRouter> = [
   {

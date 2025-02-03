@@ -14,7 +14,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
 
 import { auth } from "../../../Utils/firebase";
-import { IMAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../../Shared";
 import { RootState } from "../../../Store";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
@@ -44,11 +44,11 @@ const Login: React.FC = () => {
 
       dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
-      toast.success("Google Logged in successful");
+      toast.success(SUCCESS_MESSAGES().GOOGLE_LOGIN_SUCCESS);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      toast.error("Google Login failed");
+      toast.error(ERROR_MESSAGES().GOOGLE_LOGIN_FAILED);
       console.error(errorCode, errorMessage);
     } finally {
       dispatch(hideLoader());
@@ -62,8 +62,8 @@ const Login: React.FC = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
-      password: Yup.string().min(8, "Must be 8 characters").required("Required"),
+      email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL).required(ERROR_MESSAGES().REQUIRED),
+      password: Yup.string().min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD).required(FORM_VALIDATION_MESSAGES().REQUIRED),
     }),
     onSubmit: async (values: MyFormValues, { setSubmitting }: FormikHelpers<MyFormValues>) => {
       dispatch(showLoader());
@@ -72,13 +72,13 @@ const Login: React.FC = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        toast.success("Logged in Successfully");
+        toast.success(SUCCESS_MESSAGES().LOGGED_IN_SUCCESSFULLY);
         dispatch(loggedin());
         navigate(ROUTES_CONFIG.DASHBOARD.path);
       } catch (error: any) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error("Login not successful");
+        toast.error(SUCCESS_MESSAGES().LOGGED_IN_UNSUCCESS);
         console.log(errorCode, errorMessage);
       } finally {
         setSubmitting(false);
@@ -154,7 +154,7 @@ const Login: React.FC = () => {
             </p>
             <p className="login-footer">
               Don't have an account?{" "}
-              <Link className="login-link" to="/signup">
+              <Link className="login-link" to={ROUTES_CONFIG.REGISTER.path}>
                 Sign Up
               </Link>
             </p>

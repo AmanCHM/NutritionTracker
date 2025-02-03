@@ -7,38 +7,22 @@ interface NutritionModalProps {
   selectedFoodData: SelectedFoodData;
 }
 
+
+
 const NutritionModal: React.FC<NutritionModalProps> = ({ onClose, selectedFoodData }) => {
   // Fetch the details of selected item
-  const calculateCalories  :number =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].nf_calories : 0;
-      
 
-  const protein =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].nf_protein
-      : 0;
+  const foodItem = selectedFoodData?.foods?.[0] || null;
 
-  const carbs =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].nf_total_carbohydrate
-      : 0;
+const foods = foodItem || 0;
+const calculateCalories: number = foodItem?.nf_calories || 0;
+const protein = foodItem?.nf_protein || 0;
+const carbs = foodItem?.nf_total_carbohydrate || 0;
+const fats = foodItem?.nf_total_fat || 0;
+const serving = foodItem?.serving_unit || 0;
+const image = foodItem?.photo?.thumb || " ";
 
-  const fats =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].nf_total_fat
-      : 0;
-
-  const serving =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0].serving_unit
-      : 0;
-
-  const image =
-    selectedFoodData?.foods?.length > 0
-      ? selectedFoodData?.foods[0]?.photo?.thumb
-      : " ";
-
+      const tableStyle = { padding:'8px'}
   return (
     <>
       <div className="logout-modal-content">
@@ -65,31 +49,31 @@ const NutritionModal: React.FC<NutritionModalProps> = ({ onClose, selectedFoodDa
           </thead>
           <tbody>
             <tr>
-              <td style={{ padding: "8px" }}>Serving Size</td>
-              <td style={{ padding: "8px" }}>{(calculateCalories ) > 0 ? `${serving}` : ""}
+              <td style={tableStyle}>Serving Size</td>
+              <td style={tableStyle}>{(calculateCalories ) > 0 ? `${serving}` : ""}
 </td>
             </tr>
             <tr>
-              <td style={{ padding: "8px" }}>Calories</td>
-              <td style={{ padding: "8px" }}>
+              <td style={tableStyle}>Calories</td>
+              <td style={tableStyle}>
                 {calculateCalories > 0 ? Math.floor(calculateCalories) : 0} kcal
               </td>
             </tr>
             <tr>
-              <td style={{ padding: "8px" }}>Total Fat</td>
-              <td style={{ padding: "8px" }}>
+              <td style={tableStyle}>Total Fat</td>
+              <td style={tableStyle}>
                 {calculateCalories  > 0 ? Math.floor(fats ) : 0} g
               </td>
             </tr>
             <tr>
-              <td style={{ padding: "8px" }}>Total Carbohydrate</td>
-              <td style={{ padding: "8px" }}>
+              <td style={tableStyle}>Total Carbohydrate</td>
+              <td style={tableStyle}>
                 {calculateCalories  > 0 ? Math.floor(carbs  ) : 0} g
               </td>
             </tr>
             <tr>
-              <td style={{ padding: "8px" }}>Protein</td>
-              <td style={{ padding: "8px" }}>
+              <td style={tableStyle}>Protein</td>
+              <td style={tableStyle}>
                 {calculateCalories  > 0 ? Math.floor(protein ) : 0} g
               </td>
             </tr>

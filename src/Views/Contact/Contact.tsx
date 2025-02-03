@@ -4,12 +4,13 @@ import "./Contact.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../Store/Loader";
+import { FORM_VALIDATION_MESSAGES } from "../../Shared";
 
 
 const ContactUs: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null); 
   const dispatch = useDispatch();
-  const apiUrl =
+  const Url =
     import.meta.env.VITE_GOOGLE_SCRIPT_URL;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -18,7 +19,7 @@ const ContactUs: React.FC = () => {
     try {
       if (formRef.current) {
         const formData = new FormData(formRef.current);
-        const response = await axios.post(apiUrl, formData, {
+        const response = await axios.post(Url, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -27,8 +28,8 @@ const ContactUs: React.FC = () => {
         formRef.current.reset();
       }
     } catch (error) {
-      console.error("Error:", error);
-      toast.error("An error occurred. Please try again later.");
+      
+      toast.error(FORM_VALIDATION_MESSAGES().ERROR_OCCURED);
     } finally {
       dispatch(hideLoader());
     }
