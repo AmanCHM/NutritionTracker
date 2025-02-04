@@ -36,7 +36,7 @@ import firebaseConfig, { auth, db } from "../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { string } from "yup";
 import { Dispatch } from "@reduxjs/toolkit";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../Shared";
+import { ERROR_MESSAGES, FORM, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SUCCESS_MESSAGES } from "../../Shared";
 import { isArray } from "lodash";
 import DrinkModal from "./Modals/Drink/DrinkModal";
 
@@ -54,6 +54,7 @@ import MealProgress from "./Components/MealProgress/MealProgress";
 import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
 import { setSignout } from "../../Store/Auth";
 import { DRINK_TYPE, FIREBASE_DOC_REF, GROUP_OPTIONS, MEALTYPE, NUTRIENT, VALIDATION } from "../../Shared/Constants";
+import { DRINK_TABLE_STYLE } from "../../assets/Css/customStyle";
 // import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -815,7 +816,7 @@ useEffect(() => {
         className="search"
         style={{ backgroundImage: `url(${IMAGES.bgSelectImage})` }}
       >
-        <h1 id="header-text">Search Your Meals Below</h1>
+        <h1 id="header-text">{LABEL.SEARCH_MEAL}</h1>
 
         <Select
           id="search-box"
@@ -825,11 +826,11 @@ useEffect(() => {
           placeholder="Search here ..."
           className="search-bar"
         />
-        <h1 id="header-text">or</h1>
+        <h1 id="header-text">{LABEL.OR}</h1>
       </div>
 
       <h2 style={{ padding: "40px" }}>
-        AI Food Vision: Identify Your Dish Instantly
+       {LABEL.AI_FOOD_VISION}
       </h2>
       <div className="ai-search">
         <button
@@ -841,7 +842,7 @@ useEffect(() => {
           <span className="ai-search-button-icon">
             <FaSearch size={16} color="white" />
           </span>
-          Visual Food Search
+         AI Visual Food Search
         </button>
         <CustomModal isOpen={imageModal} onClose={() => setImageModal(false)}>
           <ImageSearch
@@ -906,7 +907,7 @@ useEffect(() => {
       <div className="total-calorie">
         <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}>
           {" "}
-          Your Calorie Journey Today
+         {LABEL.YOUR_TODAY_MEAL}
         </h2>
         <div className="doughnut-data">
           <div className="doughnut-graph">
@@ -919,7 +920,7 @@ useEffect(() => {
                 value > 0 ? Math.floor(getPercentage(value, total)) : 0;
               return (
                 <div key={index} className="doughnut-text-item">
-                  <strong>{label}:</strong> {value} kcal ({percentage}%)
+                  <strong>{label}:</strong> {value} {FORM.KCAL} ({percentage}%)
                 </div>
               );
             })}
@@ -956,13 +957,13 @@ useEffect(() => {
 
       <div className="drink-section">
         <h2 style={{ color: "darkgrey", fontSize: "2.5rem" }}>
-          Water and Beverages Intake
+         {LABEL.WATER_AND_BEVERAGE}
         </h2>
         <button
           className="ai-search-button"
           onClick={() => setShowDrinkModal(true)}
         >
-          Add Drink
+        {LABEL.ADD_DRINK}
           <span className="ai-search-button-icon">
             <FaSearch size={16} color="white" />
           </span>
@@ -995,37 +996,19 @@ useEffect(() => {
             <thead>
               <tr style={{ backgroundColor: "#f4f6f7" }}>
                 <th
-                  style={{
-                    padding: "7px",
-                    border: "1px solid #ddd",
-                    color: "white",
-                    backgroundColor: "#aa6f5e",
-                    borderRadius: "2px",
-                  }}
+                  style={DRINK_TABLE_STYLE}
                 >
-                  Drink
+                  {LABEL.DRINK}
                 </th>
                 <th
-                  style={{
-                    padding: "7px",
-                    border: "1px solid #ddd",
-                    color: "white",
-                    backgroundColor: "#aa6f5e",
-                    borderRadius: "2px",
-                  }}
+                  style={DRINK_TABLE_STYLE}
                 >
-                  Total Quantity
+                 {LABEL.DRINK_QUANTITY}
                 </th>
                 <th
-                  style={{
-                    padding: "7px",
-                    border: "1px solid #ddd",
-                    color: "white",
-                    backgroundColor: "#aa6f5e",
-                    borderRadius: "2px",
-                  }}
+                  style={DRINK_TABLE_STYLE}
                 >
-                  Action
+                {LABEL.ACTION}
                 </th>
               </tr>
             </thead>
@@ -1037,10 +1020,10 @@ useEffect(() => {
                     alt="Water"
                     style={{ height: "60px" }}
                   />
-                  <p style={{ margin: "2px 0", fontWeight: "bold" }}>Water</p>
+                  <p style={{ margin: "2px 0", fontWeight: "bold" }}>{DRINK_TYPE.WATER}</p>
                 </td>
                 <td style={{ padding: "12x", border: "1px solid #ddd" }}>
-                  {totalWater} ml
+                  {totalWater} {FORM.ML}
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>
@@ -1060,10 +1043,10 @@ useEffect(() => {
                     alt="Alcohol"
                     style={{ height: "60px" }}
                   />
-                  <p style={{ margin: "2px 0", fontWeight: "bold" }}>Alcohol</p>
+                  <p style={{ margin: "2px 0", fontWeight: "bold" }}>{DRINK_TYPE.ALCOHOL}</p>
                 </td>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  {totalAlcohol} ml
+                  {totalAlcohol} {FORM.ML}
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>
@@ -1084,11 +1067,11 @@ useEffect(() => {
                     style={{ height: "60px" }}
                   />
                   <p style={{ margin: "2px 0", fontWeight: "bold" }}>
-                    Caffeine
+                    {DRINK_TYPE.CAFFEINE}
                   </p>
                 </td>
                 <td style={{ padding: "12px", border: "1px solid #ddd" }}>
-                  {totalCaffeine} ml
+                  {totalCaffeine} {FORM.ML}
                 </td>
                 <td>
                   <div style={{ display: "flex" }}>

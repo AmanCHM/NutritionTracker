@@ -1,6 +1,9 @@
 import React from "react";
 import "../Meal/MealModal.css";
 import { SelectedFoodData } from "../../Dashboard";
+import { FORM, LABEL } from "../../../../Shared";
+import { NUTRIENT } from "../../../../Shared/Constants";
+import { capitalizeFirstLetter } from "../../../../Helpers/function";
 
 interface NutritionModalProps {
   onClose: () => void;
@@ -23,64 +26,65 @@ const serving = foodItem?.serving_unit || 0;
 const image = foodItem?.photo?.thumb || " ";
 
       const tableStyle = { padding:'8px'}
+
+      const foodName = capitalizeFirstLetter(selectedFoodData?.foods[0]?.food_name);
   return (
     <>
       <div className="logout-modal-content">
-        <h2>Nutritional Facts</h2>
+        <h2>{LABEL.NUTRI_FACTS}</h2>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
           <img src={image} alt="Food" />
         </div>
 
         <h3 style={{ color: "#063970", textAlign: "center", paddingTop: "10px" }}>
-          {selectedFoodData?.foods[0]?.food_name?.charAt(0).toUpperCase() +
-            selectedFoodData?.foods[0]?.food_name?.slice(1)}
+          {foodName}
         </h3>
 
         <table style={{ width: "100%", borderCollapse: "collapse", color: "black" }}>
           <thead>
             <tr>
               <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
-                Nutrient
+              {LABEL.NUTRIENT}
               </th>
               <th style={{ borderBottom: "1px solid #ccc", textAlign: "left", padding: "8px" }}>
-                Amount
+                {LABEL.AMOUNT}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={tableStyle}>Serving Size</td>
+              <td style={tableStyle}>{LABEL.SERVING_SIZE}</td>
               <td style={tableStyle}>{(calculateCalories ) > 0 ? `${serving}` : ""}
 </td>
             </tr>
             <tr>
-              <td style={tableStyle}>Calories</td>
+              <td style={tableStyle}>{NUTRIENT.CALORIE}</td>
               <td style={tableStyle}>
-                {calculateCalories > 0 ? Math.floor(calculateCalories) : 0} kcal
+                {calculateCalories > 0 ? Math.floor(calculateCalories) : 0} {FORM.KCAL}
               </td>
             </tr>
             <tr>
-              <td style={tableStyle}>Total Fat</td>
+              <td style={tableStyle}> {NUTRIENT.FATS}</td>
               <td style={tableStyle}>
-                {calculateCalories  > 0 ? Math.floor(fats ) : 0} g
+                {calculateCalories  > 0 ? Math.floor(fats ) : 0} {FORM.GM}
               </td>
             </tr>
             <tr>
-              <td style={tableStyle}>Total Carbohydrate</td>
+              <td style={tableStyle}>{NUTRIENT.CARBS}</td>
               <td style={tableStyle}>
-                {calculateCalories  > 0 ? Math.floor(carbs  ) : 0} g
+                {calculateCalories  > 0 ? Math.floor(carbs  ) : 0} {FORM.GM}
               </td>
             </tr>
             <tr>
-              <td style={tableStyle}>Protein</td>
+              <td style={tableStyle}>{NUTRIENT.PROTEIN}</td>
               <td style={tableStyle}>
-                {calculateCalories  > 0 ? Math.floor(protein ) : 0} g
+                {calculateCalories  > 0 ? Math.floor(protein ) : 0} {FORM.GM}
               </td>
             </tr>
           </tbody>
         </table>
         <button onClick={onClose} className="modalClose-button" style={{ marginTop: "15px" }}>
-          Close
+          {LABEL.CLOSE_TEXT}
         </button>
       </div>
     </>

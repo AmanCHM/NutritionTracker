@@ -1,6 +1,7 @@
-// import { IMAGES } from '../../../../Shared';  
-import React from 'react';
-function ErrorFallback() {
+import React from "react";
+import { LABEL } from "../../../../Shared";
+
+const ErrorFallback: React.FC = () => {
   return (
     <div>
       <img
@@ -8,7 +9,6 @@ function ErrorFallback() {
           width: 150,
           height: 150,
         }}
-        // src={IMAGES.Attention}
         alt="error"
       />
       <p
@@ -16,11 +16,10 @@ function ErrorFallback() {
           fontWeight: 400,
         }}
       >
-        Our website is currently experiencing technical issues. Rest assured, we
-        are on it! Thank you for your patience.
+       {LABEL.FALLBACK_LABEL}
       </p>
     </div>
   );
-}
+};
 
 export default ErrorFallback;

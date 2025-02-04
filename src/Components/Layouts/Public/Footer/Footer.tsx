@@ -1,20 +1,26 @@
-import React from 'react';
-import './Footer.css';       
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import "./Footer.css";
+import { useNavigate } from "react-router-dom";
+import { CONTACT_DETAILS, LABEL } from "../../../../Shared";
+import colors from "../../../../assets/Css/color";
 
 const Footer: React.FC = () => {
-  const navigate = useNavigate();
+
+const white = { color: colors.whiteColor }
+
 
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-logo-section">
-          <h3>Nutrition Tracker</h3>
-          <p style={{ color: "white" }}>Simply #1 Health & Diet Tracking Platform</p>
+          <h3>{LABEL.APP_TITLE}</h3>
+          <p style={white}>
+           {LABEL.FOOTER_APP_DESCRIPTION}
+          </p>
         </div>
 
         <div className="footer-section">
-          <h4>Quick Links</h4>
+          <h4>{LABEL.QUICK_LABEL}</h4>
           <ul className="footer-links">
             {/* Uncomment and adjust the links as needed */}
             {/* <li style={{color:"grey"}}><a href="/home">Home</a></li>
@@ -25,23 +31,27 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="footer-section">
-          <h4>Contact Us</h4>
-          <p style={{ color: "white" }}>439B Health Avenue</p>
-          <p style={{ color: "white" }}>Varanasi, India</p>
-          <p style={{ color: "white" }}>
-            <i className="fas fa-phone-alt"></i> +91 987 373 4838
-          </p>
-          <p style={{ color: "white" }}>
-            <i className="fas fa-envelope"></i> aman.kumar@gmail.com
-          </p>
+          <h4>{CONTACT_DETAILS.TITLE}</h4>
+          <div>
+            {CONTACT_DETAILS.ADDRESS.map((line, index) => (
+              <p key={index} style={white}>
+                {line}
+              </p>
+            ))}
+            <p style={white}>
+              <i className={CONTACT_DETAILS.PHONE.ICON}></i>{" "}
+              {CONTACT_DETAILS.PHONE.NUMBER}
+            </p>
+            <p style={white}>
+              <i className={CONTACT_DETAILS.EMAIL.ICON}></i>{" "}
+              {CONTACT_DETAILS.EMAIL.ADDRESS}
+            </p>
+          </div>
         </div>
-
-       
       </div>
 
       <div className="footer-bottom">
-        <p style={{ color: "white" }}>&copy; 2024 Nutrition Tracker | All rights reserved.</p>
-      
+        <p style={white}>&copy; {LABEL.COPY_RIGHT}</p>
       </div>
     </footer>
   );

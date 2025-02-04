@@ -10,6 +10,7 @@ import { loggedout } from "../../../../Store/Auth";
 import { ROUTES_CONFIG } from "../../../../Shared/Constants";
 import CustomModal from "../../../Shared/CustomModal/CustomModal";
 import LogoutModal from "./Modal/LogoutModal";
+import { LABEL } from "../../../../Shared";
 
 
 const Navbar: React.FC = () => {
@@ -23,6 +24,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (islogged) {
+      
       const user = auth.currentUser;
       if (user) {
         setEmail(user.email || undefined);
@@ -53,40 +55,40 @@ const Navbar: React.FC = () => {
     <div>
       <nav className="navbar">
         <Link to={ROUTES_CONFIG.HOMEPAGE.path}>
-          <div id="company-name">Nutrition Tracker</div>
+          <div id="company-name">{LABEL.APP_TITLE}</div>
         </Link>
 
         {islogged ? (
           <div className="navbar-login">
             <NavLink to={ROUTES_CONFIG.HOMEPAGE.path} className={classNameFunc}>
-              Home
+              {ROUTES_CONFIG.HOMEPAGE.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.DASHBOARD.path} className={classNameFunc}>
-              Dashboard
+             {ROUTES_CONFIG.DASHBOARD.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.REPORTS.path} className={classNameFunc}>
-              Reports
+             {ROUTES_CONFIG.REPORTS.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.CALORIE_CALCULATOR.path} className={classNameFunc}>
-              BMR Calculator
+             {ROUTES_CONFIG.CALORIE_CALCULATOR.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.ABOUT.path} className={classNameFunc}>
-              About
+             {ROUTES_CONFIG.ABOUT.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.CONTACT.path} className={classNameFunc}>
-              Contact
+             {ROUTES_CONFIG.CONTACT.title}
             </NavLink>
           </div>
         ) : (
           <div className="navbar-login">
             <NavLink to={ROUTES_CONFIG.HOMEPAGE.path} className={classNameFunc}>
-              Home
+            {ROUTES_CONFIG.HOMEPAGE.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.ABOUT.path} className={classNameFunc}>
-              About
+            {ROUTES_CONFIG.ABOUT.title}
             </NavLink>
             <NavLink to={ROUTES_CONFIG.CONTACT.path} className={classNameFunc}>
-              Contact
+            {ROUTES_CONFIG.CONTACT.title}
             </NavLink>
           </div>
         )}
@@ -103,7 +105,7 @@ const Navbar: React.FC = () => {
               onClick={handleLogin}
               style={{ fontSize: "1.1rem" }}
             >
-              Login
+             {LABEL.LOG_IN}
             </span>
           )}
         </div>

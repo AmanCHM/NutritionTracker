@@ -11,7 +11,7 @@ import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelec
 import {  GENDER_OPTION, ROUTES_CONFIG, VALIDATION, WEIGHT } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
 import { Formik } from "formik";
-import { ERROR_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, GREETINGS, LABEL } from "../../../Shared";
 
 
 
@@ -103,17 +103,17 @@ const ExerciseInput: React.FC = () => {
             marginTop: "5%",
           }}
         >
-          What is your baseline activity level?
+          {GREETINGS.ACTIVITY_LABEL}
         </h3>
         <h3 style={{ textAlign: "center", color: "#627373" }}>
-          Not including workouts–we count that separately
+        {GREETINGS.WORKOUT_LABEL}
         </h3>
 
         <div className="calorie-container">
           <form onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="activity" style={{ fontSize: "1.2rem" }}>
-                Select Activity
+                {LABEL.SELECT_ATIVITY}
               </label>
                <CustomSelect
                 options={activityOptions}

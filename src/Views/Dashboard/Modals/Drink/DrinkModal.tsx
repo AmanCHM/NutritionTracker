@@ -11,15 +11,14 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import {  auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import {  CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 
 
 
 interface DrinkModalProps {
   setShowDrinkModal: (show: boolean) => void;
   onDataUpdated: () => void;
-  // editDataModal: boolean;
-  // editToggle: () => void;
+ 
 }
 
 
@@ -74,10 +73,10 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
     onSubmit: async (values) => {
       const servingSize =
         values.container === CONTAINER_OPTION.SMALLGLASS
-          ? 100
+          ? CONTAINER_OPTION.SMALL_QUANTITY
           : values.container === CONTAINER_OPTION.MEDIUMGLASS
-          ? 175
-          : 250;
+          ? CONTAINER_OPTION.MEDIUM_QUANTITY
+          :CONTAINER_OPTION.LARGE_QUANTITY;
 
       const totalAmount = servingSize * values.quantity;
 
@@ -117,16 +116,16 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
   return (
     <div>
       <button className="close-button" onClick={() => setShowDrinkModal(false)}>
-        X
+        {LABEL.CLOSE}
       </button>
       <h2 className="modal-title" style={{ color: "black" }}>
        
-        Add Drink 
+      {LABEL.ADD_DRINK}
       </h2>
       <form onSubmit={formik.handleSubmit}>
        
         <div className="input-group">
-          <label htmlFor="drinkType">Drink Type:</label>
+          <label htmlFor="drinkType">{LABEL.DRINK_TYPE}</label>
           <CustomSelect
             options={drinkTypeOptions}
             value={drinkTypeOptions?.find((opt) => opt.value === formik.values.drinkType) || null}
@@ -141,7 +140,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
 
        
         <div className="input-group">
-          <label htmlFor="container">Container Type:</label>
+          <label htmlFor="container">{LABEL.CONTAINER_TYPE}</label>
           <CustomSelect
             options={containerOptions}
             value={containerOptions.find((opt) => opt.value === formik.values.container) ||null}
@@ -156,7 +155,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
 
         {/* Quantity */}
         <div className="input-group">
-          <label htmlFor="quantity">Quantity:</label>
+          <label htmlFor="quantity">{LABEL.QUANTITY}</label>
           <input
             type="number"
             id="quantity"
@@ -173,7 +172,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
 
         <button type="submit" className="submit-button">
          
-          Submit
+          {LABEL.SUBMIT}
         </button>
       </form>
     </div>

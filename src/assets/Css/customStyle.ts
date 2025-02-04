@@ -34,6 +34,7 @@ const spacing = {
     fadeIn: 'fadeIn 0.3s ease-in-out'
   };
   
+  const  progressMargin ={ margin: "20px 20px" }
   const mixins = {
     flexCenter: () => ({
       display: 'flex',
@@ -48,5 +49,19 @@ const spacing = {
       }
     })
   };
+
+  const TABLE_STYLE={
+     padding: "10px", borderBottom: "1px solid #ddd" 
+  }
+
+  const DRINK_TABLE_STYLE ={
+    
+      padding: "7px",
+      border: "1px solid #ddd",
+      color: "white",
+      backgroundColor: "#aa6f5e",
+      borderRadius: "2px",
+    
+  }
   
-  export { spacing, breakpoints, shadows, borderRadius, zIndex, animations, mixins };
+  export { spacing, breakpoints, shadows, borderRadius, zIndex, animations, mixins, progressMargin, TABLE_STYLE,DRINK_TABLE_STYLE };

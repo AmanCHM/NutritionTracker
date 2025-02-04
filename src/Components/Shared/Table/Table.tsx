@@ -1,7 +1,8 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import {  FoodDetail, LogData, MealItem } from "../../../Views/Dashboard/Dashboard";
-import { COLSPAN_VALUE, MEALTYPE } from "../../../Shared/Constants";
+import { COLSPAN_VALUE, MEALTYPE, NUTRIENT } from "../../../Shared/Constants";
+import { LABEL } from "../../../Shared";
 
   interface TableProps {
     logData: LogData | undefined;
@@ -28,13 +29,13 @@ const Table: React.FC<TableProps> = ({
             style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}
           >
             {" "}
-            Your Food Diary
+           {LABEL.FOOD_DIARY}
           </h2>
 
           <div className="meal-section">
             <div>
               <label className="table-label">
-                <strong>BreakFast </strong>
+                <strong>{MEALTYPE.BREAKFAST} </strong>
                 {/* {breakfastCalorie} kcal */}
               </label>
             </div>
@@ -43,12 +44,12 @@ const Table: React.FC<TableProps> = ({
               <table className="meal-table">
                 <thead>
                   <tr>
-                    <th>Food Name</th>
-                    <th>Proteins (g)</th>
-                    <th>Carbs (g)</th>
-                    <th>Fats (g)</th>
-                    <th>Calories (kcal)</th>
-                    {showFeature && <th>Action</th>}
+                    <th>{LABEL.FOOD_NAME}</th>
+                    <th>{NUTRIENT.PROTEIN_GM}</th>
+                    <th>{NUTRIENT.CARBS_GM}</th>
+                    <th>{NUTRIENT.FATS_GM}</th>
+                    <th>{NUTRIENT.CALORIE_KCAL}</th>
+                    {showFeature && <th>{LABEL.ACTION}</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -98,7 +99,7 @@ const Table: React.FC<TableProps> = ({
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={COLSPAN_VALUE}>No breakfast items</td>
+                      <td colSpan={COLSPAN_VALUE}>{LABEL.NO_BREAKFAST}</td>
                     </tr>
                   )}
                 </tbody>
@@ -107,18 +108,18 @@ const Table: React.FC<TableProps> = ({
           </div>
           <div className="meal-section">
             <label className="table-label">
-              <strong>Lunch </strong>
+              <strong>{MEALTYPE.LUNCH} </strong>
               {/* {lunchCalorie} kcal */}
             </label>
             <table className="meal-table">
               <thead>
                 <tr>
-                  <th>Food Name</th>
-                  <th>Proteins (g)</th>
-                  <th>Carbs (g)</th>
-                  <th>Fats (g)</th>
-                  <th>Calories (kcal)</th>
-                  {showFeature && <th>Action</th>}
+                <th>{LABEL.FOOD_NAME}</th>
+                    <th>{NUTRIENT.PROTEIN_GM}</th>
+                    <th>{NUTRIENT.CARBS_GM}</th>
+                    <th>{NUTRIENT.FATS_GM}</th>
+                    <th>{NUTRIENT.CALORIE_KCAL}</th>
+                    {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -166,7 +167,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={COLSPAN_VALUE}>No lunch items</td>
+                    <td colSpan={COLSPAN_VALUE}>{LABEL.NO_LUNCH}</td>
                   </tr>
                 )}
               </tbody>
@@ -175,18 +176,18 @@ const Table: React.FC<TableProps> = ({
 
           <div className="meal-section">
             <label className="table-label">
-              <strong>Snack </strong>
+              <strong>{MEALTYPE.SNACK} </strong>
               {/* {snackCalorie} kcal */}
             </label>
             <table className="meal-table">
               <thead>
                 <tr id="header-color">
-                  <th>Food Name</th>
-                  <th>Proteins (g)</th>
-                  <th>Carbs (g)</th>
-                  <th>Fats (g)</th>
-                  <th>Calories (kcal)</th>
-                  {showFeature && <th>Action</th>}
+                <th>{LABEL.FOOD_NAME}</th>
+                    <th>{NUTRIENT.PROTEIN_GM}</th>
+                    <th>{NUTRIENT.CARBS_GM}</th>
+                    <th>{NUTRIENT.FATS_GM}</th>
+                    <th>{NUTRIENT.CALORIE_KCAL}</th>
+                    {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -233,7 +234,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={COLSPAN_VALUE}>No snack items</td>
+                    <td colSpan={COLSPAN_VALUE}>{LABEL.NO_SNACKS}</td>
                   </tr>
                 )}
               </tbody>
@@ -243,18 +244,18 @@ const Table: React.FC<TableProps> = ({
           <div className="meal-section">
             <label className="table-label">
               {" "}
-              <strong>Dinner </strong>
+              <strong>{MEALTYPE.DINNER}</strong>
               {/* {dinnerCalorie} kcal */}
             </label>
             <table className="meal-table">
               <thead>
                 <tr>
-                  <th>Food Name</th>
-                  <th>Proteins (g)</th>
-                  <th>Carbs (g)</th>
-                  <th>Fats (g)</th>
-                  <th>Calories (kcal)</th>
-                  {showFeature && <th>Action</th>}
+                <th>{LABEL.FOOD_NAME}</th>
+                    <th>{NUTRIENT.PROTEIN_GM}</th>
+                    <th>{NUTRIENT.CARBS_GM}</th>
+                    <th>{NUTRIENT.FATS_GM}</th>
+                    <th>{NUTRIENT.CALORIE_KCAL}</th>
+                    {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -301,7 +302,7 @@ const Table: React.FC<TableProps> = ({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={COLSPAN_VALUE}>No dinner items</td>
+                    <td colSpan={COLSPAN_VALUE}>{LABEL.NO_DINNER}</td>
                   </tr>
                 )}
               </tbody>

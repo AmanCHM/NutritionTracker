@@ -16,10 +16,20 @@ const colors = {
     blackColor8: '#797979',
     blackColor9: '#6D6D6D',
     blackColor10: '#101828',
-    darkGreenColor1200: '#06513C',
+    darkBlueColor1200: '#2c3e50',
     darkGreenColor1100: '#064F3B',
     darkGreenColor1000: '#042F23',
-    darkGreenColor950: '#054130'
+    darkGreenColor950: '#054130',
+
+   berakfast_color: "rgb(255, 99, 132)",
+   lunch_color: "rgb(54, 162, 235)",
+   snacks_color: "#afc0d9",
+   dinner_color: "#D1C28A",
+
+   strokeColor_first:"#e15f41",
+   strokeColor_second:"#55a630",
+   strokeColor_third:"#007bff",
+   strokeColor_fourth:"#52b788"
   };
   
   export default colors;

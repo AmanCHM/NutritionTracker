@@ -5,7 +5,7 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../../../Utils/firebase";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../Shared";
 
 const ResetPassword: React.FC = () => {
   const [email, setEmail] = useState<string>(""); 
@@ -51,11 +51,11 @@ const ResetPassword: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Reset-Password</button>
+        <button type="submit">{LABEL.RESET_PASS}</button>
         <p className="login-footer" style={{ color: "#303952" }}>
-          Go to login page{" "}
-          <Link to="/login" className="login-link">
-            Log-in
+          {LABEL.GO_TO_LOGIN}
+          <Link to={ROUTES_CONFIG.LOGIN.path} className="login-link">
+            {LABEL.LOG_IN}
           </Link>
         </p>
       </form>

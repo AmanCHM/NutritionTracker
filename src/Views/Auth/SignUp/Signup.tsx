@@ -13,7 +13,7 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES } from "../../../Shared";
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
@@ -47,8 +47,8 @@ const Signup: React.FC = () => {
       email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL).required(ERROR_MESSAGES().REQUIRED),
       password: Yup.string().min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD).required(FORM_VALIDATION_MESSAGES().REQUIRED),
       confirmPassword: Yup.string()
-        // .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("Required"),
+        
+        .required(FORM_VALIDATION_MESSAGES().REQUIRED),
     }),
     onSubmit: async (values, { setSubmitting }: FormikHelpers<SignupFormValues>) => {
       dispatch(showLoader());
@@ -58,7 +58,7 @@ const Signup: React.FC = () => {
         const user = userCredential.user;
 
         const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
-        await setDoc(userDocRef, { calorie: 2000, water: 3000, alcohol: 600, caffeine: 850 });
+        await setDoc(userDocRef, { calorie: SET_DRINKS_CALORIE.CALORIE, water: SET_DRINKS_CALORIE.WATER, alcohol: SET_DRINKS_CALORIE.ALOCOHOL, caffeine: SET_DRINKS_CALORIE.CAFFEINE });
 
         toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
@@ -81,9 +81,9 @@ const Signup: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const userDocRef = doc(db, "users", user.uid);
+      const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
 
-      await setDoc(userDocRef, { calorie: 2000 });
+      await setDoc(userDocRef, { calorie: SET_DRINKS_CALORIE.CALORIE, water: SET_DRINKS_CALORIE.WATER, alcohol: SET_DRINKS_CALORIE.ALOCOHOL, caffeine: SET_DRINKS_CALORIE.CAFFEINE });
 
       toast.success(SUCCESS_MESSAGES().GOOGLE_SIGNEDUP_SUCCESS);
     //   dispatch(loggedin());
@@ -100,9 +100,9 @@ const Signup: React.FC = () => {
     <>
       {/* <Navbar /> */}
       <div className="signup-container">
-        <h2 className="signup-title">Sign-Up Form</h2>
+        <h2 className="signup-title">{LABEL.SIGN_UP}</h2>
         <form className="signup-form" onSubmit={formik.handleSubmit}>
-          <label className="signup-label" htmlFor="email">Email Address</label>
+          <label className="signup-label" htmlFor="email">{LABEL.EMAIL}</label>
           <input
             id="email"
             className="signup-input"
@@ -116,7 +116,7 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.email}</div>
           ) : null}
 
-          <label className="signup-label" htmlFor="password">Password</label>
+          <label className="signup-label" htmlFor="password">{LABEL.PASSWORD}</label>
           <div className="password-wrapper">
             <input
               id="password"
@@ -138,7 +138,7 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.password}</div>
           ) : null}
 
-          <label className="signup-label" htmlFor="confirmPassword">Confirm Password</label>
+          <label className="signup-label" htmlFor="confirmPassword">{LABEL.CONFIRM_PASS}</label>
           <div className="password-wrapper">
             <input
               id="confirmPassword"
@@ -160,16 +160,16 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.confirmPassword}</div>
           ) : null}
 
-          <button className="signup-button" type="submit">Sign Up</button>
+          <button className="signup-button" type="submit">{LABEL.SIGN_UP}</button>
         </form>
         <p className="login-footer">Or</p>
         <button className="signup-button" onClick={handleGoogleSignup}>
           <img src={IMAGES.googleLogo} alt="Google Logo" className="google-logo" />
-          Sign Up with Google
+          {LABEL.SIGN_IN_GOOGLE}
         </button>
 
         <p className="signup-footer">
-          Already have an account? <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>Log In</Link>
+          {LABEL.ALREADY_ACC} <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>{LABEL.LOG_IN}</Link>
         </p>
       </div>
     </>

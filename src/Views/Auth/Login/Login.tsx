@@ -14,7 +14,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
 
 import { auth } from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, SUCCESS_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SUCCESS_MESSAGES } from "../../../Shared";
 import { RootState } from "../../../Store";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
@@ -93,10 +93,10 @@ const Login: React.FC = () => {
 
       <div className="login-page">
         <div className="login-container">
-          <h2 className="login-title">Log-in </h2>
+          <h2 className="login-title">{LABEL.LOG_IN}</h2>
           <form className="login-form" onSubmit={formik.handleSubmit}>
             <label className="login-label" htmlFor="email">
-              Email Address
+            {LABEL.EMAIL}
             </label>
             <input
               id="email"
@@ -112,7 +112,7 @@ const Login: React.FC = () => {
             ) : null}
 
             <label className="login-label" htmlFor="password">
-              Password
+             {LABEL.PASSWORD}
             </label>
             <div className="password-wrapper">
               <input
@@ -136,26 +136,26 @@ const Login: React.FC = () => {
             ) : null}
 
             <button className="login-button" type="submit">
-              Submit
+            {LABEL.SUBMIT}
             </button>
 
             <p className="login-footer">Or</p>
 
             <button className="google-login-button" type="button" onClick={handleGoogleSignIn}>
               <img src={IMAGES.googleLogo} alt="Google logo" className="google-logo" />
-              Sign in with Google
+            {LABEL.SIGN_IN_GOOGLE}
             </button>
 
             <p className="login-footer">
-              Forget your password?{" "}
+              {LABEL.FORGOT_PASS}
               <Link className="login-link" to={ROUTES_CONFIG.RESET_PASSWORD.path}>
-                Reset-Password
+                {LABEL.RESET_PASS}
               </Link>
             </p>
             <p className="login-footer">
-              Don't have an account?{" "}
+             {LABEL.DONT_HAVE_ACC}
               <Link className="login-link" to={ROUTES_CONFIG.REGISTER.path}>
-                Sign Up
+               {LABEL.SIGN_UP}
               </Link>
             </p>
           </form>

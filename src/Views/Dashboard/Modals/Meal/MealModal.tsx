@@ -5,7 +5,8 @@ import CustomSelect, {
 import { SelectedFoodData } from "../../Dashboard";
 import { User } from "firebase/auth";
 import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
-import { FORM_VALIDATION_MESSAGES } from "../../../../Shared";
+import { FORM_VALIDATION_MESSAGES, LABEL } from "../../../../Shared";
+import { capitalizeFirstLetter } from "../../../../Helpers/function";
 
 interface Measure {
   serving_weight: number;
@@ -160,32 +161,36 @@ const MealModal: React.FC<MealModalProps> = ({
     }
   };
 
+
+  const foodName = capitalizeFirstLetter(selectedFoodData?.foods[0]?.food_name);
   
+
+  const altMeasures = selectedFoodData?.foods?.flatMap((food) => food.alt_measures) || [];
+
   return (
     <>
       <div>
         <button className="close-button" onClick={() => setModal(false)}>
-          X
+          {LABEL.CLOSE}
         </button>
-        <h2>Select Meal</h2>
+        <h2>{LABEL.SELECT_MEAL}</h2>
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-        >
+         >
           <img src={image} alt="" />
         </div>
         <h3
           style={{ color: "#063970", textAlign: "center", paddingTop: "10px" }}
         >
-          {selectedFoodData?.foods[0]?.food_name?.charAt(0).toUpperCase() +
-            selectedFoodData?.foods[0]?.food_name?.slice(1)}
+          {foodName}
         </h3>
 
         <div className="input-container">
-          <label>Choose Quantity</label>
+          <label>{LABEL.CHOOSE_QUANTITY}</label>
           <input
             type="number"
             name="quantity"
@@ -204,7 +209,7 @@ const MealModal: React.FC<MealModalProps> = ({
         </div>
 
         <div className="select-container">
-          <label>Select Serving Size</label>
+          <label>{LABEL.SERVING_SIZE}</label>
           <CustomSelect
             placeholder="Choose a meal"
             options={sliceOptions}
@@ -212,23 +217,18 @@ const MealModal: React.FC<MealModalProps> = ({
               selectquantity
                 ? {
                     value: selectquantity,
-                    label: selectedFoodData?.foods
-                        .flatMap((food) => food.alt_measures)
-                        .find((measure) => measure.serving_weight == selectquantity)
-                        ?.measure || "No label",
+                    label: altMeasures.find((measure) => measure.serving_weight === selectquantity)?.measure || "No label",
                   }
                 : null
             }
-           
+            
             onChange={(selectedOption) => {
-              const selectedMeasure = selectedFoodData?.foods
-                .flatMap((food) => food.alt_measures)
-                .find((measure) => measure.serving_weight === selectedOption?.value);
-                setSelectquantity(selectedOption?.value as number);
+              const selectedMeasure = altMeasures.find((measure) => measure.serving_weight === selectedOption?.value);
+              
+              setSelectquantity(selectedOption?.value as number);
               console.log(selectquantity);
               setAltMeasure(selectedMeasure?.measure || '');
             }}
-
             // onBlur={handleBlur}
             
             
@@ -238,7 +238,7 @@ const MealModal: React.FC<MealModalProps> = ({
           )}
         </div>
 
-        <label className="meal-label">Choose Meal</label>
+        <label className="meal-label">{LABEL.CHOOSE_MEAL}</label>
         <CustomSelect
           options={mealOptions}
           value={
@@ -255,10 +255,10 @@ const MealModal: React.FC<MealModalProps> = ({
         )}
 
         <p className="calorie-info">
-          Calorie Served: {Math.round(calculateCalories as number)}
+         {LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}
         </p>
         <button className="add-meal-button" onClick={handleSubmit}>
-          Add Meal
+          {LABEL.ADD_MEAL}
         </button>
       </div>
     </>
@@ -268,18 +268,4 @@ const MealModal: React.FC<MealModalProps> = ({
 export default MealModal;
 
 
-
-
-  // const foodOptions =
-  //   selectedFoodData?.foods
-  //     .flatMap((food) => food.alt_measures)
-  //     .map((measure) => ({
-  //       value: measure.serving_weight,
-  //       label: measure.measure,
-  //     })) || [];
-
-  // console.log("foodoptions", foodOptions);
-
-  // const selectedOption =
-  //   foodOptions.find((option) => option.value === selectquantity) || null;
 

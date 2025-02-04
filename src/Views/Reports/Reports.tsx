@@ -28,10 +28,11 @@ import { hideLoader, showLoader } from "../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { RootState } from "../../Store";
-import { ERROR_MESSAGES, IMAGES } from "../../Shared";
+import { ERROR_MESSAGES, FORM, IMAGES, LABEL } from "../../Shared";
 import Table from "../../Components/Shared/Table";
 import { LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
+import colors from "../../assets/Css/color";
 
 
 
@@ -110,10 +111,10 @@ const Reports: React.FC = () => {
       {
         data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
         backgroundColor: [
-          "rgb(255, 99, 132)",
-          "rgb(54, 162, 235)",
-          "#afc0d9",
-          "#D1C28A",
+          colors.berakfast_color,
+          colors.lunch_color,
+          colors.snacks_color,
+          colors.dinner_color
         ],
         hoverOffset: 1,
       },
@@ -126,7 +127,7 @@ const Reports: React.FC = () => {
         className="select-date"
           style={{ backgroundImage: `url(${IMAGES.bgSelectDate})` }}
       >
-        <h3 className="selectDate-header">Select Date</h3>
+        <h3 className="selectDate-header">{LABEL.SELECT_DATE}</h3>
         <input
           type="Date"
           className="date-input"
@@ -149,7 +150,7 @@ const Reports: React.FC = () => {
 
       <h2 style={{ marginRight: "1%", marginTop: "5vh", fontSize: "2rem" }}>
         {" "}
-        Total Calorie Consumed : {totalCalories} kcal
+        {FORM.TOTAL_CALORIE_CONSUMED}{totalCalories} {FORM.KCAL}
       </h2>
       <div className="reports-chart">
         <Doughnut
@@ -167,7 +168,7 @@ const Reports: React.FC = () => {
 
             return (
               <div key={index} className="dashboard-text-item">
-                <strong>{label}:</strong> {value} kcal
+                <strong>{label}:</strong> {value} {FORM.KCAL}
               </div>
             );
           })}

@@ -2,8 +2,9 @@ import React, { FormEvent, useEffect, useState } from "react";
 import "../Nutrition/NutritionModal.css";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { FoodData, LogData, SelectedFoodData } from "../../Dashboard";
-import { FORM_VALIDATION_MESSAGES } from "../../../../Shared";
+import { FORM_VALIDATION_MESSAGES, LABEL } from "../../../../Shared";
 import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
+import { capitalizeFirstLetter } from "../../../../Helpers/function";
 
 
 // Define types for the food data and props
@@ -124,36 +125,53 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
     { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
     { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
+ 
 
-
-  const sliceOptions = selectedFoodData?.foods.flatMap((food, foodIndex) =>
-    food.alt_measures.map((measure, index) => ({
-      value: measure.serving_weight,
-      label: measure.measure,
-      key: `${foodIndex}-${index}`,
-    }))
-  ) || [];
+  const getSliceOptions = (selectedFoodData: SelectedFoodData) => {
+    return (
+      selectedFoodData?.foods?.flatMap((food, foodIndex) =>
+        food.alt_measures.map((measure, index) => ({
+          value: measure.serving_weight,
+          label: measure.measure,
+          key: `${foodIndex}-${index}`,
+        }))
+      ) || []
+    );
+  };
   useEffect(() => {
     if (mealName) {
       setSelectCategory(mealName);
     }
   }, [mealName, setSelectCategory]);
 
-
-  ;
+  const sliceOptions = getSliceOptions(selectedFoodData);
+  // Fetch image
+  const image =
+  selectedFoodData?.foods.length > 0
+    ? selectedFoodData?.foods[0]?.photo?.thumb
+    : "no data";
+    
+  const foodName = capitalizeFirstLetter(selectedFoodData?.foods[0]?.food_name);
   return (
     <>
       <div>
         <button className="close-button" onClick={() => setModal(false)}>
-          X
+        {LABEL.CLOSE}
         </button>
         <h2 className="modal-title" style={{ color: "black" }}>
-          Update Meal
+         {LABEL.UPDATE_MEAL}
         </h2>
-
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+         >
+          <img src={image} alt="" />
+        </div>
         <h3 style={{ color: "#063970", textAlign: 'center', paddingTop: '10px' }}>
-          {selectedFoodData?.foods[0]?.food_name?.charAt(0).toUpperCase() +
-            selectedFoodData?.foods[0]?.food_name?.slice(1)}
+          {foodName}
         </h3>
 
         <div className="input-container">
@@ -171,16 +189,14 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
         </div>
 
         <div className="select-container">
-          <label>Select Serving Size</label>
+          <label>{LABEL.SERVING_SIZE}</label>
           <CustomSelect
             options={sliceOptions}
             value={
               selectquantity
                 ? {
                     value: selectquantity,
-                    label: selectedFoodData?.foods
-                      .flatMap((food) => food.alt_measures)
-                      .find((measure) => measure.serving_weight === selectquantity)?.measure || '',
+                    label: sliceOptions.find((option) => option.value === selectquantity)?.label || '',
                   }
                 : null
             }
@@ -193,7 +209,7 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
           {errors.selectquantity && <div style={{ color: "red" }}>{errors.selectquantity}</div>}
         </div>
 
-        <label className="meal-label">Choose Meal</label>
+        <label className="meal-label">{LABEL.CHOOSE_MEAL}</label>
         <CustomSelect
           options={mealOptions}
           value={mealOptions.find((option) => option.value === selectCategory) || null}
@@ -202,10 +218,10 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
         />
         {errors.selectCategory && <div style={{ color: "red" }}>{errors.selectCategory}</div>}
 
-        <p className="calorie-info">Calorie Served: {Math.round(calculateCalories as number)}</p>
+        <p className="calorie-info">{LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}</p>
 
         <button className="add-meal-button" onClick={handleSubmit}>
-          Update Meal
+          {LABEL.UPDATE_MEAL}
         </button>
       </div>
     </>

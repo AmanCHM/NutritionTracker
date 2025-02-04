@@ -7,12 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetGoal } from "../../Store/Nutrition";
 import { ROUTES_CONFIG } from "../../Shared/Constants";
 import { RootState } from "../../Store";
-import { IMAGES } from "../../Shared";
+import { GREETINGS, IMAGES } from "../../Shared";
 import Feature from "./components/AppFeature/AppFeature";
 import AppFeature from "./components/AppFeature/AppFeature";
 import AppOverview from "./components/AppOverview/AppOverview";
 import AIFeature from "./components/AIFeature/AIFeature";
 import Footer from "../../Components/Layouts/Public/Footer";
+import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
 
 
 
@@ -32,8 +33,8 @@ const Home = () => {
       <div className="landing-page">
         <section className="hero">
           <div className="content">
-            <b style={{ color: "grey" }}>Welcome to Nutrition Tracker</b>
-            <p>Track your meals and stay healthy!</p>
+            <b style={{ color: "grey" }}>{GREETINGS.WELCOME_NUTRITRACK}</b>
+            <p>{GREETINGS.TRACK_MEALS}</p>
           </div>
         </section>
 
@@ -41,21 +42,32 @@ const Home = () => {
           <div className="description">
             <h1 style={{ color: "grey" }}>
               {" "}
-              Eat smarter, <br />
-              Live better.
+             {GREETINGS.EAT_SMARTER} <br />
+             {GREETINGS.LIVE_BETTER}
             </h1>
 
             <h4 style={{ color: "grey" }}>
-              Track your calories, exercise,
+             {GREETINGS.TRACK_CALORIE}
               <br />
-              biometrics and health data.
+              {GREETINGS.BIOMETRIC_DATA}
             </h4>
             {islogged ? (
               ""
             ) : (
-              <button id="button" onClick={handleClick}>
-                Let's Start
-              </button>
+
+              <CustomButton
+            type="submit"
+            style={{
+           
+              width:"200px"
+            }}
+            size={"large"}
+            onClick={handleClick}
+            label={"Let's Start"}
+          >
+            
+          </CustomButton>
+            
             )}
           </div>
           <div>

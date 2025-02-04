@@ -24,7 +24,7 @@ const WILDCARD_ROUTES = {
   const ROUTES_CONFIG = {
     HOMEPAGE: {
       path: ROUTES.HOMEPAGE,
-      title: 'Landing Page',
+      title: 'Home',
     },
     LOGIN: {
       path: ROUTES.LOGIN,
@@ -40,7 +40,7 @@ const WILDCARD_ROUTES = {
     },
     CALORIE_CALCULATOR: {
       path: ROUTES.CALORIE_CALCULATOR,
-      title: 'Calorie Calculator',
+      title: 'BMR Calculator',
     },
     USER_INFO: {
       path: ROUTES.USER_INFO,
@@ -90,7 +90,10 @@ const WILDCARD_ROUTES = {
   export  const  CONTAINER_OPTION ={
            SMALLGLASS:'Small Glass (100ml)',
            MEDIUMGLASS:'Medium Glass (175ml)',
-           LARGEGLASS :'Large Glass (250ml)'
+           LARGEGLASS :'Large Glass (250ml)',
+           SMALL_QUANTITY:100,
+           MEDIUM_QUANTITY:175,
+           LARGE_QUANTITY:275,
   }
 
   export const ACTIVITY_OPTIONS = {
@@ -148,7 +151,17 @@ export const WEIGHT_VALIDATION={
   REQUIRED:'Weight is required',
   POSITIVE:'Weight must be positive',
   INTEGER:'Weight must be a whole number',
-  NUMBER:'Weight must be a number'
+  NUMBER:'Weight must be a number',
+  CURRENT_WEIGHT: {
+    TYPE_ERROR: "Must be a number",
+    MIN: "Current weight must be at least 1 kg.",
+    REQUIRED: "Please enter your current weight.",
+  },
+  TARGET_WEIGHT: {
+    TYPE_ERROR: "Must be a number",
+    MIN: "Target weight must be at least 1 kg.",
+    REQUIRED: "Please enter your target weight.",
+  },
 }
 export const QUANTITY_VALIDATION = {
   REQUIRED: "Please enter a quantity",
@@ -202,7 +215,11 @@ export const NUTRIENT={
   CALORIE: 'calories',
   PROTEIN: 'proteins',
   CARBS:'carbs',
-  FATS:'fats'
+  FATS:'fats',
+  CALORIE_KCAL: 'Calories (Kcal)',
+  PROTEIN_GM: 'proteins (g)',
+  CARBS_GM:'carbs (g)',
+  FATS_GM:'fats(g)'
 }
 
 
@@ -210,3 +227,4 @@ export const GENDER_OPTION={
   MALE:'Male',
   FEMALE:'Female'
 }
+

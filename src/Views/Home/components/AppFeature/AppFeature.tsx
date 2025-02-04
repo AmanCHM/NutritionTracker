@@ -2,20 +2,21 @@ import React from "react";
 
 import "./AppFeature.css";
 import FeatureCards from "../Cards/FeatureCard/FeatureCards";
-import { IMAGES } from "../../../../Shared";
+import { HOME_PAGE, IMAGES } from "../../../../Shared";
+import colors from "../../../../assets/Css/color";
+
 
 const AppFeature = () => {
   return (
     <div> 
        <div className="feature">
         <div className="feature-header" >
-        <label style={{ fontSize: "32px", color: "white"}}> 
-          Improve your nutrition with confidence.
+        <label style={{ fontSize: "32px", color: colors.whiteColor}}> 
+       {HOME_PAGE.APP_FEATURE.LABEL}
           </label>
         <p style={{ fontSize: "18px", color: "#a3a3a3" }}>
           {" "}
-          Nutrition tracker encourages you to not just count your calories but
-          to focus on your nutrition as a whole{" "}
+         {HOME_PAGE.APP_FEATURE.GREET}
         </p>
       </div>
       <div className="feature-component">
@@ -28,17 +29,14 @@ const AppFeature = () => {
 
       
           <FeatureCards
-            header="Accurate nutrition data"
-            description="Be confident that the food you log has the correct nutrition data. We verify every food submission for accuracy."
-          />
+            header={HOME_PAGE.APP_FEATURE.FIRST_CARDS.HEADER}
+            description= {HOME_PAGE.APP_FEATURE.FIRST_CARDS.DESCRITION}        />
           <FeatureCards
-            header="Over many users"
-            description="Join the community to get tips and inspiration from other users on our forums and Facebook "
-          />
+            header={HOME_PAGE.APP_FEATURE.SECOND_CARDS.HEADER}
+            description={HOME_PAGE.APP_FEATURE.SECOND_CARDS.DESCRITION}         />
           <FeatureCards
-            header="Data privacy & security"
-            description="We take the security of our users' accounts seriously - we will never sell your account data to third parties."
-          />
+            header={HOME_PAGE.APP_FEATURE.THIRD_CARDS.HEADER}
+            description={HOME_PAGE.APP_FEATURE.THIRD_CARDS.DESCRITION}          />
         </div>
       </div>
 

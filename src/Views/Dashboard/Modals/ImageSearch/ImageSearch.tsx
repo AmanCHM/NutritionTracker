@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
 
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import { arrayUnion, doc, setDoc } from "firebase/firestore";
 import { useFormik } from "formik";
@@ -13,16 +13,28 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { Throttle } from "../../../../Helpers/function";
-import { FIREBASE_DOC_REF, IMAGE_ID_API_URL, MEALTYPE, NUTRI_INFO_API_URL, VALIDATION } from "../../../../Shared/Constants";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
-
+import {
+  FIREBASE_DOC_REF,
+  IMAGE_ID_API_URL,
+  MEALTYPE,
+  NUTRIENT,
+  NUTRI_INFO_API_URL,
+  VALIDATION,
+} from "../../../../Shared/Constants";
+import {
+  ERROR_MESSAGES,
+  FORM,
+  FORM_VALIDATION_MESSAGES,
+  LABEL,
+  SUCCESS_MESSAGES,
+} from "../../../../Shared";
+import { TABLE_STYLE } from "../../../../assets/Css/customStyle";
 
 interface ImageSearchProps {
   setImageModal: (show: boolean) => void;
   setImageData: (data: any) => void;
   handleGetData: (user: any) => void;
-  // setSelectCategory?: (category: string) => void; 
-  // handelImageSearchModal?: (data: any) => void; 
+ 
 }
 
 interface NutritionInfo {
@@ -41,30 +53,30 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   setImageModal,
   setImageData,
   handleGetData,
-  // setSelectCategory,
-  // handelImageSearchModal,
 }) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const [quantity, setQuantity] = useState<number  >(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [mealCategory, setMealCategory] = useState<string | undefined>();
   const dispatch = useDispatch();
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const [calories, setCalories] = useState<number>(0);
   const [carbohydrates, setCarbohydrates] = useState<number>(0);
   const [fat, setFat] = useState<number>(0);
   const [protein, setProtein] = useState<number>(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageId, setImageId] = useState<string | null>(null);
-  const [nutritionInfo, setNutritionInfo] = useState<NutritionInfo | undefined>();
+  const [nutritionInfo, setNutritionInfo] = useState<
+    NutritionInfo | undefined
+  >();
 
   const [errors, setErrors] = useState<{
     quantity: string;
     mealCategory: string;
   }>({
-    quantity: '',
-    mealCategory: '',
+    quantity: "",
+    mealCategory: "",
   });
 
   // Validate Quantity
@@ -72,32 +84,32 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     if (!value || value <= 0) {
       return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
     }
-    return '';
+    return "";
   };
 
   // Validate Meal Category
   const validateMealCategory = (value: string | undefined): string => {
     if (!value) {
-      return  FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
+      return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
     }
-    return '';
+    return "";
   };
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     const newErrors = { ...errors };
-  
+
     // Trigger validation on blur
     if (name === VALIDATION.QUANTITY) {
       newErrors.quantity = validateQuantity(Number(value));
     }
-  
+
     if (name === VALIDATION.SELECT_CATEGORY) {
       newErrors.mealCategory = validateMealCategory(value);
     }
-  
+
     setErrors(newErrors);
   };
-  
+
   // Save the meal details into Firebase
   const handleSaveData = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -130,12 +142,12 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     }
   };
 
-  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {           
+  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {
     handleSaveData(e);
   }, 1000);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file :File |  undefined = e.target.files?.[0];
+    const file: File | undefined = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -153,12 +165,18 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       const user = auth.currentUser;
       if (user) {
         const userId = user?.uid;
-        const date = new Date().toISOString().split('T')[0];
-        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
+        const date = new Date().toISOString().split("T")[0];
+        const docRef = doc(
+          db,
+          FIREBASE_DOC_REF.USER,
+          userId,
+          FIREBASE_DOC_REF.DAILY_LOGS,
+          date
+        );
         const categorisedData = { [mealCategory as string]: arrayUnion(data) };
 
         await setDoc(docRef, categorisedData, { merge: true });
-             handleGetData(user);
+        handleGetData(user);
 
         setImageModal(false);
       }
@@ -175,19 +193,15 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     dispatch(showLoader());
     const formData = new FormData();
     if (selectedFile) {
-      formData.append('image', selectedFile);
+      formData.append("image", selectedFile);
     }
     try {
-      const result = await axios.post(
-        `${IMAGE_ID_API_URL}`,
-        formData,
-        {
-          headers: {
-            Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const result = await axios.post(`${IMAGE_ID_API_URL}`, formData, {
+        headers: {
+          Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       setImageId(result.data?.imageId);
     } catch (error) {
@@ -208,16 +222,12 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const fetchNutritionInfo = async (imageId: string): Promise<void> => {
     const data = { imageId: imageId };
     try {
-      const result = await axios.post(
-        `${NUTRI_INFO_API_URL}`,
-        data,
-        {
-          headers: {
-            Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const result = await axios.post(`${NUTRI_INFO_API_URL}`, data, {
+        headers: {
+          Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
+          "Content-Type": "application/json",
+        },
+      });
       setNutritionInfo(result.data);
     } catch (error) {
       toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
@@ -227,7 +237,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
 
   useEffect(() => {
     if (nutritionInfo) {
-      setName(nutritionInfo?.foodName[0] || '');
+      setName(nutritionInfo?.foodName[0] || "");
       setCalories(
         Math.floor(nutritionInfo?.nutritional_info?.calories) * quantity || 0
       );
@@ -251,14 +261,10 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
 
   const mealOptions = [
     { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
-    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+    { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
+    { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
     { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
-
-
-  
-
 
   return (
     <>
@@ -272,11 +278,11 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
           cursor: "pointer",
         }}
       >
-        X
+        {LABEL.CLOSE}
       </span>
 
       <div className="image-search-container">
-        <h2 className="title"> Recognize Food Facts</h2>
+        <h2 className="title"> {LABEL.RECO_FOOD}</h2>
 
         <div className="upload-section">
           <input
@@ -298,12 +304,12 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
         )}
 
         <button onClick={handleUpload} className="upload-button">
-          Upload
+          {LABEL.UPLOAD}
         </button>
 
         {nutritionInfo && (
           <div>
-            <h2>Nutrition Information</h2>
+            <h2>{LABEL.NUTRI_INFO}</h2>
             <h3>{name}</h3>
             <table
               style={{
@@ -317,109 +323,84 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
             >
               <thead>
                 <tr style={{ backgroundColor: "#f4f6f7" }}>
-                  <th
-                    style={{ padding: "10px", borderBottom: "2px solid #ddd" }}
-                  >
-                    Nutrient
-                  </th>
-                  <th
-                    style={{ padding: "10px", borderBottom: "2px solid #ddd" }}
-                  >
-                    Quantity
-                  </th>
+                  <th style={TABLE_STYLE}>{LABEL.NUTRIENT}</th>
+                  <th style={TABLE_STYLE}>{LABEL.QUANTITY}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    Calories
-                  </td>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    {calories} kcal
+                  <td style={TABLE_STYLE}>{NUTRIENT.CALORIE}</td>
+                  <td style={TABLE_STYLE}>
+                    {calories} {FORM.KCAL}
                   </td>
                 </tr>
                 <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    Carbohydrates
-                  </td>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    {carbohydrates} g
+                  <td style={TABLE_STYLE}>{NUTRIENT.CARBS}</td>
+                  <td style={TABLE_STYLE}>
+                    {carbohydrates} {FORM.GM}
                   </td>
                 </tr>
                 <tr>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    Fat
-                  </td>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    {fat} g
+                  <td style={TABLE_STYLE}>{NUTRIENT.FATS}</td>
+                  <td style={TABLE_STYLE}>
+                    {fat} {FORM.GM}
                   </td>
                 </tr>
                 <tr style={{ backgroundColor: "#f9f9f9" }}>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    Protein
-                  </td>
-                  <td
-                    style={{ padding: "10px", borderBottom: "1px solid #ddd" }}
-                  >
-                    {protein} g
+                  <td style={TABLE_STYLE}>{NUTRIENT.PROTEIN}</td>
+                  <td style={TABLE_STYLE}>
+                    {protein} {FORM.GM}
                   </td>
                 </tr>
               </tbody>
             </table>
             <div style={{ marginTop: "30px" }}>
-              {/* <label className="meal-label" >Choose Meal</label> */}
-
-              <label className="meal-label">Choose Meal</label>
-        <CustomSelect
-          options={mealOptions}
-          value={mealOptions.find((option) => option.value === mealCategory)|| null}
-          onChange={(selected) => setMealCategory(selected?.value as string)}
-          // onBlur={ handleBlur}
-          
-        />
-        {errors.mealCategory && <div style={{ color: "red" }}>{errors.mealCategory}</div>}
-
-            </div>  
+              <label className="meal-label">{LABEL.CHOOSE_MEAL}</label>
+              <CustomSelect
+                options={mealOptions}
+                value={
+                  mealOptions.find((option) => option.value === mealCategory) ||
+                  null
+                }
+                onChange={(selected) =>
+                  setMealCategory(selected?.value as string)
+                }
+                // onBlur={ handleBlur}
+              />
+              {errors.mealCategory && (
+                <div style={{ color: "red" }}>{errors.mealCategory}</div>
+              )}
+            </div>
 
             <div className="input-container">
-          <label>Choose Quantity</label>
-          <input
-            type="number"
-            name="quantity"
-            min="1"
-            value={quantity}
-            onChange={(e) => {
-              const value = e.target.valueAsNumber;
-              setQuantity(value)
-            }
-            }
-            onBlur={handleBlur} 
-            step="1"
-          />
-          {errors.quantity && <div style={{ color: "red" }}>{errors.quantity}</div>}
-        </div>
-
+              <label>{LABEL.CHOOSE_QUANTITY}</label>
+              <input
+                type="number"
+                name="quantity"
+                min="1"
+                value={quantity}
+                onChange={(e) => {
+                  const value = e.target.valueAsNumber;
+                  setQuantity(value);
+                }}
+                onBlur={handleBlur}
+                step="1"
+              />
+              {errors.quantity && (
+                <div style={{ color: "red" }}>{errors.quantity}</div>
+              )}
+            </div>
 
             <div>
               <p className="calorie-info">
-                Calorie Served: {calories || "N/A"}
+                {LABEL.CALORIE_SERVED}
+                {calories || "N/A"}
               </p>
-              <button className="add-meal-button" onClick={throttledHandleSaveData}>
-                Add Meal
+              <button
+                className="add-meal-button"
+                onClick={throttledHandleSaveData}
+              >
+                {LABEL.ADD_MEAL}
               </button>
             </div>
           </div>

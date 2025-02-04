@@ -11,7 +11,7 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 
 // Define the types for the component props
 interface UpdateMealProps {
@@ -55,11 +55,12 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
     }),
     onSubmit: async (values) => {
       const servingSize =
-        values.container === CONTAINER_OPTION.SMALLGLASS
-          ? 100
-          : values.container === CONTAINER_OPTION.MEDIUMGLASS
-          ? 175
-          : 250;
+      values.container === CONTAINER_OPTION.SMALLGLASS
+      ? CONTAINER_OPTION.SMALL_QUANTITY
+      : values.container === CONTAINER_OPTION.MEDIUMGLASS
+      ? CONTAINER_OPTION.MEDIUM_QUANTITY
+      :CONTAINER_OPTION.LARGE_QUANTITY;
+
       const totalAmount = servingSize * values.quantity;
 
       dispatch(showLoader());
@@ -109,7 +110,7 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
   return (
     <>
       <button className="close-button" onClick={() => setEditDrinkModal(false)}>
-        X
+      {LABEL.CLOSE}
       </button>
       <h2 className="modal-title" style={{ color: "black" }}>
         Update Drink Details
@@ -133,7 +134,7 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
 
         
         <div className="input-group">
-          <label htmlFor="container">Container Type:</label>
+          <label htmlFor="container">{LABEL.CONTAINER_TYPE}C</label>
           <CustomSelect
             options={containerOptions}
             value={containerOptions.find((opt) => opt.value === formik.values.container)||null}
@@ -147,7 +148,7 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
         </div>
 
         <div className="input-group">
-          <label htmlFor="quantity">Quantity:</label>
+          <label htmlFor="quantity">{LABEL.QUANTITY}</label>
           <input
             type="number"
             id="quantity"
@@ -163,7 +164,7 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
         </div>
 
         <button type="submit" className="submit-button">
-          Submit
+          {LABEL.SUBMIT}
         </button>
       </form>
     </>

@@ -1,5 +1,9 @@
 import React from 'react';
 import { Progress } from 'rsuite';
+import { FORM, LABEL } from '../../../../Shared';
+import { DRINK_TYPE } from '../../../../Shared/Constants';
+import colors from '../../../../assets/Css/color';
+import { progressMargin } from '../../../../assets/Css/customStyle';
  // Replace with the actual import
 
 type DrinkProgressProps = {
@@ -24,40 +28,40 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
   return (
     <div className="progress-line" style={{ height: "auto", width: "50vw", marginLeft: "25%" }}>
       <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
-        Today's Drink Progress Report
+       {LABEL.DRINK_PROGRESS}
       </h2>
 
-      <div style={{ margin: "20px 20px" }}>
+      <div style={progressMargin}>
         <label htmlFor="">
-          <strong> Water : </strong>
-          {totalWater}/{requiredWater} ml
+          <strong> {DRINK_TYPE.WATER} </strong>
+          {totalWater}/{requiredWater}{FORM.ML}
         </label>
         <Progress.Line
           percent={totalWater > 0 ? Math.floor((totalWater / (requiredWater )) * 100) : 0}
           status="active"
-          strokeColor="#e15f41"
+          strokeColor={colors.strokeColor_first}
         />
       </div>
-      <div style={{ margin: "20px 20px" }}>
+      <div style={progressMargin}>
         <label htmlFor="">
-          <strong> Alcohol: </strong>
-          {totalAlcohol}/{requiredAlcohol} ml
+          <strong> {DRINK_TYPE.ALCOHOL}</strong>
+          {totalAlcohol}/{requiredAlcohol} {FORM.ML}
         </label>
         <Progress.Line
           percent={totalAlcohol > 0 ? Math.floor((totalAlcohol / (requiredAlcohol ) ) * 100) : 0}
           status="active"
-          strokeColor="#55a630"
+          strokeColor={colors.strokeColor_second}
         />
       </div>
-      <div style={{ margin: "20px 20px" }}>
+      <div style={progressMargin}>
         <label htmlFor="">
-          <strong> Caffeine: </strong>
-          {totalCaffeine}/{requiredCaffeine} ml
+          <strong> {DRINK_TYPE.CAFFEINE} </strong>
+          {totalCaffeine}/{requiredCaffeine}  {FORM.ML}
         </label>
         <Progress.Line
           percent={totalCaffeine > 0 ? Math.floor((totalCaffeine / (requiredCaffeine ))  * 100) : 0}
           status="active"
-          strokeColor="#007bff"
+          strokeColor={colors.strokeColor_third}
         />
       </div>
     </div>

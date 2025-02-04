@@ -1,5 +1,9 @@
 import React from 'react'
 import { Progress } from 'rsuite';
+import { progressMargin } from '../../../../assets/Css/customStyle';
+import colors from '../../../../assets/Css/color';
+import { FORM, LABEL, MEAL_TERMS } from '../../../../Shared';
+import { MEALTYPE, NUTRIENT } from '../../../../Shared/Constants';
 
 
 type MealProgressProps= {
@@ -21,7 +25,7 @@ type MealProgressProps= {
 
 const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie, progressPercent,totalProtein,proteinGrams,proteinPercentage,totalCarbs,carbsGrams,carbsPercentage,totalFats,fatsGrams,fatsPercentage}) => {
 
-  // console.log("total Calorires",dailyCalorie)
+  
   return (
    <>
    <div
@@ -29,53 +33,53 @@ const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie,
         style={{ height: "auto", width: "50vw", marginLeft: "25%" }}
        >
         <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
-          Today Meal Progress Report
+          {LABEL.MEAL_PROGRESS}
         </h2>
-        <div style={{ margin: "20px 20px" }}>
+        <div style={progressMargin}>
           <label htmlFor="">
             <strong> Energy : </strong>
-            {totalCalories}/{dailyCalorie} kcal
+            {totalCalories}/{dailyCalorie} {FORM.KCAL}
           </label>
 
           <Progress.Line
             percent={progressPercent}
             status="active"
-            strokeColor="#e15f41"
+            strokeColor={colors.strokeColor_first}
           />
         </div>
-        <div style={{ margin: "20px 20px" }}>
+        <div style={progressMargin}>
           <label htmlFor="">
-            <strong> Protein: </strong>
-            {totalProtein}/{proteinGrams}g
+            <strong> {NUTRIENT.PROTEIN} </strong>
+            {totalProtein}/{proteinGrams}{FORM.GM}
           </label>
           <Progress.Line
             percent={proteinPercentage}
             status="active"
-            strokeColor="#55a630"
+            strokeColor={colors.strokeColor_second}
           />
         </div>
-        <div style={{ margin: "20px 20px" }}>
+        <div style={progressMargin}>
           <label htmlFor="">
             {" "}
-            <strong> Carbs </strong>
-            {totalCarbs}/{carbsGrams} g
+            <strong> {NUTRIENT.CARBS} </strong>
+            {totalCarbs}/{carbsGrams} {FORM.GM}
           </label>
           <Progress.Line
             percent={carbsPercentage}
             status="active"
-            strokeColor="355070"
+            strokeColor={colors.strokeColor_third}
           />
         </div>
-        <div style={{ margin: "20px 20px" }}>
+        <div style={progressMargin}>
           <label htmlFor="">
             {" "}
-            <strong> Fat: </strong>
-            {totalFats}/{fatsGrams} g
+            <strong> {NUTRIENT.FATS} </strong>
+            {totalFats}/{fatsGrams} {FORM.GM}
           </label>
           <Progress.Line
             percent={fatsPercentage}
             status="active"
-            strokeColor="#52b788"
+            strokeColor={colors.strokeColor_fourth}
           />
         </div>
       </div>

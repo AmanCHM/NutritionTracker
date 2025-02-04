@@ -8,7 +8,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../../../Shared";
+import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 import { FIREBASE_DOC_REF } from "../../../../Shared/Constants";
 
 // Define types for props
@@ -114,20 +114,20 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   return (
     <>
       <button className="close-button" onClick={() => setDrinkUpdateModal(false)}>
-        X
+        {LABEL.CLOSE}
       </button>
 
       <h2 className="modal-title" style={{ color: "black" }}>
-        Update {updateDrinkName} Details
+        {LABEL.UPDATE} {updateDrinkName} {LABEL.DETAILS}
       </h2>
 
       <div>
         <table className="meal-table">
           <thead>
             <tr>
-              <th>Drink Size</th>
-              <th>Drink Quantity (ml)</th>
-              <th>Action</th>
+              <th>{LABEL.DRINK_SIZE}</th>
+              <th>{LABEL.DRINK_QUANTITY}</th>
+              <th>{LABEL.ACTION}</th>
             </tr>
           </thead>
           <tbody>
@@ -156,7 +156,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={3}>No items available</td>
+                <td colSpan={3}>{LABEL.NO_ITEM_AVAILABLE}</td>
               </tr>
             ) }
           </tbody>

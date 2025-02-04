@@ -4,7 +4,7 @@ import "./Contact.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../Store/Loader";
-import { FORM_VALIDATION_MESSAGES } from "../../Shared";
+import { FORM_VALIDATION_MESSAGES, LABEL } from "../../Shared";
 
 
 const ContactUs: React.FC = () => {
@@ -39,10 +39,10 @@ const ContactUs: React.FC = () => {
     <>
  
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
-        <h2 className="title-contactus">Contact Us</h2>
+        <h2 className="title-contactus">{LABEL.CONTACT}</h2>
         <div className="form-group">
           <label className="form-label" htmlFor="name">
-            Name:
+           {LABEL.NAME}
           </label>
           <input
             type="text"
@@ -54,7 +54,7 @@ const ContactUs: React.FC = () => {
         </div>
         <div className="form-group">
           <label className="form-label" htmlFor="email">
-            Email:
+            {LABEL.EMAIL_LABEL}
           </label>
           <input
             type="email"
@@ -66,7 +66,7 @@ const ContactUs: React.FC = () => {
         </div>
         <div className="form-group">
           <label className="form-label" htmlFor="message">
-            Message:
+           {LABEL.MESSAGE}
           </label>
           <textarea
             name="Message"
@@ -76,7 +76,7 @@ const ContactUs: React.FC = () => {
           ></textarea>
         </div>
         <button type="submit" className="form-submit">
-          Send
+          {LABEL.SEND}
         </button>
       </form>
     </>

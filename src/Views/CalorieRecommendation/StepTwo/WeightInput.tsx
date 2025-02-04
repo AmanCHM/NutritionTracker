@@ -9,9 +9,9 @@ import * as Yup from "yup";
 import { RootState } from "../../../Store";
 import { updateGoal } from "../../../Store/Nutrition";
 import CustomSelect from "../../../Components/Shared/CustomSelect/CustomSelect";
-import { GOAL_OPTIONS, ROUTES_CONFIG, WEIGHT } from "../../../Shared/Constants";
+import { GOAL_OPTIONS, ROUTES_CONFIG, WEIGHT, WEIGHT_VALIDATION } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
-import { FORM_VALIDATION_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, GREETINGS, LABEL, USER } from "../../../Shared";
 
 
 // Define form values type
@@ -53,27 +53,28 @@ GOAL_OPTIONS.MAINTAIN_WEIGHT
     validationSchema: Yup.object({
       goal: Yup.string().required(FORM_VALIDATION_MESSAGES().REQUIRED),
       currentWeight: Yup.number()
-        .typeError("Must be a number")
-        .min(1, "Current weight must be at least 1 kg.")
-        .required("Please enter your current weight."),
-      targetWeight: Yup.number()
-        .typeError("Must be a number")
-        .min(1, "Target weight must be at least 1 kg.")
-        .required("Please enter your target weight."),
+      .typeError(WEIGHT_VALIDATION.CURRENT_WEIGHT.TYPE_ERROR)
+      .min(1, WEIGHT_VALIDATION.CURRENT_WEIGHT.MIN)
+      .required(WEIGHT_VALIDATION.CURRENT_WEIGHT.REQUIRED),
+  
+    targetWeight: Yup.number()
+      .typeError(WEIGHT_VALIDATION.TARGET_WEIGHT.TYPE_ERROR)
+      .min(1, WEIGHT_VALIDATION.TARGET_WEIGHT.MIN)
+      .required(WEIGHT_VALIDATION.TARGET_WEIGHT.REQUIRED),
     }),
     onSubmit: (values) => {
       const weightDifference = Number(values.targetWeight) - Number(values.currentWeight);
 
       if (values.goal === WEIGHT.LOOSE_WEIGHT && weightDifference > 0) {
-        toast.error("Target weight must be less than current weight for weight loss.");
+        toast.error(ERROR_MESSAGES().TARGET_LESS_THAN_CURRENT);
         return;
       }
       if (values.goal === WEIGHT.GAIN_WEIGHT && weightDifference < 0) {
-        toast.error("Target weight must be greater than current weight for weight gain.");
+        toast.error(ERROR_MESSAGES().TARGET_MORE_THAN_CURRENT);
         return;
       }
       if (values.goal === WEIGHT.MAINTAIN_WEIGHT && weightDifference !== 0) {
-        toast.error("Target weight must equal current weight for maintenance.");
+        toast.error(ERROR_MESSAGES().TARGET_EQUAL);
         return;
       }
 
@@ -107,16 +108,16 @@ GOAL_OPTIONS.MAINTAIN_WEIGHT
           marginTop: "3%",
         }}
       >
-        Thanks! Now for your goals.
+       {GREETINGS.GOAl_GREET}
       </h3>
       <h3 style={{ textAlign: "center", color: "#627373" }}>
-        Select your goal and provide your target weights.
+        {LABEL.SELECT_GOAL_HEAD}
       </h3>
       <div className="calorie-container">
         <form onSubmit={formik.handleSubmit}>
           {/* Goal Selection */}
           <div className="input-group">
-            <label htmlFor="goal">Select Goal:</label>
+            <label htmlFor="goal">{LABEL.SELECT_GOAL}</label>
             <CustomSelect
               options={goalOptions}
               value={goalOptions.find((option) => option.value === formik.values.goal)|| null}
@@ -132,7 +133,7 @@ GOAL_OPTIONS.MAINTAIN_WEIGHT
 
           {/* Current Weight */}
           <div className="input-group">
-            <label htmlFor="currentWeight">Current Weight (kg)</label>
+            <label htmlFor="currentWeight">{USER.CURR_WEIGHT}</label>
             <input
               type="number"
               id="currentWeight"
@@ -149,7 +150,7 @@ GOAL_OPTIONS.MAINTAIN_WEIGHT
 
           {/* Target Weight */}
           <div className="input-group">
-            <label htmlFor="targetWeight">Target Weight (kg)</label>
+            <label htmlFor="targetWeight">{USER.TARGET_WEIGHT}</label>
             <input
               type="number"
               id="targetWeight"

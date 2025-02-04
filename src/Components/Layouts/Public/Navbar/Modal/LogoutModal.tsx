@@ -1,4 +1,5 @@
 import React from "react";
+import { LABEL } from "../../../../../Shared";
 // import "./LogoutModal.css";
 
 interface LogoutModalProps {
@@ -10,13 +11,13 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose, onConfirm }) => {
   return (
     <div>
       <div className="logout-modal-content">
-        <h2>Are you sure ! you want to logout?</h2>
+        <h2>{LABEL.LOGOUT_WARNING}</h2>
         <div className="modal-buttons">
           <button onClick={onConfirm} className="confirm-button" style={{ marginLeft: "20%" }}>
-            Yes, Logout
+        {LABEL.LOGOUT_OPTION}
           </button>
           <button onClick={onClose} className="cancel-button">
-            Cancel
+            {LABEL.LOGOUT_CANCEL}
           </button>
         </div>
       </div>

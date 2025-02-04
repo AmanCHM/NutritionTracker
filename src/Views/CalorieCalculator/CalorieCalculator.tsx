@@ -11,8 +11,8 @@ import { auth, db } from "../../Utils/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { setSignout } from "../../Store/Auth";
 import CustomSelect, { OptionType } from "../../Components/Shared/CustomSelect/CustomSelect";
-import { ACTIVITY_OPTIONS, AGE_VALIDATION, FIREBASE_DOC_REF, HEIGHT_VALIDATION, WEIGHT_VALIDATION } from "../../Shared/Constants";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../Shared";
+import { ACTIVITY_OPTIONS, AGE_VALIDATION, FIREBASE_DOC_REF, GENDER_OPTION, HEIGHT_VALIDATION, WEIGHT_VALIDATION } from "../../Shared/Constants";
+import { ERROR_MESSAGES, FORM, SUCCESS_MESSAGES, USER } from "../../Shared";
 
 interface ActivityOption {
   value: number;
@@ -88,7 +88,7 @@ const CalorieCalculator: React.FC = () => {
     const a = parseInt(age, 10);
 
     let bmr = 0;
-    if (gender === "male") {
+    if (gender === GENDER_OPTION.MALE) {
       bmr = 10 * w + 6.25 * h - 5 * a + 5;
     } else {
       bmr = 10 * w + 6.25 * h - 5 * a - 161;
@@ -127,10 +127,10 @@ const CalorieCalculator: React.FC = () => {
     <>
    
       <div className="calorie-container">
-        <h1 className="calorie-title">Calculate Your Daily Energy Intake</h1>
+        <h1 className="calorie-title">{FORM.DAILY_ENERGY_INTAKE}</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="input-group">
-            <label htmlFor="height">Height (cm):</label>
+            <label htmlFor="height">{USER.HEIGHT}</label>
             <input
               id="height"
               type="text"
@@ -142,7 +142,7 @@ const CalorieCalculator: React.FC = () => {
             )}
           </div>
           <div className="input-group">
-            <label htmlFor="weight">Weight (kg):</label>
+            <label htmlFor="weight">{USER.WEIGHT}</label>
             <input
               id="weight"
               type="text"
@@ -154,7 +154,7 @@ const CalorieCalculator: React.FC = () => {
             )}
           </div>
           <div className="input-group">
-            <label htmlFor="age">Age (years):</label>
+            <label htmlFor="age">{USER.AGE}</label>
             <input
               id="age"
               type="text"
@@ -166,7 +166,7 @@ const CalorieCalculator: React.FC = () => {
             )}
           </div>
           <div className="input-group">
-            <label htmlFor="activity">Activity Level:</label>
+            <label htmlFor="activity">{USER.ACTIVITY}</label>
             <CustomSelect
               id="activity"
               options={activityOptions}
@@ -177,17 +177,17 @@ const CalorieCalculator: React.FC = () => {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="gender">Gender:</label>
+            <label htmlFor="gender">{USER.GENDER}</label>
             <select
               id="gender"
               {...formik.getFieldProps("gender")}
             >
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+              <option value="male">{GENDER_OPTION.MALE}</option>
+              <option value="female">{GENDER_OPTION.FEMALE}</option>
             </select>
           </div>
           <button type="submit" className="calculate-button">
-            Calculate
+          {FORM.CALCULATE}
           </button>
         </form>
         {calculatedCalorie && (
@@ -197,7 +197,7 @@ const CalorieCalculator: React.FC = () => {
               your activity level.
             </p>
             <button className="calculate-button" onClick={handleSave}>
-              Set Your Daily Meal
+              {FORM.SET_DAILY_MEAL}
             </button>
           </>
         )}

@@ -10,7 +10,7 @@ import { setUserInfo } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { AGE_VALIDATION, GENDER_OPTION, HEIGHT_VALIDATION, ROUTES_CONFIG } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
-import { FORM_VALIDATION_MESSAGES } from "../../../Shared";
+import { FORM_VALIDATION_MESSAGES, GREETINGS, LABEL, USER } from "../../../Shared";
 
 
 
@@ -77,16 +77,16 @@ const UserInfo: React.FC = () => {
           marginTop: "3%",
         }}
       >
-        Welcome to Nutrition Tracker
+       {GREETINGS.WELCOME_NUTRITRACK}
       </h3>
       <h3 style={{ textAlign: "center", color: "#627373" }}>
-        We’re happy you’re here. <br />
-        Let’s get to know a little about you.
+        {GREETINGS.HAPPY_GREET} <br />
+        {GREETINGS.INFO_GREET}
       </h3>
       <div className="calorie-container">
         <form onSubmit={formik.handleSubmit}>
           <div className="input-group">
-            <label>Enter Your Name</label>
+            <label>{LABEL.ENTER_NAME}</label>
             <input
               type="text"
               id="userName"
@@ -99,7 +99,7 @@ const UserInfo: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="height">Height (cm)</label>
+            <label htmlFor="height">{USER.HEIGHT}</label>
             <input
               type="number"
               id="height"
@@ -114,7 +114,7 @@ const UserInfo: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="gender">Gender:</label>
+            <label htmlFor="gender">{USER.GENDER}</label>
            <CustomSelect
               options={genderOptions}
               value={genderOptions.find(
@@ -131,7 +131,7 @@ const UserInfo: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="age">Age (years):</label>
+            <label htmlFor="age">{USER.AGE}</label>
             <input
               type="number"
               id="age"
@@ -156,7 +156,7 @@ const UserInfo: React.FC = () => {
             onClick={formik.handleSubmit}
             label={"Next"}
           >
-            {/* Next */}
+            
           </CustomButton>
         </form>
       </div>

@@ -1,44 +1,35 @@
 
-export const firstLetterUpperCase = (message: string) => {
-    if (message && message.length > 0) {
-      return (
-        message[0].toUpperCase() +
-        message.substring(1, message.length).toLowerCase()
-      );
-    }
-    return '';
-  };
+export const capitalizeFirstLetter = (text?: string): string => {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
 
   export const debounce = (func: (...args: any[]) => void, limit: number) => {
-    let inDebounce: NodeJS.Timeout | null;
-    return function(this: any, ...args: any[]) {
+    let inDebounce: ReturnType<typeof setTimeout> | null = null;
+  
+    return function (this: any, ...args: any[]) {
       if (inDebounce) {
         clearTimeout(inDebounce);
       }
-      inDebounce = setTimeout(() => func.apply(this, args), limit);
+      inDebounce = setTimeout(() => {
+        func.apply(this, args);
+        inDebounce = null; 
+      }, limit);
     };
   };
 
-  import { useState } from "react";
-
-export const Throttle = (func:(...args: any[]) => void, delay:number ) =>{
-    const [timeout, saveTimeout] = useState(null);
-      
-    const throttledFunc = function () {
+  export const Throttle = (func: (...args: any[]) => void, delay: number) => {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+  
+    return function (...args: any[]) {
       if (timeout) {
         clearTimeout(timeout);
       }
   
-      const newTimeout = setTimeout(() => {
-        func(...arguments);
-        if (newTimeout === timeout) {
-          saveTimeout(null);
-        }
+      timeout = setTimeout(() => {
+        func(...args);
+        timeout = null;
       }, delay);
-  
-      saveTimeout(newTimeout);
-    }
-  
-    return throttledFunc;
-  }
-  
+    };
+  };

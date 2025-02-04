@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
 import { ROUTES_CONFIG, WEIGHT } from "../../Shared/Constants";
 import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
+import { GREETINGS, LABEL } from "../../Shared";
 
 
 // Define types for Redux state slices
@@ -50,15 +51,14 @@ const CalorieRecommendation: React.FC = () => {
           marginTop: "5%",
         }}
       >
-        What is your weekly goal?
+        {GREETINGS.WEEKLY_GOAL}
       </h3>
       <h3 style={{ textAlign: "center", color: "#627373" }}>
-        Let's break down your overall health goal into a weekly one you can
-        maintain. <br /> Slow-and-steady is best!
+       {GREETINGS.WEEKLY_HEALTH} <br /> {GREETINGS.SLOW_AND_STEADY_BEST}
       </h3>
 
       <div className="calorie-container" style={{ height: "300px" }}>
-        <h2>Hi! {username}, Your Calorie Requirements</h2>
+        <h2>{GREETINGS.GREET}{username}{GREETINGS.CALORIE_REQUIREMENT}</h2>
         <div className="calorie-data">
           <ul>
             <p
@@ -80,7 +80,7 @@ const CalorieRecommendation: React.FC = () => {
                 marginTop: "10px",
               }}
             >
-              <strong>Recommended Calories:</strong> {recommendedCalories} kcal/day
+              <strong>{LABEL.RECOMMENDED_CALORIE}</strong> {recommendedCalories} {LABEL.KCAL_PER_DAY}
             </p>
             
           </ul>
@@ -114,7 +114,7 @@ const CalorieRecommendation: React.FC = () => {
              </CustomButton>
           </div>
         </div>
-      {/* </div> */}
+     
 
     </>
   );
