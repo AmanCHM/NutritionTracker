@@ -120,7 +120,7 @@ export const LABEL = {
   RESET_PASS: "Reset-Password",
   DONT_HAVE_ACC: "Dont have an account?",
   SIGN_UP: "Sign Up",
-  GO_TO_LOGIN: "Go to login page",
+  GO_TO_LOGIN: "Go to login page: ",
   CONFIRM_PASS: "Confirm Password",
   ALREADY_ACC: "Already have an account?",
   ENTER_NAME: "Enter Your Name",
@@ -215,6 +215,16 @@ export const SET_DRINKS_CALORIE = {
   CAFFEINE: 850,
 };
 
+
+export const NUM ={
+  HUNDRED:100,
+  TWO_FIVE:0.25,
+  ZERO_FIVE:0.5,
+  FOUR:4,
+  NINE:9,
+  ZERO:0,
+
+}
 export const MEAL_TERMS = {
   DAILY_ENERGY_INTAKE: "Calculate Your Daily Energy Intake",
 };

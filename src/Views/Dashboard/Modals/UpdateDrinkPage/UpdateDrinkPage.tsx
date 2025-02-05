@@ -12,6 +12,7 @@ import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
 import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
+import { dateFunction } from "../../../../Helpers/function";
 
 // Define the types for the component props
 interface UpdateMealProps {
@@ -70,7 +71,7 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({ setEditDrinkModal, drinkNa
           throw new Error(ERROR_MESSAGES().USER_NOT_AUTHENTICATED);
         }
         const userId = user.uid;
-        const date = new Date().toISOString().split("T")[0];
+        const date = dateFunction;
         const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
 
         const existingData = (await getDoc(docRef)).data();

@@ -33,3 +33,5 @@ export const capitalizeFirstLetter = (text?: string): string => {
       }, delay);
     };
   };
+
+  export const  dateFunction = new Date().toISOString().split("T")[0];

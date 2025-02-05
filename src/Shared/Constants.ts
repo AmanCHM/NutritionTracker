@@ -81,11 +81,6 @@ const WILDCARD_ROUTES = {
 } 
   export { WILDCARD_ROUTES, ROUTES_CONFIG };
 
-  export interface User {
-    id: number;
-    email: string;
-    isActive: boolean;
-  }
   
   export  const  CONTAINER_OPTION ={
            SMALLGLASS:'Small Glass (100ml)',

@@ -13,7 +13,7 @@ import AppFeature from "./components/AppFeature/AppFeature";
 import AppOverview from "./components/AppOverview/AppOverview";
 import AIFeature from "./components/AIFeature/AIFeature";
 import Footer from "../../Components/Layouts/Public/Footer";
-import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
+import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
 
 
 

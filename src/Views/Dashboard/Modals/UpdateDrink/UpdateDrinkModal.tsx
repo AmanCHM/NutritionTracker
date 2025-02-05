@@ -10,6 +10,7 @@ import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 import { FIREBASE_DOC_REF } from "../../../../Shared/Constants";
+import { dateFunction } from "../../../../Helpers/function";
 
 // Define types for props
 interface UpdateDrinkModalProps {
@@ -44,6 +45,9 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   const [drinkId, setUpdateId] = useState<string | undefined>();
   const dispatch = useDispatch();
 
+
+
+  console.log("drink details",drinkDetails);
   // Delete the drink
   const handleDeleteDrink = async (drinkType: string, id: string) => {
     dispatch(showLoader());
@@ -51,7 +55,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       const user = auth.currentUser;
       if (user) {
         const userId = user.uid;
-        const date = new Date().toISOString().split("T")[0];
+        const date = dateFunction;
         const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
         const getData = (await getDoc(docRef)).data();
         if (getData) {
@@ -87,7 +91,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       dispatch(showLoader());
       if (user) {
         const userId = user.uid;
-        const date = new Date().toISOString().split("T")[0];
+        const date = dateFunction;
         const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {

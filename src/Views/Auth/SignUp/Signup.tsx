@@ -17,6 +17,7 @@ import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SET_DRINKS_CAL
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
+import { CustomError } from "../../../Shared/Common";
 
 
 interface SignupFormValues {
@@ -63,9 +64,11 @@ const Signup: React.FC = () => {
         toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
         navigate(ROUTES_CONFIG.DASHBOARD.path);
-      } catch (error: any) {
-        console.log(error.message);
+      }  catch (error: CustomError|unknown) {
+        const errorCode = (error as CustomError)?.data?.code ; 
+        const errorMessage = (error as CustomError)?.message;
         toast.error(SUCCESS_MESSAGES().SIGNED_UP_NOT_SUCCESSFULLY);
+        console.error(errorCode, errorMessage);
       } finally {
         dispatch(setSignup());
         dispatch(hideLoader());
@@ -88,9 +91,11 @@ const Signup: React.FC = () => {
       toast.success(SUCCESS_MESSAGES().GOOGLE_SIGNEDUP_SUCCESS);
     //   dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
-    } catch (error: any) {
+    } catch (error: CustomError|unknown) {
+      const errorCode = (error as CustomError)?.data?.code ; 
+      const errorMessage = (error as CustomError)?.message;
       toast.error(ERROR_MESSAGES().GOOGLE_SIGNEDUP_FAIL)
-   
+      console.error(errorCode, errorMessage);
     } finally {
       dispatch(hideLoader());
     }

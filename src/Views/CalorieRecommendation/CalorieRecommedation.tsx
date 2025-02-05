@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
 import { ROUTES_CONFIG, WEIGHT } from "../../Shared/Constants";
-import CustomButton from "../../Components/Shared/Form/CustomButton/CustomButton";
+import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
 import { GREETINGS, LABEL } from "../../Shared";
 
 

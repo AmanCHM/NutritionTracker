@@ -9,7 +9,7 @@ import { RootState } from "../../../Store";
 import { setUserInfo } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { AGE_VALIDATION, GENDER_OPTION, HEIGHT_VALIDATION, ROUTES_CONFIG } from "../../../Shared/Constants";
-import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { FORM_VALIDATION_MESSAGES, GREETINGS, LABEL, USER } from "../../../Shared";
 
 

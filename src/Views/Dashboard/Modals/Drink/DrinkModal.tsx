@@ -12,6 +12,7 @@ import {  auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import {  CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
 import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 
 
@@ -170,6 +171,8 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
           )}
         </div>
 
+
+        {/* <CustomButton   label="Submit" /> */}
         <button type="submit" className="submit-button">
          
           {LABEL.SUBMIT}

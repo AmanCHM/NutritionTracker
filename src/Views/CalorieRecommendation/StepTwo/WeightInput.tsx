@@ -10,7 +10,7 @@ import { RootState } from "../../../Store";
 import { updateGoal } from "../../../Store/Nutrition";
 import CustomSelect from "../../../Components/Shared/CustomSelect/CustomSelect";
 import { GOAL_OPTIONS, ROUTES_CONFIG, WEIGHT, WEIGHT_VALIDATION } from "../../../Shared/Constants";
-import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, GREETINGS, LABEL, USER } from "../../../Shared";
 
 

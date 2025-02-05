@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
-import { Throttle } from "../../../../Helpers/function";
+import { Throttle, dateFunction } from "../../../../Helpers/function";
 import {
   FIREBASE_DOC_REF,
   IMAGE_ID_API_URL,
@@ -29,11 +29,13 @@ import {
   SUCCESS_MESSAGES,
 } from "../../../../Shared";
 import { TABLE_STYLE } from "../../../../assets/Css/customStyle";
+import { LogDataItem } from "../../Dashboard";
+import { User } from "firebase/auth";
 
 interface ImageSearchProps {
   setImageModal: (show: boolean) => void;
-  setImageData: (data: any) => void;
-  handleGetData: (user: any) => void;
+  setImageData: (data: LogDataItem |null) => void;
+  handleGetData: (user: User) => void;
  
 }
 
@@ -159,13 +161,13 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   };
 
   // Set the meal details
-  const handelImageSearchModal = async (data: any): Promise<void> => {
+  const handelImageSearchModal = async (data: LogDataItem|null): Promise<void> => {
     dispatch(showLoader());
     try {
       const user = auth.currentUser;
       if (user) {
         const userId = user?.uid;
-        const date = new Date().toISOString().split("T")[0];
+        const date = dateFunction;
         const docRef = doc(
           db,
           FIREBASE_DOC_REF.USER,

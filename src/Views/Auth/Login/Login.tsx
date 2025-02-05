@@ -19,6 +19,7 @@ import { RootState } from "../../../Store";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin } from "../../../Store/Auth";
+import { CustomError } from "../../../Shared/Common";
 
 
 interface MyFormValues {
@@ -45,9 +46,9 @@ const Login: React.FC = () => {
       dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
       toast.success(SUCCESS_MESSAGES().GOOGLE_LOGIN_SUCCESS);
-    } catch (error: any) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
+    } catch (error: CustomError|unknown) {
+      const errorCode = (error as CustomError)?.data?.code ; 
+      const errorMessage = (error as CustomError)?.message;
       toast.error(ERROR_MESSAGES().GOOGLE_LOGIN_FAILED);
       console.error(errorCode, errorMessage);
     } finally {
@@ -75,9 +76,9 @@ const Login: React.FC = () => {
         toast.success(SUCCESS_MESSAGES().LOGGED_IN_SUCCESSFULLY);
         dispatch(loggedin());
         navigate(ROUTES_CONFIG.DASHBOARD.path);
-      } catch (error: any) {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      } catch (error: CustomError|unknown) {
+        const errorCode = (error as CustomError)?.data?.code ; 
+        const errorMessage = (error as CustomError)?.message;
         toast.error(SUCCESS_MESSAGES().LOGGED_IN_UNSUCCESS);
         console.log(errorCode, errorMessage);
       } finally {

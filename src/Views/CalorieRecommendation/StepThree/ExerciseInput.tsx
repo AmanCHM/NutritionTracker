@@ -9,7 +9,7 @@ import { RootState } from "../../../Store";
 import { openCalorieModal, setActivityLevel, setRequiredCalorie } from "../../../Store/Nutrition";
 import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import {  GENDER_OPTION, ROUTES_CONFIG, VALIDATION, WEIGHT } from "../../../Shared/Constants";
-import CustomButton from "../../../Components/Shared/Form/CustomButton/CustomButton";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { Formik } from "formik";
 import { ERROR_MESSAGES, GREETINGS, LABEL } from "../../../Shared";
 
