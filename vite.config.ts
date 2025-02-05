@@ -1,10 +1,11 @@
-import { defineConfig, UserConfig } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // Define and export Vite configuration
-const config: UserConfig = defineConfig({
+export default defineConfig({
   plugins: [react()],
   build: {
+    outDir: 'dist', // Ensures the output goes to 'dist' folder
     chunkSizeWarningLimit: 2000, // Set chunk size limit to 2MB
   },
   resolve: {
@@ -13,5 +14,3 @@ const config: UserConfig = defineConfig({
     },
   },
 });
-
-export default config;
