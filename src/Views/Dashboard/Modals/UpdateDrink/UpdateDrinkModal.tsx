@@ -47,7 +47,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
 
 
 
-  console.log("drink details",drinkDetails);
+  // console.log("drink details",drinkDetails);
   // Delete the drink
   const handleDeleteDrink = async (drinkType: string, id: string) => {
     dispatch(showLoader());

@@ -51,7 +51,7 @@ import DrinkModal from "./Modals/Drink/DrinkModal";
 import CustomModal from "../../Components/Shared/CustomModal/CustomModal";
 import ImageSearch from "./Modals/ImageSearch/ImageSearch";
 import MealModal from "./Modals/Meal/MealModal";
-import Table from "../../Components/Shared/Table/Table";
+
 import UpdateMeal from "./Modals/UpdateMeal/UpdateMeal";
 import NutritionModal from "./Modals/Nutrition/NutritionModal";
 import UpdateDrinkModal from "./Modals/UpdateDrink/UpdateDrinkModal";
@@ -72,6 +72,8 @@ import {
 import { DRINK_TABLE_STYLE } from "../../assets/Css/customStyle";
 import colors from "../../assets/Css/color";
 import DrinkTable from "./Components/DrinkTable/DrinkTable";
+import Table from "../../Components/Shared/Table";
+
 // import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -251,7 +253,7 @@ const Dashboard = () => {
 
   const dispatch = useDispatch();
 
-  console.log("drinkData", drinkData);
+  // console.log("drinkData", drinkData);
   // const [inputValue, setInputValue] = useState<string>('');
   const authUser = auth.currentUser;
   const debouncedInputValue = debounce(
@@ -259,7 +261,7 @@ const Dashboard = () => {
     300
   );
 
-  // console.log("input value",inputValue);
+  console.log("input value",inputValue);
   // Food suggestion search bar
   const {
     data: suggestion,
@@ -340,7 +342,7 @@ const Dashboard = () => {
         dispatch(hideLoader());
       }
     },
-    [dispatch]
+    []
   );
 
   useEffect(() => {
