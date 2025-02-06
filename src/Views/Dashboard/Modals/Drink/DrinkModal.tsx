@@ -13,6 +13,7 @@ import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelec
 import {  CONTAINER_OPTION, DRINK_TYPE, FIREBASE_DOC_REF, QUANTITY_VALIDATION, VALIDATION } from "../../../../Shared/Constants";
 import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
+import { dateFunction } from "../../../../Helpers/function";
 
 
 
@@ -34,6 +35,17 @@ interface FormValues {
   quantity: number;
 }
 
+const drinkTypeOptions:OptionType[] = [
+  { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
+  { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
+  { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
+];
+
+const containerOptions :OptionType[] = [
+  { value: CONTAINER_OPTION.SMALLGLASS, label:  CONTAINER_OPTION.SMALLGLASS },
+  { value: CONTAINER_OPTION.MEDIUMGLASS, label:CONTAINER_OPTION.MEDIUMGLASS },
+  { value:  CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
+];
 const DrinkModal: React.FC<DrinkModalProps> = ({
   setShowDrinkModal,
   onDataUpdated,
@@ -41,19 +53,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  // Options for the drink type and container type dropdowns
-  const drinkTypeOptions:OptionType[] = [
-    { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
-    { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
-    { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
-  ];
-
-  const containerOptions :OptionType[] = [
-    { value: CONTAINER_OPTION.SMALLGLASS, label:  CONTAINER_OPTION.SMALLGLASS },
-    { value: CONTAINER_OPTION.MEDIUMGLASS, label:CONTAINER_OPTION.MEDIUMGLASS },
-    { value:  CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
-  ];
-
+  
   // handle validation and set drink data
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -86,7 +86,7 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
         const user = auth.currentUser;
         if (user) {
           const userId = user.uid;
-          const date = new Date().toISOString().split('T')[0];
+          const date = dateFunction;
           const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
           const data = {
             id: Date.now(),
@@ -111,14 +111,11 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
     },
   });
 
-  
-
-
   return (
-    <div>
-      <button className="close-button" onClick={() => setShowDrinkModal(false)}>
-        {LABEL.CLOSE}
-      </button>
+    <>
+      <CustomButton className="close-button" label={LABEL.CLOSE} onClick={() => setShowDrinkModal(false)}>
+                                             
+      </CustomButton>
       <h2 className="modal-title" style={{ color: "black" }}>
        
       {LABEL.ADD_DRINK}
@@ -172,13 +169,15 @@ const DrinkModal: React.FC<DrinkModalProps> = ({
         </div>
 
 
-        {/* <CustomButton   label="Submit" /> */}
-        <button type="submit" className="submit-button">
-         
-          {LABEL.SUBMIT}
-        </button>
-      </form>
-    </div>
+        <CustomButton
+            type="submit" 
+            label="Submit"
+            variant="primary"
+            size="medium"
+            style={{ marginLeft: "40%" }}
+          />
+        </form>
+    </>
   );
 };
 

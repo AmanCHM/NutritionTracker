@@ -488,7 +488,9 @@ const Dashboard = () => {
     );
   }, [logData, dailyRequiredCalorie]);
 
-  const calculateNutrient = (
+
+  // Check implementation calculateNutrient
+  const calculateNutrient =  useMemo(()=>(
     selectedFoodData: SelectedFoodData,
     nutrient: keyof Food,
     selectquantity: number,
@@ -502,7 +504,7 @@ const Dashboard = () => {
           quantityNumber *
           quantity
       : " ";
-  };
+  },[selectquantity, quantity]);
 
   const calculateCalories = calculateNutrient(
     selectedFoodData,
@@ -618,8 +620,8 @@ const Dashboard = () => {
     dailyCalorie as number
   );
 
-  const requiredCalorie =
-    validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
+  // const requiredCalorie =
+  //   validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
 
   const progressPercent: number = dailyCalorie
     ? Math.floor((totalCalories / validDailyCalorie) * NUM.HUNDRED)
@@ -636,13 +638,9 @@ const Dashboard = () => {
 
   //Doughnut Data
 
-  const doughnutdata = {
-    labels: [
-      MEALTYPE.BREAKFAST,
-      MEALTYPE.LUNCH,
-      MEALTYPE.SNACK,
-      MEALTYPE.DINNER,
-    ],
+  
+  const doughnutdata = useMemo(() => ({
+    labels: [MEALTYPE.BREAKFAST, MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
     datasets: [
       {
         data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
@@ -650,11 +648,12 @@ const Dashboard = () => {
           colors.berakfast_color,
           colors.lunch_color,
           colors.snacks_color,
-          colors.dinner_color,
+          colors.dinner_color
         ],
+        hoverOffset: 1,
       },
     ],
-  };
+  }), [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
   const getPercentage = (value: number, total: number): number => {
     return (value / total) * NUM.HUNDRED;
@@ -744,6 +743,7 @@ const Dashboard = () => {
 
   //energy modal
   const isSignup = useSelector((state: RootState) => state.Auth.signedup);
+  
   useEffect(() => {
     if (isSignup === true) {
       setEnergyModal(true);
@@ -839,7 +839,7 @@ const Dashboard = () => {
           <span className="ai-search-button-icon">
             <FaSearch size={16} color="white" />
           </span>
-          AI Visual Food Search
+          {LABEL.AI_VISUAL_SEARCH}
         </button>
         <CustomModal isOpen={imageModal} onClose={() => setImageModal(false)}>
           <ImageSearch

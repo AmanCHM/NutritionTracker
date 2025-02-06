@@ -9,6 +9,7 @@ interface CustomButtonProps {
   type?: "button" | "submit" | "reset";
   size?: "small" | "medium" | "large";
   style?: React.CSSProperties;
+  className?:string
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -19,10 +20,11 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   type = "button",
   size = "medium",
   style = {}, 
+  className
 }) => {
   return (
     <button
-      className={`custom-button ${variant} ${size}`}
+      className={className}
       onClick={onClick}
       disabled={disabled}
       type={type}

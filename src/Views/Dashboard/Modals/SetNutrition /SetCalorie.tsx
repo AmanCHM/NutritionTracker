@@ -9,23 +9,24 @@ import { closeCalorieModal, resetGoal } from "../../../../Store/Nutrition";
 import { setSignout } from "../../../../Store/Auth";
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../../Shared/Constants";
 import { ERROR_MESSAGES, GREETINGS, LABEL } from "../../../../Shared";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 interface SetCalorieModalProps {
-  setEnergyModal: (value: boolean) => void; 
+  setEnergyModal: (value: boolean) => void;
 }
 
-const SetCalorieModal :React.FC<SetCalorieModalProps> = ({ setEnergyModal }) => {
-
-
-  const user = useSelector((state:RootState)=>state.Nutrition.userName);
-  const dispatch = useDispatch()
+const SetCalorieModal: React.FC<SetCalorieModalProps> = ({
+  setEnergyModal,
+}) => {
+  const user = useSelector((state: RootState) => state.Nutrition.userName);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const calories = useSelector(
-    (state:RootState) => state?.Nutrition?.requiredCalorie
+    (state: RootState) => state?.Nutrition?.requiredCalorie
   );
-  const goal = useSelector((state:RootState) => state.Nutrition.goal);
+  const goal = useSelector((state: RootState) => state.Nutrition.goal);
   const recommendedData = useSelector(
-    (state:RootState) => state.Nutrition.showrecommendation
+    (state: RootState) => state.Nutrition.showrecommendation
   );
   let recommendedCalories = 0;
   let goalDescription = "";
@@ -51,80 +52,86 @@ const SetCalorieModal :React.FC<SetCalorieModalProps> = ({ setEnergyModal }) => 
       } catch (error) {
         console.error(ERROR_MESSAGES().ERROR_FETCH, error);
       } finally {
-        dispatch(closeCalorieModal())
-        dispatch(setSignout())
+        dispatch(closeCalorieModal());
+        dispatch(setSignout());
         dispatch(resetGoal());
-        setEnergyModal(false); 
+        setEnergyModal(false);
       }
     }
   };
 
-  const handlePlan  = ()=>{
+  const handlePlan = () => {
     setEnergyModal(false);
-    dispatch(setSignout())
-    navigate(ROUTES_CONFIG.CALORIE_CALCULATOR.path)
-
-  }
+    dispatch(setSignout());
+    navigate(ROUTES_CONFIG.CALORIE_CALCULATOR.path);
+  };
 
   return (
     <>
-      <button className="close-button" onClick={() => setEnergyModal(false)}>
-        X
-      </button>
+      <CustomButton
+        className="close-button"
+        label={LABEL.CLOSE}
+        onClick={() => setEnergyModal(false)}
+      ></CustomButton>
 
       {recommendedData ? (
-        <div  style={{ paddingTop: "50px", textAlign: "center" }}>
-            <h3
+        <div style={{ paddingTop: "50px", textAlign: "center" }}>
+          <h3
             style={{ color: "#627373", fontWeight: "bold", fontSize: "24px" }}
           >
-           {GREETINGS.WELCOME_NUTRITRACK}
+            {GREETINGS.WELCOME_NUTRITRACK}
           </h3>
-          <h2> {GREETINGS.GREET} {user} {LABEL.CALORIE_REQUIREMENT}</h2>
+          <h2>
+            {" "}
+            {GREETINGS.GREET} {user} {LABEL.CALORIE_REQUIREMENT}
+          </h2>
           <div className="calorie-data">
             <ul>
               <li>
                 <strong>{LABEL.YOUR_GOAL}</strong>{" "}
-                {goalDescription.charAt(0).toUpperCase() + goalDescription.slice(1)}
+                {goalDescription.charAt(0).toUpperCase() +
+                  goalDescription.slice(1)}
               </li>
               <li>
-                <strong>{LABEL.RECOMMENDED_CALORIE}</strong> {recommendedCalories}{" "}
-              {LABEL.KCAL_PER_DAY}
+                <strong>{LABEL.RECOMMENDED_CALORIE}</strong>{" "}
+                {recommendedCalories} {LABEL.KCAL_PER_DAY}
               </li>
             </ul>
           </div>
-          <button className="submit-button" onClick={handlesetCalorie}>
-            {LABEL.SET_CALORIE}
-          </button>
+          <CustomButton className="submit-button" onClick={handlesetCalorie} label= {LABEL.SET_CALORIE}>
+           
+          </CustomButton>
 
-         
           <p style={{ marginTop: "15px", fontSize: "14px", color: "#627373" }}>
-         {LABEL.CUSTOMISE_NUTRI_PLAN}
-    <Link
-      to={ROUTES_CONFIG.CALORIE_CALCULATOR.path}
-      style={{
-        color: "blue",
-        fontWeight: "bold",
-      }}
-    >
-    {LABEL.CLICK_HERE}
-    </Link>
-  </p>
+            {LABEL.CUSTOMISE_NUTRI_PLAN}
+            <Link
+              to={ROUTES_CONFIG.CALORIE_CALCULATOR.path}
+              style={{
+                color: "blue",
+                fontWeight: "bold",
+              }}
+            >
+              {LABEL.CLICK_HERE}
+            </Link>
+          </p>
         </div>
       ) : (
         <div style={{ paddingTop: "50px", textAlign: "center" }}>
           <h3
             style={{ color: "#627373", fontWeight: "bold", fontSize: "24px" }}
           >
-          {GREETINGS.WELCOME_NUTRITRACK}
+            {GREETINGS.WELCOME_NUTRITRACK}
           </h3>
           <p style={{ color: "#4A4A4A", fontSize: "16px", margin: "10px 0" }}>
-         {GREETINGS.NUTRI_PLAN_GREET}
+            {GREETINGS.NUTRI_PLAN_GREET}
           </p>
-          {/* <Link to="/calorie-calculator"> */}
-            <button className="submit-button" style={{ marginTop: "120px" }} onClick={handlePlan}>
-              {LABEL.CLICK_HERE}
-            </button>
-          {/* </Link> */}
+
+          <CustomButton
+            className="submit-button"
+            label={LABEL.CLICK_HERE}
+            style={{ marginTop: "120px" }}
+            onClick={handlePlan}
+          ></CustomButton>
         </div>
       )}
     </>

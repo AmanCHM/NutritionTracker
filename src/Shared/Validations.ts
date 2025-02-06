@@ -114,11 +114,11 @@ export const LABEL = {
   SUBMIT: "Submit",
   PASSWORD: "Password",
   EMAIL: "Email Address",
-  LOG_IN: "Log-in",
+  LOG_IN: "Login",
   SIGN_IN_GOOGLE: "Sign in with Google",
-  FORGOT_PASS: "Forget your password?",
-  RESET_PASS: "Reset-Password",
-  DONT_HAVE_ACC: "Dont have an account?",
+  FORGOT_PASS: "Forget your password? ",
+  RESET_PASS: "Reset Password",
+  DONT_HAVE_ACC: "Dont have an account? ",
   SIGN_UP: "Sign Up",
   GO_TO_LOGIN: "Go to login page: ",
   CONFIRM_PASS: "Confirm Password",
@@ -223,6 +223,7 @@ export const NUM ={
   FOUR:4,
   NINE:9,
   ZERO:0,
+  FIVE_FIFTY:550,
 
 }
 export const MEAL_TERMS = {

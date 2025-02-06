@@ -1,10 +1,11 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import "../Nutrition/NutritionModal.css";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { FoodData, LogData, SelectedFoodData } from "../../Dashboard";
 import { FORM_VALIDATION_MESSAGES, LABEL } from "../../../../Shared";
 import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
 import { capitalizeFirstLetter } from "../../../../Helpers/function";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 
 // Define types for the food data and props
@@ -12,6 +13,12 @@ interface Measure {
   serving_weight: number;
   measure: string;
 }
+const mealOptions = [
+  { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+  { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
+  { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+  { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
+];
 
 interface EditDataModalProps {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -103,31 +110,25 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
     setErrors(newErrors);
   };
 
-  const handleSubmit =  (e: FormEvent): void => {
-    e.preventDefault();
+  
 
+  const handleSubmit = useCallback((e: FormEvent): void => {
+    e.preventDefault();
+  
     const newErrors = {
       quantity: validateQuantity(quantity),
       selectquantity: validateSelectQuantity(selectquantity),
       selectCategory: validateMealCategory(selectCategory),
     };
-
+  
     setErrors(newErrors);
-
+  
     if (Object.values(newErrors).every((error) => !error)) {
       handleEditModalData();
     }
-  };
-
-  const mealOptions = [
-    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
-    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
-    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
-  ];
- 
-
-  const getSliceOptions = (selectedFoodData: SelectedFoodData) => {
+  }, [quantity, selectquantity, selectCategory, handleEditModalData]);
+  
+  const getSliceOptions = useCallback((selectedFoodData: SelectedFoodData) => {
     return (
       selectedFoodData?.foods?.flatMap((food, foodIndex) =>
         food.alt_measures.map((measure, index) => ({
@@ -137,27 +138,30 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
         }))
       ) || []
     );
-  };
+  }, []);
+  
   useEffect(() => {
     if (mealName) {
       setSelectCategory(mealName);
     }
   }, [mealName, setSelectCategory]);
-
+  
   const sliceOptions = getSliceOptions(selectedFoodData);
+  
   // Fetch image
-  const image =
-  selectedFoodData?.foods.length > 0
-    ? selectedFoodData?.foods[0]?.photo?.thumb
-    : "no data";
+  const image = selectedFoodData?.foods?.[0]?.photo?.thumb ?? "no data";
     
   const foodName = capitalizeFirstLetter(selectedFoodData?.foods[0]?.food_name);
   return (
     <>
       <div>
-        <button className="close-button" onClick={() => setModal(false)}>
-        {LABEL.CLOSE}
-        </button>
+
+      <CustomButton
+        className="close-button"
+        label={LABEL.CLOSE}
+        onClick={() => setModal(false)}
+      ></CustomButton>
+
         <h2 className="modal-title" style={{ color: "black" }}>
          {LABEL.UPDATE_MEAL}
         </h2>
@@ -220,9 +224,9 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
 
         <p className="calorie-info">{LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}</p>
 
-        <button className="add-meal-button" onClick={handleSubmit}>
-          {LABEL.UPDATE_MEAL}
-        </button>
+        {/* <CustomButton className="add-meal-button" label= {LABEL.UPDATE_MEAL} onClick={()=>{handleSubmit}}>
+         
+        </CustomButton> */}
       </div>
     </>
   );

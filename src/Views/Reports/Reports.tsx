@@ -1,5 +1,5 @@
 import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc, getFirestore, onSnapshot } from "firebase/firestore";
@@ -48,78 +48,79 @@ const Reports: React.FC = () => {
   const loader = useSelector((state: RootState) => state.Loader.loading);
 
   // Fetch User Data from Firestore
-  const handleGetData = async (user: User | null) => {
-    try {
-      dispatch(showLoader());
-      if (!user) {
-        dispatch(hideLoader());
-        return;
-      }
-      const userId = user.uid;
-      const date = selectDate;
-      const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
 
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const mealData = docSnap.data() as LogData;
-        setLogdata(mealData);
-      } else {
-        setLogdata({});
-      }
-    } catch (error) {
-      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
-    } finally {
+const handleGetData = useCallback(async (user: User | null) => {
+  try {
+    dispatch(showLoader());
+    if (!user) {
+      dispatch(hideLoader());
+      return;
+    }
+    const userId = user.uid;
+    const date = selectDate;
+    const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
+
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const mealData = docSnap.data() as LogData;
+      setLogdata(mealData);
+    } else {
+      setLogdata({});
+    }
+  } catch (error) {
+    console.error(ERROR_MESSAGES().ERROR_FETCH, error);
+  } finally {
+    dispatch(hideLoader());
+  }
+}, [selectDate]);
+
+// Watch for authentication state changes
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+    if (user) {
+      dispatch(showLoader());
+      handleGetData(user);
+    } else {
       dispatch(hideLoader());
     }
-  };
+  });
 
-  // Watch for authentication state changes
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) {
-        dispatch(showLoader());
-        handleGetData(user);
-      } else {
-        
-        dispatch(hideLoader());
-      }
-    });
+  return () => unsubscribe();
+}, [handleGetData]);
 
-    return () => unsubscribe();
-  }, [selectDate]);
+// Calculate meal calories
+const calculateMealCalories = (mealData?: { calories: number }[]): number => {
+  return mealData?.length 
+    ? mealData.reduce((total, item) => total + item.calories, 0)
+    : 0;
+};
 
-  // Calculate meal calories
-  const calculateMealCalories = (mealData?: { calories: number }[]): number => {
-    return mealData?.length 
-      ? mealData.reduce((total, item) => total + item.calories, 0)
-      : 0;
-  };
+// Calorie calculations
+const breakfastCalorie = calculateMealCalories(logData?.Breakfast);
+const lunchCalorie = calculateMealCalories(logData?.Lunch);
+const snackCalorie = calculateMealCalories(logData?.Snack);
+const dinnerCalorie = calculateMealCalories(logData?.Dinner);
 
-  // Calorie calculations
-  const breakfastCalorie = calculateMealCalories(logData?.Breakfast);
-  const lunchCalorie = calculateMealCalories(logData?.Lunch);
-  const snackCalorie = calculateMealCalories(logData?.Snack);
-  const dinnerCalorie = calculateMealCalories(logData?.Dinner);
+const totalCalories = useMemo(() => {
+  return breakfastCalorie + lunchCalorie + snackCalorie + dinnerCalorie;
+}, [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
-  const totalCalories =
-    breakfastCalorie + lunchCalorie + snackCalorie + dinnerCalorie;
-
-  // Set the donut chart data
-  const chartData = {
-    labels: [MEALTYPE.BREAKFAST,MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
-    datasets: [
-      {
-        data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
-        backgroundColor: [
-          colors.berakfast_color,
-          colors.lunch_color,
-          colors.snacks_color,
-          colors.dinner_color
-        ],
-        hoverOffset: 1,
-      },
-    ],
-  };
+// Set the donut chart data
+const chartData = useMemo(() => ({
+  labels: [MEALTYPE.BREAKFAST, MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
+  datasets: [
+    {
+      data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
+      backgroundColor: [
+        colors.berakfast_color,
+        colors.lunch_color,
+        colors.snacks_color,
+        colors.dinner_color
+      ],
+      hoverOffset: 1,
+    },
+  ],
+}), [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
   return (
     <>

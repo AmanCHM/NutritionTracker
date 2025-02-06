@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { hideLoader, showLoader } from "../../Store/Loader";
 import { FORM_VALIDATION_MESSAGES, LABEL } from "../../Shared";
+import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
 
 
 const ContactUs: React.FC = () => {
@@ -75,9 +76,9 @@ const ContactUs: React.FC = () => {
             className="form-input"
           ></textarea>
         </div>
-        <button type="submit" className="form-submit">
-          {LABEL.SEND}
-        </button>
+        <CustomButton type="submit" className="form-submit" label= {LABEL.SEND}>
+         
+        </CustomButton>
       </form>
     </>
   );

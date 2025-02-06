@@ -13,6 +13,7 @@ import { setSignout } from "../../Store/Auth";
 import CustomSelect, { OptionType } from "../../Components/Shared/CustomSelect/CustomSelect";
 import { ACTIVITY_OPTIONS, AGE_VALIDATION, FIREBASE_DOC_REF, GENDER_OPTION, HEIGHT_VALIDATION, WEIGHT_VALIDATION } from "../../Shared/Constants";
 import { ERROR_MESSAGES, FORM, SUCCESS_MESSAGES, USER } from "../../Shared";
+import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
 
 interface ActivityOption {
   value: number;
@@ -186,9 +187,9 @@ const CalorieCalculator: React.FC = () => {
               <option value="female">{GENDER_OPTION.FEMALE}</option>
             </select>
           </div>
-          <button type="submit" className="calculate-button">
-          {FORM.CALCULATE}
-          </button>
+          <CustomButton type="submit" className="calculate-button"  label={FORM.CALCULATE}> 
+          
+          </CustomButton>
         </form>
         {calculatedCalorie && (
           <>
@@ -196,9 +197,9 @@ const CalorieCalculator: React.FC = () => {
               You require approximately {calculatedCalorie} kcal daily based on
               your activity level.
             </p>
-            <button className="calculate-button" onClick={handleSave}>
-              {FORM.SET_DAILY_MEAL}
-            </button>
+            <CustomButton  className="calculate-button" onClick={handleSave} label={FORM.SET_DAILY_MEAL}>
+              
+            </CustomButton>
           </>
         )}
       </div>

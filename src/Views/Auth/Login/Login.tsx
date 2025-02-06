@@ -20,6 +20,7 @@ import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin } from "../../../Store/Auth";
 import { CustomError } from "../../../Shared/Common";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 
 
 interface MyFormValues {
@@ -136,9 +137,9 @@ const Login: React.FC = () => {
               <div className="error-message">{formik.errors.password}</div>
             ) : null}
 
-            <button className="login-button" type="submit">
-            {LABEL.SUBMIT}
-            </button>
+            <CustomButton className="login-button" type="submit" label= {LABEL.SUBMIT}>
+           
+            </CustomButton>
 
             <p className="login-footer">Or</p>
 
@@ -148,7 +149,7 @@ const Login: React.FC = () => {
             </button>
 
             <p className="login-footer">
-              {LABEL.FORGOT_PASS}
+              {LABEL.FORGOT_PASS }
               <Link className="login-link" to={ROUTES_CONFIG.RESET_PASSWORD.path}>
                 {LABEL.RESET_PASS}
               </Link>

@@ -100,6 +100,16 @@ const WILDCARD_ROUTES = {
   };
   
 
+// constants.ts
+export const ACTIVITY= {
+
+  SEDENTRY:'Sedentary (little to no exercise)',
+  LIGHTLY_ACTIVE:"Lightly active (light exercise 1-3 days/week)",
+  MODERATELY_ACTIVE:"Moderately active (moderate exercise 3-5 days/week)",
+  VERY_ACTIVE:"Very active (hard exercise 6-7 days/week)",
+  EXTRA_ACTIVE: "Extra active (very hard exercise or a physical job)",
+}
+
   export  const COLSPAN_VALUE = 6;
 
 
@@ -181,6 +191,7 @@ export const GOAL_OPTIONS = {
   GAIN_WEIGHT: { value: "Gain Weight", label: "Gain Weight" },
   MAINTAIN_WEIGHT: { value: "Maintain Weight", label: "Maintain Weight" },
 };
+
 
 
 

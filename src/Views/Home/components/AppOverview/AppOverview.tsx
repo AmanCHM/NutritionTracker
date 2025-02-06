@@ -26,42 +26,42 @@ const AppOverview = () => {
 
           <div>
             <OverviewCards  className ="overview-innerCards"
-              header="Track up to 82 micronutrients"
-              description="Log your meals and track all your macro and micronutrients."
+              header={HOME_PAGE.APP_OVERVIEW.FIRST_CARDS.HEADER}
+              description={HOME_PAGE.APP_OVERVIEW.FIRST_CARDS.DESCRIPTION}
             />
           </div>
           <div>
             {" "}
             <OverviewCards className="overview-innerCards"
-              header="Valuable reports and charts "
-              description="Learn how nutrients and biometrics correlate over time."
+             header={HOME_PAGE.APP_OVERVIEW.SECOND_CARDS.HEADER}
+             description={HOME_PAGE.APP_OVERVIEW.SECOND_CARDS.DESCRIPTION}
             />
           </div>
           <div>
             {" "}
             <OverviewCards className="overview-innerCards"
-              header="Log meals, exercise and biometrics"
-              description="Plus, you can create custom foods, recipes, exercises and biometrics!"
+            header={HOME_PAGE.APP_OVERVIEW.THIRD_CARDS.HEADER}
+            description={HOME_PAGE.APP_OVERVIEW.THIRD_CARDS.DESCRIPTION}
             />
           </div>
           <div>
             {" "}
             <OverviewCards className="overview-innerCards"
-              header="Track up to 82 micronutrients"
-              description="Log your meals and track all your macro and micronutrients."
+             header={HOME_PAGE.APP_OVERVIEW.FOURTH_CARDS.HEADER}
+             description={HOME_PAGE.APP_OVERVIEW.FOURTH_CARDS.DESCRIPTION}
             />
           </div>
           <div>
             {" "}
             <OverviewCards className="overview-innerCards"
-              header="AI enabled Image-search "
-              description="Search meals via image & track all your macro and micronutrients."
+              header={HOME_PAGE.APP_OVERVIEW.FIFTH_CARDS.HEADER}
+              description={HOME_PAGE.APP_OVERVIEW.FIFTH_CARDS.DESCRIPTION}
             />
           </div>
           <div>
             <OverviewCards className="overview-innerCards"
-              header="Track up to 82 micronutrients"
-              description="Log your meals and track all your macro and micronutrients."
+             header={HOME_PAGE.APP_OVERVIEW.SIXTH_CARDS.HEADER}
+             description={HOME_PAGE.APP_OVERVIEW.SIXTH_CARDS.DESCRIPTION}
             />
           </div>
         </div>

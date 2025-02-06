@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, FocusEvent, FormEvent, useMemo } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  FocusEvent,
+  FormEvent,
+  useMemo,
+} from "react";
 import CustomSelect, {
   OptionType,
 } from "../../../../Components/Shared/CustomSelect/CustomSelect";
@@ -7,6 +13,7 @@ import { User } from "firebase/auth";
 import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
 import { FORM_VALIDATION_MESSAGES, LABEL } from "../../../../Shared";
 import { capitalizeFirstLetter } from "../../../../Helpers/function";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 interface Measure {
   serving_weight: number;
@@ -67,7 +74,6 @@ const MealModal: React.FC<MealModalProps> = ({
   selectCategory,
   setAltMeasure,
 }) => {
-
   // const [food ,setFood] = useState<();
   const sliceOptions =
     selectedFoodData?.foods.flatMap((food, foodIndex) =>
@@ -80,11 +86,10 @@ const MealModal: React.FC<MealModalProps> = ({
 
   const mealOptions = [
     { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-    { value: MEALTYPE.LUNCH, label:MEALTYPE.LUNCH},
-    { value: MEALTYPE.SNACK, label:  MEALTYPE.SNACK},
+    { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
+    { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
     { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
   ];
-
 
   // Fetch image
   const image =
@@ -105,7 +110,7 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Quantity
   const validateQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return  FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
+      return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
     }
     return "";
   };
@@ -113,7 +118,7 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Select Quantity
   const validateSelectQuantity = (value: number): string => {
     if (!value || value <= 0) {
-      return  FORM_VALIDATION_MESSAGES().VALID_SERVING_SIZE;
+      return FORM_VALIDATION_MESSAGES().VALID_SERVING_SIZE;
     }
     return "";
   };
@@ -121,12 +126,14 @@ const MealModal: React.FC<MealModalProps> = ({
   // Validate Meal Category
   const validateMealCategory = (value: string): string => {
     if (!value) {
-      return  FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
+      return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
     }
     return "";
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>): void => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
     const { name, value } = e.target;
     const newErrors = { ...errors };
 
@@ -134,10 +141,10 @@ const MealModal: React.FC<MealModalProps> = ({
     if (name === VALIDATION.QUANTITY) {
       newErrors.quantity = validateQuantity(quantity);
     }
-    if (name ===VALIDATION.SELECT_QUANTITY) {
+    if (name === VALIDATION.SELECT_QUANTITY) {
       newErrors.selectquantity = validateSelectQuantity(selectquantity);
     }
-    if (name ===VALIDATION.SELECT_CATEGORY) {
+    if (name === VALIDATION.SELECT_CATEGORY) {
       newErrors.selectCategory = validateMealCategory(value);
     }
 
@@ -161,18 +168,20 @@ const MealModal: React.FC<MealModalProps> = ({
     }
   };
 
-
   const foodName = capitalizeFirstLetter(selectedFoodData?.foods[0]?.food_name);
-  
 
-  const altMeasures = selectedFoodData?.foods?.flatMap((food) => food.alt_measures) || [];
+  const altMeasures =
+    selectedFoodData?.foods?.flatMap((food) => food.alt_measures) || [];
 
   return (
     <>
+
       <div>
-        <button className="close-button" onClick={() => setModal(false)}>
-          {LABEL.CLOSE}
-        </button>
+        <CustomButton
+          className="close-button"
+          label={LABEL.CLOSE}
+          onClick={() => setModal(false)}
+        ></CustomButton>
         <h2>{LABEL.SELECT_MEAL}</h2>
         <div
           style={{
@@ -180,7 +189,7 @@ const MealModal: React.FC<MealModalProps> = ({
             justifyContent: "center",
             alignItems: "center",
           }}
-         >
+        >
           <img src={image} alt="" />
         </div>
         <h3
@@ -217,21 +226,23 @@ const MealModal: React.FC<MealModalProps> = ({
               selectquantity
                 ? {
                     value: selectquantity,
-                    label: altMeasures.find((measure) => measure.serving_weight === selectquantity)?.measure || "No label",
+                    label:
+                      altMeasures.find(
+                        (measure) => measure.serving_weight === selectquantity
+                      )?.measure || "No label",
                   }
                 : null
             }
-            
             onChange={(selectedOption) => {
-              const selectedMeasure = altMeasures.find((measure) => measure.serving_weight === selectedOption?.value);
-              
+              const selectedMeasure = altMeasures.find(
+                (measure) => measure.serving_weight === selectedOption?.value
+              );
+
               setSelectquantity(selectedOption?.value as number);
               console.log(selectquantity);
-              setAltMeasure(selectedMeasure?.measure || '');
+              setAltMeasure(selectedMeasure?.measure || "");
             }}
             // onBlur={handleBlur}
-            
-            
           />
           {errors.selectquantity && (
             <div style={{ color: "red" }}>{errors.selectquantity}</div>
@@ -246,7 +257,7 @@ const MealModal: React.FC<MealModalProps> = ({
             null
           }
           onChange={(selectedOption) =>
-            setSelectCategory(selectedOption?.value as string )
+            setSelectCategory(selectedOption?.value as string)
           }
           onBlur={handleBlur}
         />
@@ -255,17 +266,14 @@ const MealModal: React.FC<MealModalProps> = ({
         )}
 
         <p className="calorie-info">
-         {LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}
+          {LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}
         </p>
-        <button className="add-meal-button" onClick={handleSubmit}>
+        {/* <CustomButton className="add-meal-button" label= {LABEL.ADD_MEAL} onClick={handleSubmit}>
           {LABEL.ADD_MEAL}
-        </button>
+        </CustomButton> */}
       </div>
     </>
   );
 };
 
 export default MealModal;
-
-
-

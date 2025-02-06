@@ -1,4 +1,4 @@
-  import React from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
@@ -7,58 +7,68 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { RootState } from "../../../Store";
 import { setUserInfo } from "../../../Store/Nutrition";
-import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
-import { AGE_VALIDATION, GENDER_OPTION, HEIGHT_VALIDATION, ROUTES_CONFIG } from "../../../Shared/Constants";
+import CustomSelect, {
+  OptionType,
+} from "../../../Components/Shared/CustomSelect/CustomSelect";
+import {
+  AGE_VALIDATION,
+  GENDER_OPTION,
+  HEIGHT_VALIDATION,
+  ROUTES_CONFIG,
+} from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
-import { FORM_VALIDATION_MESSAGES, GREETINGS, LABEL, USER } from "../../../Shared";
-
-
+import {
+  FORM_VALIDATION_MESSAGES,
+  GREETINGS,
+  LABEL,
+  USER,
+} from "../../../Shared";
 
 // Define types for the user form data
 interface UserInfoForm {
   userName: string;
-  height: number ;
+  height: number;
   gender: string;
-  age:  number;
+  age: number;
 }
 
+const genderOptions: OptionType[] = [
+  { value: GENDER_OPTION.MALE, label: GENDER_OPTION.MALE },
+  { value: GENDER_OPTION.FEMALE, label: GENDER_OPTION.FEMALE },
+];
 const UserInfo: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Select data from Redux store with proper types
-  const userheight = useSelector((state:RootState ) => state.Nutrition.height);   
+  const userheight = useSelector((state: RootState) => state.Nutrition.height);
   const userage = useSelector((state: RootState) => state.Nutrition.age);
   const usergender = useSelector((state: RootState) => state.Nutrition.gender);
   const username = useSelector((state: RootState) => state.Nutrition.userName);
 
   // Gender options
-  const genderOptions :OptionType[]= [
-    { value: GENDER_OPTION.MALE, label: GENDER_OPTION.MALE},
-    { value: GENDER_OPTION.FEMALE, label: GENDER_OPTION.FEMALE },
-  ];
 
   // Formik for form handling
   const formik = useFormik<UserInfoForm>({
     initialValues: {
       userName: username || "",
-      height: userheight    ,
+      height: userheight,
       gender: usergender || "",
-      age: userage ,
+      age: userage,
     },
     validationSchema: Yup.object({
       userName: Yup.string().required(FORM_VALIDATION_MESSAGES().NAME_REQUIRED),
       height: Yup.number()
-      .required(HEIGHT_VALIDATION.REQUIRED)
-      .typeError(HEIGHT_VALIDATION.NUMBER)
-      .positive(HEIGHT_VALIDATION.POSITIVE)
-      .integer(HEIGHT_VALIDATION.INTEGER),
+        .required(HEIGHT_VALIDATION.REQUIRED)
+        .typeError(HEIGHT_VALIDATION.NUMBER)
+        .positive(HEIGHT_VALIDATION.POSITIVE)
+        .integer(HEIGHT_VALIDATION.INTEGER),
       gender: Yup.string().required(FORM_VALIDATION_MESSAGES().GENDER_REQUIRED),
       age: Yup.number()
-      .required(AGE_VALIDATION.REQUIRED)
-      .typeError(AGE_VALIDATION.NUMBER)
-      .positive(AGE_VALIDATION.POSITIVE)
-      .integer(AGE_VALIDATION.INTEGER)
+        .required(AGE_VALIDATION.REQUIRED)
+        .typeError(AGE_VALIDATION.NUMBER)
+        .positive(AGE_VALIDATION.POSITIVE)
+        .integer(AGE_VALIDATION.INTEGER),
     }),
     onSubmit: (values) => {
       dispatch(setUserInfo(values));
@@ -68,7 +78,6 @@ const UserInfo: React.FC = () => {
 
   return (
     <>
-     
       <h3
         style={{
           fontSize: "2.3rem",
@@ -77,7 +86,7 @@ const UserInfo: React.FC = () => {
           marginTop: "3%",
         }}
       >
-       {GREETINGS.WELCOME_NUTRITRACK}
+        {GREETINGS.WELCOME_NUTRITRACK}
       </h3>
       <h3 style={{ textAlign: "center", color: "#627373" }}>
         {GREETINGS.HAPPY_GREET} <br />
@@ -115,16 +124,18 @@ const UserInfo: React.FC = () => {
 
           <div className="input-group">
             <label htmlFor="gender">{USER.GENDER}</label>
-           <CustomSelect
+            <CustomSelect
               options={genderOptions}
-              value={genderOptions.find(
-                (option) => option.value === formik.values.gender 
-              ) || null}
+              value={
+                genderOptions.find(
+                  (option) => option.value === formik.values.gender
+                ) || null
+              }
               onChange={(selectedOption) =>
                 formik.setFieldValue("gender", selectedOption?.value)
               }
               placeholder="-- Select Gender --"
-            />    
+            />
             {formik.touched.gender && formik.errors.gender && (
               <p className="error-message">{formik.errors.gender}</p>
             )}
@@ -139,7 +150,6 @@ const UserInfo: React.FC = () => {
               {...formik.getFieldProps("age")}
               value={formik.values.age || ""}
               placeholder="Enter age in years"
-
             />
             {formik.touched.age && formik.errors.age && (
               <p className="error-message">{formik.errors.age}</p>
@@ -149,18 +159,14 @@ const UserInfo: React.FC = () => {
           <CustomButton
             type="submit"
             style={{
-           
               marginLeft: "40%",
             }}
             size={"medium"}
             onClick={formik.handleSubmit}
             label={"Next"}
-          >
-            
-          </CustomButton>
+          ></CustomButton>
         </form>
       </div>
-     
     </>
   );
 };

@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import "./ImageSearch.css";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -31,12 +37,12 @@ import {
 import { TABLE_STYLE } from "../../../../assets/Css/customStyle";
 import { LogDataItem } from "../../Dashboard";
 import { User } from "firebase/auth";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 interface ImageSearchProps {
   setImageModal: (show: boolean) => void;
-  setImageData: (data: LogDataItem |null) => void;
+  setImageData: (data: LogDataItem | null) => void;
   handleGetData: (user: User) => void;
- 
 }
 
 interface NutritionInfo {
@@ -50,6 +56,13 @@ interface NutritionInfo {
     };
   };
 }
+
+const mealOptions = [
+  { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+  { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
+  { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
+  { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
+];
 
 const ImageSearch: React.FC<ImageSearchProps> = ({
   setImageModal,
@@ -113,90 +126,107 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   };
 
   // Save the meal details into Firebase
-  const handleSaveData = (e: React.FormEvent): void => {
-    e.preventDefault();
 
-    dispatch(showLoader());
+  const handleSaveData = useCallback(
+    (e: React.FormEvent): void => {
+      e.preventDefault();
+      dispatch(showLoader());
 
-    const newErrors = {
-      quantity: validateQuantity(quantity),
-      mealCategory: validateMealCategory(mealCategory),
-    };
-
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).every((error) => !error)) {
-      const newData = {
-        id: Date.now(),
-        name: name,
-        calories: calories,
-        proteins: protein,
-        carbs: carbohydrates,
-        fats: fat,
+      // Validate fields and set errors
+      const newErrors = {
+        quantity: validateQuantity(quantity),
+        mealCategory: validateMealCategory(mealCategory),
       };
-      setImageData(newData);
-      handelImageSearchModal(newData);
+      setErrors(newErrors);
 
-      dispatch(hideLoader());
-      toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
-    } else {
-      dispatch(hideLoader());
-    }
-  };
-
-  const throttledHandleSaveData = Throttle((e: React.FormEvent) => {
-    handleSaveData(e);
-  }, 1000);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const file: File | undefined = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageSrc(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-    setSelectedFile(file ?? null);
-  };
-
-  // Set the meal details
-  const handelImageSearchModal = async (data: LogDataItem|null): Promise<void> => {
-    dispatch(showLoader());
-    try {
-      const user = auth.currentUser;
-      if (user) {
-        const userId = user?.uid;
-        const date = dateFunction;
-        const docRef = doc(
-          db,
-          FIREBASE_DOC_REF.USER,
-          userId,
-          FIREBASE_DOC_REF.DAILY_LOGS,
-          date
-        );
-        const categorisedData = { [mealCategory as string]: arrayUnion(data) };
-
-        await setDoc(docRef, categorisedData, { merge: true });
-        handleGetData(user);
-
-        setImageModal(false);
+      // Only proceed if no errors
+      if (!Object.values(newErrors).some((error) => error)) {
+        const newData = {
+          id: Date.now(),
+          name,
+          calories,
+          proteins: protein,
+          carbs: carbohydrates,
+          fats: fat,
+        };
+        setImageData(newData);
+        handelImageSearchModal(newData);
+        toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
       }
-    } catch (error) {
-      console.error(ERROR_MESSAGES().ERROR_SAVING_DATA, error);
-    } finally {
-      dispatch(hideLoader());
-    }
-  };
 
-  // ImageID API
-  const handleUpload = async (): Promise<void> => {
+      dispatch(hideLoader());
+    },
+    [
+      quantity,
+      mealCategory,
+      name,
+      calories,
+      protein,
+      carbohydrates,
+      fat,
+      dispatch,
+    ]
+  );
+
+  const throttledHandleSaveData = useMemo(
+    () => Throttle(handleSaveData, 1000),
+    [handleSaveData]
+  );
+
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => setImageSrc(event.target?.result as string);
+        reader.readAsDataURL(file);
+      }
+      setSelectedFile(file ?? null);
+    },
+    []
+  );
+
+  const handelImageSearchModal = useCallback(
+    async (data: LogDataItem | null): Promise<void> => {
+      dispatch(showLoader());
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          const date = dateFunction;
+          const docRef = doc(
+            db,
+            FIREBASE_DOC_REF.USER,
+            userId,
+            FIREBASE_DOC_REF.DAILY_LOGS,
+            date
+          );
+          const categorisedData = {
+            [mealCategory as string]: arrayUnion(data),
+          };
+
+          await setDoc(docRef, categorisedData, { merge: true });
+          handleGetData(user);
+          setImageModal(false);
+        }
+      } catch (error) {
+        console.error(ERROR_MESSAGES().ERROR_SAVING_DATA, error);
+      } finally {
+        dispatch(hideLoader());
+      }
+    },
+    [mealCategory, dispatch]
+  );
+
+  const handleUpload = useCallback(async (): Promise<void> => {
     setImageData(null);
     dispatch(showLoader());
+
+    if (!selectedFile) return;
+
     const formData = new FormData();
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
+    formData.append("image", selectedFile);
+
     try {
       const result = await axios.post(`${IMAGE_ID_API_URL}`, formData, {
         headers: {
@@ -204,15 +234,14 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
           "Content-Type": "multipart/form-data",
         },
       });
-
       setImageId(result.data?.imageId);
     } catch (error) {
       toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
-      console.log(error);
+      console.error(error);
     } finally {
       dispatch(hideLoader());
     }
-  };
+  }, [selectedFile, dispatch]);
 
   useEffect(() => {
     if (imageId) {
@@ -220,70 +249,52 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     }
   }, [imageId]);
 
-  // Nutrition info API
-  const fetchNutritionInfo = async (imageId: string): Promise<void> => {
-    const data = { imageId: imageId };
-    try {
-      const result = await axios.post(`${NUTRI_INFO_API_URL}`, data, {
-        headers: {
-          Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
-          "Content-Type": "application/json",
-        },
-      });
-      setNutritionInfo(result.data);
-    } catch (error) {
-      toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
-      console.log(error);
-    }
-  };
+  const fetchNutritionInfo = useCallback(
+    async (imageId: string): Promise<void> => {
+      const data = { imageId };
+
+      try {
+        const result = await axios.post(`${NUTRI_INFO_API_URL}`, data, {
+          headers: {
+            Authorization: import.meta.env.VITE_LOGMEAL_API_TOKEN,
+            "Content-Type": "application/json",
+          },
+        });
+        setNutritionInfo(result.data);
+      } catch (error) {
+        toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
+        console.error(error);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
-    if (nutritionInfo) {
-      setName(nutritionInfo?.foodName[0] || "");
-      setCalories(
-        Math.floor(nutritionInfo?.nutritional_info?.calories) * quantity || 0
-      );
-      setCarbohydrates(
-        Math.floor(
-          nutritionInfo?.nutritional_info?.totalNutrients?.CHOCDF?.quantity
-        ) * quantity || 0
-      );
-      setFat(
-        Math.floor(
-          nutritionInfo?.nutritional_info?.totalNutrients?.FAT?.quantity
-        ) * quantity || 0
-      );
-      setProtein(
-        Math.floor(
-          nutritionInfo?.nutritional_info?.totalNutrients?.PROCNT?.quantity
-        ) * quantity || 0
-      );
-    }
-  }, [nutritionInfo, quantity]);
+    if (!nutritionInfo) return;
 
-  const mealOptions = [
-    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-    { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
-    { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
-    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
-  ];
+    const nutrition = nutritionInfo?.nutritional_info;
+    const multiplier = quantity || 1;
+
+    setName(nutritionInfo?.foodName[0] || "");
+    setCalories(Math.floor(nutrition?.calories * multiplier) || 0);
+    setCarbohydrates(
+      Math.floor(nutrition?.totalNutrients?.CHOCDF?.quantity * multiplier) || 0
+    );
+    setFat(
+      Math.floor(nutrition?.totalNutrients?.FAT?.quantity * multiplier) || 0
+    );
+    setProtein(
+      Math.floor(nutrition?.totalNutrients?.PROCNT?.quantity * multiplier) || 0
+    );
+  }, [nutritionInfo, quantity]);
 
   return (
     <>
-      <span
-        className="close-button"
-        onClick={() => setImageModal(false)}
-        style={{
-          color: "black",
-          backgroundColor: "white",
-          padding: "5px",
-          cursor: "pointer",
-        }}
-      >
-        {LABEL.CLOSE}
-      </span>
-
+      <CustomButton className="close-button" label=   {LABEL.CLOSE} onClick={() => setImageModal(false)}>
+     
+      </CustomButton>
       <div className="image-search-container">
+       
         <h2 className="title"> {LABEL.RECO_FOOD}</h2>
 
         <div className="upload-section">
@@ -305,9 +316,11 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
           </div>
         )}
 
-        <button onClick={handleUpload} className="upload-button">
-          {LABEL.UPLOAD}
-        </button>
+        <CustomButton
+          onClick={handleUpload}
+          size="medium"
+          label={LABEL.UPLOAD}
+        ></CustomButton>
 
         {nutritionInfo && (
           <div>
@@ -398,12 +411,13 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
                 {LABEL.CALORIE_SERVED}
                 {calories || "N/A"}
               </p>
-              <button
-                className="add-meal-button"
+              <CustomButton
+                size="large"
                 onClick={throttledHandleSaveData}
-              >
-                {LABEL.ADD_MEAL}
-              </button>
+                label={LABEL.ADD_MEAL}
+                >
+
+              </CustomButton>
             </div>
           </div>
         )}

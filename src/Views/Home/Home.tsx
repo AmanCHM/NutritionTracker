@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import "./Home.css";
 
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -23,10 +23,10 @@ const Home = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     dispatch(resetGoal());
     navigate(ROUTES_CONFIG.USER_INFO.path);
-  };
+  },[]) ;
 
   return (  
     <>

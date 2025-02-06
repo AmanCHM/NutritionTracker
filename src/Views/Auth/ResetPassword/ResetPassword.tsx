@@ -7,6 +7,7 @@ import { auth } from "../../../Utils/firebase";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../Shared";
 import { CustomError } from "../../../Shared/Common";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 
 const ResetPassword: React.FC = () => {
   const [email, setEmail] = useState<string>(""); 
@@ -35,7 +36,6 @@ const ResetPassword: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
       <form onSubmit={handleSubmit} className="reset-container">
         <div>
           <h2 className="reset-title">{LABEL.RESET_PASS}</h2>
@@ -52,7 +52,7 @@ const ResetPassword: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">{LABEL.RESET_PASS}</button>
+        <CustomButton type="submit" label={LABEL.RESET_PASS}></CustomButton>
         <p className="login-footer" style={{ color: "#303952" }}>
           {LABEL.GO_TO_LOGIN } 
           <Link to={ROUTES_CONFIG.LOGIN.path} className="login-link">

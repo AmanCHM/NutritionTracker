@@ -15,6 +15,7 @@ import CustomSelect, {
   OptionType,
 } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import {
+  ACTIVITY,
   GENDER_OPTION,
   ROUTES_CONFIG,
   VALIDATION,
@@ -22,8 +23,30 @@ import {
 } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { Formik } from "formik";
-import { ERROR_MESSAGES, GREETINGS, LABEL } from "../../../Shared";
+import { ERROR_MESSAGES, GREETINGS, LABEL, NUM } from "../../../Shared";
 
+const activityOptions: OptionType[] = [
+  {
+    value: ACTIVITY.SEDENTRY,
+    label:ACTIVITY.SEDENTRY,
+  },
+  {
+    value: ACTIVITY.LIGHTLY_ACTIVE,
+    label: ACTIVITY.LIGHTLY_ACTIVE,
+  },
+  {
+    value: ACTIVITY.MODERATELY_ACTIVE,
+    label:  ACTIVITY.MODERATELY_ACTIVE
+  },
+  {
+    value: ACTIVITY.VERY_ACTIVE,
+    label: ACTIVITY.VERY_ACTIVE,
+  },
+  {
+    value: ACTIVITY.EXTRA_ACTIVE,
+    label: ACTIVITY.EXTRA_ACTIVE,
+  },
+];
 const ExerciseInput: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,28 +71,6 @@ const ExerciseInput: React.FC = () => {
     label: string;
   };
   // Activity Options
-  const activityOptions: OptionType[] = [
-    {
-      value: "Sedentary (little to no exercise)",
-      label: "Sedentary (little to no exercise)",
-    },
-    {
-      value: "Lightly active (light exercise 1-3 days/week)",
-      label: "Lightly active (light exercise 1-3 days/week)",
-    },
-    {
-      value: "Moderately active (moderate exercise 3-5 days/week)",
-      label: "Moderately active (moderate exercise 3-5 days/week)",
-    },
-    {
-      value: "Very active (hard exercise 6-7 days/week)",
-      label: "Very active (hard exercise 6-7 days/week)",
-    },
-    {
-      value: "Extra active (very hard exercise or a physical job)",
-      label: "Extra active (very hard exercise or a physical job)",
-    },
-  ];
 
   // Handle Form Submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -97,7 +98,7 @@ const ExerciseInput: React.FC = () => {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age + 5;
     } else {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age - 161;
-    }
+    } 
 
     const activityMultipliers: Record<string, number> = {
       "Sedentary (little to no exercise)": 1.2,
@@ -112,9 +113,9 @@ const ExerciseInput: React.FC = () => {
 
     let recommendedCalories = maintenance;
     if (goal === WEIGHT.LOOSE_WEIGHT) {
-      recommendedCalories = maintenance - 550;
+      recommendedCalories = maintenance - NUM.FIVE_FIFTY;
     } else if (goal === WEIGHT.GAIN_WEIGHT) {
-      recommendedCalories = maintenance + 550;
+      recommendedCalories = maintenance + NUM.FIVE_FIFTY;
     }
 
     return { recommendedCalories };

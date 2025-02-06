@@ -18,6 +18,7 @@ import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
 import { CustomError } from "../../../Shared/Common";
+import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 
 
 interface SignupFormValues {
@@ -165,7 +166,7 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.confirmPassword}</div>
           ) : null}
 
-          <button className="signup-button" type="submit">{LABEL.SIGN_UP}</button>
+          <CustomButton className="signup-button" type="submit" label={LABEL.SIGN_UP}></CustomButton>
         </form>
         <p className="login-footer">Or</p>
         <button className="signup-button" onClick={handleGoogleSignup}>

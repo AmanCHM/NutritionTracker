@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -11,6 +11,7 @@ import { auth, db } from "../../../../Utils/firebase";
 import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../Shared";
 import { FIREBASE_DOC_REF } from "../../../../Shared/Constants";
 import { dateFunction } from "../../../../Helpers/function";
+import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 // Define types for props
 interface UpdateDrinkModalProps {
@@ -19,8 +20,8 @@ interface UpdateDrinkModalProps {
   onDataUpdated: () => void;
   setEditDrinkModal: React.Dispatch<React.SetStateAction<boolean>>;
   editDrinkModal: boolean;
-  setDrinkId: React.Dispatch<React.SetStateAction<string | number |undefined>>;
-  setDrinkName: React.Dispatch<React.SetStateAction<string |undefined>>;
+  setDrinkId: React.Dispatch<React.SetStateAction<string | number | undefined>>;
+  setDrinkName: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 interface DrinkDetails {
@@ -45,11 +46,10 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   const [drinkId, setUpdateId] = useState<string | undefined>();
   const dispatch = useDispatch();
 
-
-
   // console.log("drink details",drinkDetails);
   // Delete the drink
-  const handleDeleteDrink = async (drinkType: string, id: string) => {
+
+  const handleDeleteDrink = useCallback(async (drinkType: string, id: string) => {
     dispatch(showLoader());
     try {
       const user = auth.currentUser;
@@ -74,19 +74,17 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
       dispatch(hideLoader());
       toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
     }
-  };
-
-  // Set the details of editable drink
-  const handleEditModal = (drinkType: string, id: string) => {
+  }, [dispatch, onDataUpdated]);
+  
+  const handleEditModal = useCallback((drinkType: string, id: string) => {
     setDrinkName(drinkType);
     setDrinkId(id);
     setEditDrinkModal(true);
     setUpdateId(id);
     setDrinkUpdateModal(false);
-  };
-
-  // Get the drink data
-  const getDrinkData = async (user: User | null) => {
+  }, []);
+  
+  const getDrinkData = useCallback(async (user: User | null) => {
     try {
       dispatch(showLoader());
       if (user) {
@@ -106,20 +104,23 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
     } finally {
       dispatch(hideLoader());
     }
-  };
-
+  }, [dispatch]);
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       getDrinkData(user);
     });
     return () => unsubscribe();
-  }, [drinkData]);
+  }, [getDrinkData]);
+  
 
   return (
     <>
-      <button className="close-button" onClick={() => setDrinkUpdateModal(false)}>
-        {LABEL.CLOSE}
-      </button>
+      <CustomButton
+        className="close-button"
+        label={LABEL.CLOSE}
+        onClick={() => setDrinkUpdateModal(false)}
+      ></CustomButton>
 
       <h2 className="modal-title" style={{ color: "black" }}>
         {LABEL.UPDATE} {updateDrinkName} {LABEL.DETAILS}
@@ -143,13 +144,17 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
                   <td>
                     <div style={{ display: "flex" }}>
                       <span
-                        onClick={() => handleDeleteDrink(updateDrinkName, item.id)}
+                        onClick={() =>
+                          handleDeleteDrink(updateDrinkName, item.id)
+                        }
                         className="icon-button delete"
                       >
                         <FaTrashAlt style={{ color: "#e15f41" }} />
                       </span>
                       <span
-                        onClick={() => handleEditModal(updateDrinkName, item.id)}
+                        onClick={() =>
+                          handleEditModal(updateDrinkName, item.id)
+                        }
                         className="icon-button edit"
                       >
                         <FaEdit />
@@ -162,7 +167,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
               <tr>
                 <td colSpan={3}>{LABEL.NO_ITEM_AVAILABLE}</td>
               </tr>
-            ) }
+            )}
           </tbody>
         </table>
       </div>
