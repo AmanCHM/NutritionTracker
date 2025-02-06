@@ -1,7 +1,7 @@
 {
   "name": "nutrition-tracker",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "postbuild": "cp -r dist/ /path/to/render/publish/folder"
+
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",

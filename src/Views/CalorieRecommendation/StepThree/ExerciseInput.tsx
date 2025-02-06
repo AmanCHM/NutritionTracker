@@ -6,14 +6,23 @@ import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { RootState } from "../../../Store";
-import { openCalorieModal, setActivityLevel, setRequiredCalorie } from "../../../Store/Nutrition";
-import CustomSelect, { OptionType } from "../../../Components/Shared/CustomSelect/CustomSelect";
-import {  GENDER_OPTION, ROUTES_CONFIG, VALIDATION, WEIGHT } from "../../../Shared/Constants";
+import {
+  openCalorieModal,
+  setActivityLevel,
+  setRequiredCalorie,
+} from "../../../Store/Nutrition";
+import CustomSelect, {
+  OptionType,
+} from "../../../Components/Shared/CustomSelect/CustomSelect";
+import {
+  GENDER_OPTION,
+  ROUTES_CONFIG,
+  VALIDATION,
+  WEIGHT,
+} from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { Formik } from "formik";
 import { ERROR_MESSAGES, GREETINGS, LABEL } from "../../../Shared";
-
-
 
 const ExerciseInput: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,26 +30,45 @@ const ExerciseInput: React.FC = () => {
 
   // user details from Redux store
   const height = useSelector((state: RootState) => state.Nutrition.height);
-  const weight = useSelector((state: RootState) => state.Nutrition.currentWeight);
+  const weight = useSelector(
+    (state: RootState) => state.Nutrition.currentWeight
+  );
   const age = useSelector((state: RootState) => state.Nutrition.age);
   const gender = useSelector((state: RootState) => state.Nutrition.gender);
   const goal = useSelector((state: RootState) => state.Nutrition.goal);
-  const activities = useSelector((state: RootState) => state.Nutrition.activity);
+  const activities = useSelector(
+    (state: RootState) => state.Nutrition.activity
+  );
 
   // State for selected activity
   const [activity, setActivity] = useState<string>(activities || "");
 
   type OptionType = {
-    value: string ;
+    value: string;
     label: string;
   };
   // Activity Options
-  const activityOptions: OptionType[]= [
-    { value: "Sedentary (little to no exercise)", label: "Sedentary (little to no exercise)" },
-    { value: "Lightly active (light exercise 1-3 days/week)", label: "Lightly active (light exercise 1-3 days/week)" },
-    { value: "Moderately active (moderate exercise 3-5 days/week)", label: "Moderately active (moderate exercise 3-5 days/week)" },
-    { value: "Very active (hard exercise 6-7 days/week)", label: "Very active (hard exercise 6-7 days/week)" },
-    { value: "Extra active (very hard exercise or a physical job)", label: "Extra active (very hard exercise or a physical job)" },
+  const activityOptions: OptionType[] = [
+    {
+      value: "Sedentary (little to no exercise)",
+      label: "Sedentary (little to no exercise)",
+    },
+    {
+      value: "Lightly active (light exercise 1-3 days/week)",
+      label: "Lightly active (light exercise 1-3 days/week)",
+    },
+    {
+      value: "Moderately active (moderate exercise 3-5 days/week)",
+      label: "Moderately active (moderate exercise 3-5 days/week)",
+    },
+    {
+      value: "Very active (hard exercise 6-7 days/week)",
+      label: "Very active (hard exercise 6-7 days/week)",
+    },
+    {
+      value: "Extra active (very hard exercise or a physical job)",
+      label: "Extra active (very hard exercise or a physical job)",
+    },
   ];
 
   // Handle Form Submission
@@ -79,7 +107,7 @@ const ExerciseInput: React.FC = () => {
       "Extra active (very hard exercise or a physical job)": 1.9,
     };
 
-    const activityValue = activityMultipliers[activity] || 1.2; 
+    const activityValue = activityMultipliers[activity] || 1.2;
     const maintenance = Math.round(bmrCurrent * activityValue);
 
     let recommendedCalories = maintenance;
@@ -94,7 +122,7 @@ const ExerciseInput: React.FC = () => {
 
   return (
     <>
-       <div style={{ height: "430px" }}>
+      <div style={{ height: "430px" }}>
         <h3
           style={{
             fontSize: "2.3rem",
@@ -106,7 +134,7 @@ const ExerciseInput: React.FC = () => {
           {GREETINGS.ACTIVITY_LABEL}
         </h3>
         <h3 style={{ textAlign: "center", color: "#627373" }}>
-        {GREETINGS.WORKOUT_LABEL}
+          {GREETINGS.WORKOUT_LABEL}
         </h3>
 
         <div className="calorie-container">
@@ -115,35 +143,32 @@ const ExerciseInput: React.FC = () => {
               <label htmlFor="activity" style={{ fontSize: "1.2rem" }}>
                 {LABEL.SELECT_ATIVITY}
               </label>
-               <CustomSelect
+              <CustomSelect
                 options={activityOptions}
-                value={activityOptions.find((option) => option.value === activity ) || null}
-                onChange={(selectedOption) => setActivity(selectedOption?.value as string)}
+                value={
+                  activityOptions.find((option) => option.value === activity) ||
+                  null
+                }
+                onChange={(selectedOption) =>
+                  setActivity(selectedOption?.value as string)
+                }
                 placeholder={VALIDATION.SELECT_OPTION}
               />
             </div>
             <div style={{ marginTop: "20px", marginLeft: "5%" }}>
-
-        
               <CustomButton
-            type="submit"
-            size={"medium"}
-            onClick={()=>  navigate(ROUTES_CONFIG.INPUT_WEIGHT.path)}
-            label={"Back"}
-          >
-    
-          </CustomButton>
+                type="submit"
+                size={"medium"}
+                onClick={() => navigate(ROUTES_CONFIG.INPUT_WEIGHT.path)}
+                label={"Back"}
+              ></CustomButton>
 
               <CustomButton
-            type="submit"
-            style={{ marginLeft: "60%" }}
-            size={"medium"}
-          
-            label={"Next"}
-          >
-            
-          </CustomButton>
-
+                type="submit"
+                style={{ marginLeft: "60%" }}
+                size={"medium"}
+                label={"Next"}
+              ></CustomButton>
             </div>
           </form>
         </div>
