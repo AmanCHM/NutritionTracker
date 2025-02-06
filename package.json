@@ -10,8 +10,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "postinstall": "husky install",
-    "postbuild": "cp -r dist/ /path/to/render/publish/folder"
-
+ 
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
