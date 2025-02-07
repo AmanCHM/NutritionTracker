@@ -85,3 +85,9 @@
 a.active_link {
     color: rgb(244, 236, 236);
 }
+
+@media (min-width: 768px) {
+    .navbar ul {
+      display: flex;
+    }
+  }

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import { useFormik, FieldProps } from "formik";
 import * as Yup from "yup";
-import "./CalorieCalculator.css";
+import "./BMRCalculator.css";
 import { toast } from "react-toastify";
 
 import { useDispatch } from "react-redux";
@@ -54,20 +54,26 @@ const CalorieCalculator: React.FC = () => {
 
     validationSchema: Yup.object({
       height: Yup.number()
+           .min(50)
+           .max(300)
         .required(HEIGHT_VALIDATION.REQUIRED)
         .typeError(HEIGHT_VALIDATION.NUMBER)
-        .positive(HEIGHT_VALIDATION.POSITIVE)
-        .integer(HEIGHT_VALIDATION.INTEGER),
+        .positive(HEIGHT_VALIDATION.POSITIVE),
+        // .integer(HEIGHT_VALIDATION.INTEGER),
       weight: Yup.number()
+      .min(10)
+      .max(500)
       .required(WEIGHT_VALIDATION.REQUIRED)
       .typeError(WEIGHT_VALIDATION.NUMBER)
-      .positive(WEIGHT_VALIDATION.POSITIVE)
-      .integer(WEIGHT_VALIDATION.INTEGER),
+      .positive(WEIGHT_VALIDATION.POSITIVE),
+      // .integer(WEIGHT_VALIDATION.INTEGER),
       age: Yup.number()
+      .min(0)
+      .max(120)
       .required(AGE_VALIDATION.REQUIRED)
       .typeError(AGE_VALIDATION.NUMBER)
       .positive(AGE_VALIDATION.POSITIVE)
-      .integer(AGE_VALIDATION.INTEGER)
+      // .integer(AGE_VALIDATION.INTEGER)
     }),
     onSubmit: (values: FormValues) => {
       const totalCalories = calculateCalorieIntake(values);
@@ -135,6 +141,8 @@ const CalorieCalculator: React.FC = () => {
             <input
               id="height"
               type="text"
+              min="50"
+              max="300"
               {...formik.getFieldProps("height")}
               placeholder="Enter height in cm"
             />
@@ -147,6 +155,8 @@ const CalorieCalculator: React.FC = () => {
             <input
               id="weight"
               type="text"
+              min="10"
+              max="500"
               {...formik.getFieldProps("weight")}
               placeholder="Enter weight in kg"
             />
@@ -159,6 +169,8 @@ const CalorieCalculator: React.FC = () => {
             <input
               id="age"
               type="text"
+              min="0"
+              max="120"
               {...formik.getFieldProps("age")}
               placeholder="Enter age in years"
             />

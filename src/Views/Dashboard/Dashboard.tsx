@@ -33,9 +33,7 @@ import {
 import { dateFunction, debounce } from "../../Helpers/function";
 import { hideLoader, showLoader } from "../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../Utils/firebase";
-import { initializeApp } from "firebase/app";
-import { string } from "yup";
-import { Dispatch } from "@reduxjs/toolkit";
+
 import {
   ERROR_MESSAGES,
   FORM,
@@ -262,6 +260,8 @@ const Dashboard = () => {
   );
 
   console.log("input value",inputValue);
+
+ 
   // Food suggestion search bar
   const {
     data: suggestion,

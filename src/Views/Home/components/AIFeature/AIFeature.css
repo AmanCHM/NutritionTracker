@@ -20,12 +20,12 @@
   }
   
   #feature-image {
-    height: 700px;
-    width: 360px;
+    height: 650px;
+    width: 330px ;
     margin-top: 7vh;
     border-radius: 15px;
     box-shadow: 2px;
-    margin-left: 10vw;
+    margin-left: 15vw;
   }
   
   #feature-card {

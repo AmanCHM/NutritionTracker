@@ -141,7 +141,7 @@ const Login: React.FC = () => {
            
             </CustomButton>
 
-            <p className="login-footer">Or</p>
+            <p className="login-footer">{LABEL.OR}</p>
 
             <button className="google-login-button" type="button" onClick={handleGoogleSignIn}>
               <img src={IMAGES.googleLogo} alt="Google logo" className="google-logo" />

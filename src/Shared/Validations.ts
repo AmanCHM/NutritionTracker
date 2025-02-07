@@ -97,9 +97,9 @@ export const ABOUT = {
   THIRD_PARA:
     " Our dedicated team of developers, nutritionists, and designers is committed to helping you achieve your health goals. Together, we innovate, inspire, and create a better way to live healthier.",
   LIST_TITLE: "Our Values",
-  OUR_STORY_TITLE: "Our Story",
+  OUR_STORY_TITLE: "Our Mission",
   OUR_STORY_PARA:
-    " Nutrition Tracker was born from the idea that understanding what you eat shouldn't be complicated. With a team of health enthusiasts,  developers, and nutrition experts, we set out to create a solution that simplifies meal tracking and fosters better eating habits.",
+    " Our Story Nutrition Tracker was born from the idea that understanding what you eat shouldn't be complicated. With a team of health enthusiasts, developers, and nutrition experts, we set out to create a solution that simplifies meal tracking and fosters better eating habits.",
 
   VALUE: [
     "Encouraging Balanced Nutrition",
@@ -291,7 +291,7 @@ export const HOME_PAGE = {
         "Be confident that the food you log has the correct nutrition data. We verify every food submission for accuracy.",
     },
     SECOND_CARDS: {
-      HEADER: "Over many users",
+      HEADER: "Community Engagement",
       DESCRITION:
         "Join the community to get tips and inspiration from other users on our forums and Facebook ",
     },
@@ -321,17 +321,18 @@ export const HOME_PAGE = {
         "Plus, you can create custom foods, recipes, exercises and biometrics!",
     },
     FOURTH_CARDS: {
-      HEADER: "Track up to 82 micronutrients",
-      DESCRIPTION: "Log your meals and track all your macro and micronutrients.",
+      HEADER: "Stay Hydrated, Track Your Drinks",
+      DESCRIPTION: "Log your daily water intake and stay on top of your hydration goals.",
     },
+    
     FIFTH_CARDS: {
       HEADER: "AI enabled Image-search",
       DESCRIPTION:
         "Search meals via image & track all your macro and micronutrients.",
     },
-    SIXTH_CARDS: {
-      HEADER: "Track up to 82 micronutrients",
-      DESCRIPTION: "Log your meals and track all your macro and micronutrients.",
+   SIXTH_CARDS: {
+      HEADER: "Monitor Your Alcohol and Caffeine Intake",
+      DESCRIPTION: "Track your alcohol and caffeine consumption to stay mindful of your drinking habits.",
     },
   }
   

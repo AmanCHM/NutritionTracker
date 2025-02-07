@@ -11,10 +11,10 @@ const AppFeature = () => {
     <div> 
        <div className="feature">
         <div className="feature-header" >
-        <label style={{ fontSize: "32px", color: colors.whiteColor}}> 
+        <h2 style={{ fontSize:"2.5rem", color: colors.whiteColor}}> 
        {HOME_PAGE.APP_FEATURE.LABEL}
-          </label>
-        <p style={{ fontSize: "18px", color: "#a3a3a3" }}>
+          </h2>
+        <p style={{ fontSize: "1.5rem" }}>
           {" "}
          {HOME_PAGE.APP_FEATURE.GREET}
         </p>

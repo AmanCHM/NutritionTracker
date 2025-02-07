@@ -33,6 +33,7 @@ import Table from "../../Components/Shared/Table";
 import { LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 import colors from "../../assets/Css/color";
+import { dateFunction } from "../../Helpers/function";
 
 
 
@@ -122,6 +123,10 @@ const chartData = useMemo(() => ({
   ],
 }), [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
+
+
+console.log("dinnerCalorie",dinnerCalorie);
+  //  const today = dateFunction;
   return (
     <>
       <div
@@ -131,6 +136,7 @@ const chartData = useMemo(() => ({
         <h3 className="selectDate-header">{LABEL.SELECT_DATE}</h3>
         <input
           type="Date"
+          max={dateFunction}
           className="date-input"
           value={selectDate}
           onChange={(e) => setSelectDate(e.target.value)}

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css";
 import { RiAccountCircleFill } from "react-icons/ri";
-import { toast } from "react-toastify";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { RootState } from "../../../../Store";
 import { auth } from "../../../../Utils/firebase";

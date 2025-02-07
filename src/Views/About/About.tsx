@@ -34,12 +34,12 @@ const About: React.FC = () => {
         </div>
       </section>
 
-      <section className="about-team">
+      <div className="about-team">
         <h2 style={{ color: colors.blackColor8 }}>{ABOUT.THIRD_PARA_HEADER}</h2>
         <p style={{ color: colors.blackColor9 }} >
           {ABOUT.THIRD_PARA}
         </p>
-      </section>
+      </div>
     </div>
   );
 };

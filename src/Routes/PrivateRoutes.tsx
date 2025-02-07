@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import React from 'react';
 import Dashboard from '../Views/Dashboard';
 import About from '../Views/About';
-import CalorieCalculator from '../Views/CalorieCalculator';
+import CalorieCalculator from '../Views/BMRCalculator';
 
 import Home from '../Views/Home';
 import Reports from '../Views/Reports';

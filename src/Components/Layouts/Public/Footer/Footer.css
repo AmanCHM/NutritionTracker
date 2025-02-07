@@ -10,7 +10,7 @@
   .footer-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-between  ;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -24,7 +24,7 @@
   
   .footer-section {
     flex: 1;
-    margin: 10px;
+    padding-left: 20%;
     min-width: 200px;
   }
   

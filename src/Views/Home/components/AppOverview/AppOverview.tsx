@@ -2,6 +2,8 @@ import React from "react";
 import "./AppOverview.css";
 import OverviewCards from "../Cards/OverviewCard/OverviewCards";
 import { HOME_PAGE } from "../../../../Shared";
+import colors from "../../../../assets/Css/color";
+
 
 interface OverviewCardsProps {
     header: string;
@@ -15,7 +17,7 @@ const AppOverview = () => {
     <>
       <div className="overview">
         <span id="header">
-          <h2 style={{fontSize:"2.5rem", color:"#737373"}}>{HOME_PAGE.APP_OVERVIEW.LABEL}</h2>
+          <h2 style={{fontSize:"2.5rem", color:"grey"}}>{HOME_PAGE.APP_OVERVIEW.LABEL}</h2>
           <p style={{fontSize:"1.5rem" ,color:"#a3a3a3"}}>
            {HOME_PAGE.APP_OVERVIEW.DESCRIPTION}
           </p>

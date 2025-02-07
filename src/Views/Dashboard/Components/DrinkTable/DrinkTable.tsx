@@ -13,12 +13,6 @@ interface DrinkTableProps {
   handleUpdateDrink: (drink: Drink) => void;
 }
 
-// const DRINK_TABLE_STYLE: React.CSSProperties = {
-//   padding: "12px",
-//   border: "1px solid #ddd",
-//   fontWeight: "bold",
-// };
-
 const drinkType = {
     water: { drinklabel: DRINK_TYPE.WATER },
     caffeine: { drinklabel: DRINK_TYPE.CAFFEINE },

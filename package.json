@@ -11,7 +11,6 @@
     "prepare": "husky",
     "postinstall": "husky install",
     "postbuild": "cp -r dist/ /path/to/render/publish/folder"
-
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
@@ -59,6 +58,7 @@
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.19.1",
     "vite": "^6.0.5"

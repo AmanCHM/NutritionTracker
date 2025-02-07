@@ -242,7 +242,7 @@ const MealModal: React.FC<MealModalProps> = ({
               console.log(selectquantity);
               setAltMeasure(selectedMeasure?.measure || "");
             }}
-            // onBlur={handleBlur}
+            onBlur={handleBlur}
           />
           {errors.selectquantity && (
             <div style={{ color: "red" }}>{errors.selectquantity}</div>
@@ -268,9 +268,13 @@ const MealModal: React.FC<MealModalProps> = ({
         <p className="calorie-info">
           {LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}
         </p>
-        {/* <CustomButton className="add-meal-button" label= {LABEL.ADD_MEAL} onClick={handleSubmit}>
+        {/* <CustomButton className="add-meal-button" label= {LABEL.ADD_MEAL} onClick={()=> {handleSubmit} }>
           {LABEL.ADD_MEAL}
         </CustomButton> */}
+
+<button className="add-meal-button" onClick={handleSubmit}>
+          {LABEL.ADD_MEAL}
+        </button>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import { useNavigate } from "react-router-dom";
+
 import { CONTACT_DETAILS, LABEL } from "../../../../Shared";
 import colors from "../../../../assets/Css/color";
 
@@ -20,14 +20,8 @@ const white = { color: colors.whiteColor }
         </div>
 
         <div className="footer-section">
-          <h4>{LABEL.QUICK_LABEL}</h4>
-          <ul className="footer-links">
-            {/* Uncomment and adjust the links as needed */}
-            {/* <li style={{color:"grey"}}><a href="/home">Home</a></li>
-            <li><a href="/features">Features</a></li>
-            <li><a href="/contact">Contact Us</a></li>
-            <li><a href="/faq">FAQ</a></li> */}
-          </ul>
+          <h4>{LABEL.QUICK_LABEL}</h4>  
+        
         </div>
 
         <div className="footer-section">

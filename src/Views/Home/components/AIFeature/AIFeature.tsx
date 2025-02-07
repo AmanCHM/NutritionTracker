@@ -2,16 +2,17 @@ import React from 'react'
 import './AIFeature.css'
 import FeatureCards from '../Cards/FeatureCard/FeatureCards'
 import { HOME_PAGE, IMAGES } from '../../../../Shared'
+import colors from '../../../../assets/Css/color'
 
 const AIFeature = () => {
   return (
     <>
     <div className="feature" style={{height:"1000px"}}>
      <div id="feature-header">
-        <h2 style={{ fontSize: "32px", color: "white"}}>
+       <h2 style={{ fontSize:"2.5rem", color: colors.whiteColor}}> 
        {HOME_PAGE.AI_FEATURE.INTRO}
         </h2>
-        <p style={{ fontSize: "18px", color: "#a3a3a3" }}>
+        <p style={{ fontSize:"1.5rem"}}>
           {" "}
           {HOME_PAGE.AI_FEATURE.GREET}
         </p>

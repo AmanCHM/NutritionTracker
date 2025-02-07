@@ -151,7 +151,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
         };
         setImageData(newData);
         handelImageSearchModal(newData);
-        toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_DELETED);
+        toast.success(SUCCESS_MESSAGES().SUCCESS_ITEM_ADD);
       }
 
       dispatch(hideLoader());
@@ -176,13 +176,19 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const file = e.target.files?.[0];
+      
+      const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+      if (!validImageTypes.includes(file?.type as string)) {
+        toast.error("Please select a valid image file (JPEG, PNG, GIF, or WebP).");
+        return;
+      }
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => setImageSrc(event.target?.result as string);
         reader.readAsDataURL(file);
       }
       setSelectedFile(file ?? null);
-    },
+    },  
     []
   );
 
@@ -290,7 +296,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
 
   return (
     <>
-      <CustomButton className="close-button" label=   {LABEL.CLOSE} onClick={() => setImageModal(false)}>
+      <CustomButton className="close-button"  label={LABEL.CLOSE} onClick={() => setImageModal(false)}>
      
       </CustomButton>
       <div className="image-search-container">

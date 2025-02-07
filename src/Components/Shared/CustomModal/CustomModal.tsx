@@ -11,6 +11,8 @@ interface CustomModalProps {
 const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
+  console.log("isopen", isOpen);
+  console.log('isclose',onClose);
   return (
     <div className="custom-modal-overlay" onClick={onClose}>
       <div

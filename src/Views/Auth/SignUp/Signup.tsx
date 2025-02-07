@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendEmailVerification, signInWithPopup, User } from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, useFormik, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -64,6 +64,9 @@ const Signup: React.FC = () => {
 
         toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
+        
+        const  currentUser :User | null = auth.currentUser
+        sendEmailVerification(currentUser  as User )
         navigate(ROUTES_CONFIG.DASHBOARD.path);
       }  catch (error: CustomError|unknown) {
         const errorCode = (error as CustomError)?.data?.code ; 
@@ -104,7 +107,7 @@ const Signup: React.FC = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
+   
       <div className="signup-container">
         <h2 className="signup-title">{LABEL.SIGN_UP}</h2>
         <form className="signup-form" onSubmit={formik.handleSubmit}>
