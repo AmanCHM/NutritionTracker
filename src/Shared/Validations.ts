@@ -25,6 +25,12 @@ export const FORM_VALIDATION_MESSAGES = (...args: string[]) => ({
   CONTAINER_SELECT: "Please select a container type",
   DRINK_SELECTOR: "Please select a drink type.",
   USER_NOT_AUTHENTICATED: "User is not authenticated",
+  PASSWORD_TOO_LONG: "Password cannot exceed 20 characters.",
+  PASSWORD_UPPERCASE: "Password must contain at least one uppercase letter.",
+  PASSWORD_LOWERCASE: "Password must contain at least one lowercase letter.",
+  PASSWORD_NUMBER: "Password must contain at least one number.",
+  PASSWORD_SPECIAL: "Password must contain at least one special character (@, $, !, %, *, ?, &).",
+  // REQUIRED: "This field is required.",
 });
 
 export const VALIDATION_REGEX = {
