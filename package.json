@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "prepare": "husky",
 
-    "postinstall": "husky install",
     "postbuild": "cp -r dist/ /path/to/render/publish/folder",
 
     "postinstall": "husky install"

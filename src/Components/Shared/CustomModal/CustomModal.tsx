@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import "./CustomModal.css"; 
 
 interface CustomModalProps {
@@ -10,12 +10,23 @@ interface CustomModalProps {
 
 const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+  
+    return () => {
+      document.body.classList.remove("modal-open"); 
+    };
+  }, [isOpen]);
+  
 
-  console.log("isopen", isOpen);
-  console.log('isclose',onClose);
+  if (!isOpen) return null;
   return (
     <div className="custom-modal-overlay" onClick={onClose}>
-      <div
+      <div  
         className="custom-modal-content"
         onClick={(e) => e.stopPropagation()} 
 
