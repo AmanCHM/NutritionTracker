@@ -9,8 +9,13 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
+<<<<<<< HEAD
     "postinstall": "husky install",
     "postbuild": "cp -r dist/ /path/to/render/publish/folder"
+=======
+    "postinstall": "husky install"
+ 
+>>>>>>> b417266137c40ae013da164aede2015fc3c8c5b8
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
