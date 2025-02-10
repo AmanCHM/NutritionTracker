@@ -1,3 +1,10 @@
+import { User } from "firebase/auth";
+import { useCallback } from "react";
+import { hideLoader, showLoader } from "../Store/Loader";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../Utils/firebase";
+import { FIREBASE_DOC_REF } from "../Shared/Constants";
+import { LogData } from "../Views/Dashboard/Dashboard";
 
 export const capitalizeFirstLetter = (text?: string): string => {
   if (!text) return "";
@@ -35,3 +42,8 @@ export const capitalizeFirstLetter = (text?: string): string => {
   };
 
   export const  dateFunction = new Date().toISOString().split("T")[0];
+
+
+
+  
+  

@@ -232,6 +232,7 @@ const Dashboard = () => {
   const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
     undefined
   );
+  const [selectDate, setSelectDate] = useState<string>(dateFunction); 
 
   const [dailyCalorie, setDailyCalorie] = useState<number | null>(null);
 
@@ -674,20 +675,20 @@ const Dashboard = () => {
   };
 
   //  Get Drinks
-  const getDrinkData = async (user: User) => {
+  const getDrinkData = async (user: User,  selectDate:string) => {
     try {
       dispatch(showLoader());
       if (!user) {
         return;
       }
       const userId = user.uid;
-      const date = dateFunction;
+      const date =  selectDate;
       const docRef = doc(
         db,
         FIREBASE_DOC_REF.USER,
         userId,
         FIREBASE_DOC_REF.DAILY_LOGS,
-        date
+        selectDate
       );
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -706,7 +707,7 @@ const Dashboard = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
-        getDrinkData(user);
+        getDrinkData(user ,selectDate);
       } else {
         console.log(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
       }
@@ -977,6 +978,7 @@ const Dashboard = () => {
 
         {/* Drinks Table */}
         <DrinkTable
+        showAction = {true}
           totalWater={totalWater}
           totalAlcohol={totalAlcohol}
           totalCaffeine={totalCaffeine}

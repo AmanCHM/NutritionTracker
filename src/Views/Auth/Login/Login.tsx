@@ -14,7 +14,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./Login.css";
 
 import { auth } from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SUCCESS_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SUCCESS_MESSAGES, VALIDATION_REGEX } from "../../../Shared";
 import { RootState } from "../../../Store";
 import { ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
@@ -64,7 +64,9 @@ const Login: React.FC = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL).required(ERROR_MESSAGES().REQUIRED),
+      email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL)
+      .required(ERROR_MESSAGES().REQUIRED)
+      .matches(VALIDATION_REGEX.EMAIL, ERROR_MESSAGES().INVALID_EMAIL) ,
       password: Yup.string().min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD).required(FORM_VALIDATION_MESSAGES().REQUIRED),
     }),
     onSubmit: async (values: MyFormValues, { setSubmitting }: FormikHelpers<MyFormValues>) => {

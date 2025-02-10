@@ -13,7 +13,7 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES, VALIDATION_REGEX } from "../../../Shared";
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
@@ -49,26 +49,17 @@ const Signup: React.FC = () => {
     validationSchema :Yup.object({
       email: Yup.string()
         .email(ERROR_MESSAGES().INVALID_EMAIL) 
-        .matches(/^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, ERROR_MESSAGES().INVALID_EMAIL) 
+        .matches(VALIDATION_REGEX.EMAIL, ERROR_MESSAGES().INVALID_EMAIL) 
         .required(ERROR_MESSAGES().REQUIRED),
       
       password: Yup.string()
         .min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD) 
         .max(20, FORM_VALIDATION_MESSAGES().PASSWORD_TOO_LONG) 
-        .matches(/[A-Z]/, FORM_VALIDATION_MESSAGES().PASSWORD_UPPERCASE) 
-        .matches(/[a-z]/, FORM_VALIDATION_MESSAGES().PASSWORD_LOWERCASE) 
-        .matches(/[0-9]/, FORM_VALIDATION_MESSAGES().PASSWORD_NUMBER) 
-        .matches(/[@$!%*?&]/, FORM_VALIDATION_MESSAGES().PASSWORD_SPECIAL) 
+      
         .required(FORM_VALIDATION_MESSAGES().REQUIRED),
         confirmPassword: Yup.string().required(FORM_VALIDATION_MESSAGES().REQUIRED),
     }),
-    // validationSchema: Yup.object({
-    //   email: Yup.string().email(ERROR_MESSAGES().INVALID_EMAIL).required(ERROR_MESSAGES().REQUIRED),
-    //   password: Yup.string().min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD).required(FORM_VALIDATION_MESSAGES().REQUIRED),
-    //   confirmPassword: Yup.string()
-        
-    //     .required(FORM_VALIDATION_MESSAGES().REQUIRED),
-    // }),
+   
     onSubmit: async (values, { setSubmitting }: FormikHelpers<SignupFormValues>) => {
       dispatch(showLoader());
       const { email, password } = values;

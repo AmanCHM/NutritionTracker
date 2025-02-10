@@ -54,8 +54,8 @@ const CalorieCalculator: React.FC = () => {
 
     validationSchema: Yup.object({
       height: Yup.number()
-           .min(50)
-           .max(300)
+        .min(50)
+        .max(300)
         .required(HEIGHT_VALIDATION.REQUIRED)
         .typeError(HEIGHT_VALIDATION.NUMBER)
         .positive(HEIGHT_VALIDATION.POSITIVE),

@@ -146,7 +146,7 @@ NUMBER:'Height must be a number'
 }
 
 export const AGE_VALIDATION={
-  REQUIRED:'Age is required',
+REQUIRED:'Age is required',
 POSITIVE:'Age must be positive',
 INTEGER:'Age must be a whole number',
 NUMBER:'Age must be a number'

@@ -28,12 +28,13 @@ import { hideLoader, showLoader } from "../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../Utils/firebase";
 import { initializeApp } from "firebase/app";
 import { RootState } from "../../Store";
-import { ERROR_MESSAGES, FORM, IMAGES, LABEL } from "../../Shared";
+import { ERROR_MESSAGES, FORM, FORM_VALIDATION_MESSAGES, IMAGES, LABEL } from "../../Shared";
 import Table from "../../Components/Shared/Table";
-import { LogData } from "../Dashboard/Dashboard";
+import { DrinkData, DrinkItem, LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 import colors from "../../assets/Css/color";
 import { dateFunction } from "../../Helpers/function";
+import DrinkTable from "../Dashboard/Components/DrinkTable/DrinkTable";
 
 
 
@@ -44,7 +45,15 @@ const Reports: React.FC = () => {
   const [selectDate, setSelectDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
- 
+  const [drinkData, setDrinkData] = useState<DrinkData>({});
+  const [totalWater, setTotalWater] = useState<number>();
+  const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(
+    undefined
+  );
+  const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
+    undefined
+  );
+  
   // Loader from Redux
   const loader = useSelector((state: RootState) => state.Loader.loading);
 
@@ -125,7 +134,71 @@ const chartData = useMemo(() => ({
 
 
 
-console.log("dinnerCalorie",dinnerCalorie);
+const getDrinkData = async (user: User,  selectDate:string) => {
+  try {
+    dispatch(showLoader());
+    if (!user) {
+      return;
+    }
+    const userId = user.uid;
+    const date =  selectDate;
+    const docRef = doc(
+      db,
+      FIREBASE_DOC_REF.USER,
+      userId,
+      FIREBASE_DOC_REF.DAILY_LOGS,
+      selectDate
+    );
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const getData = docSnap.data();
+      setDrinkData(getData);
+    } else {
+      setDrinkData({});
+    }
+  } catch (error) {
+    console.error(ERROR_MESSAGES().ERROR_FETCH, error);
+  } finally {
+    dispatch(hideLoader());
+  }
+};
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+    if (user) {
+      getDrinkData(user ,selectDate);
+    } else {
+      console.log(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
+    }
+  });
+  return () => unsubscribe();
+}, [selectDate]);
+
+
+const calculateTotals = () => {
+  const calculateDrinkTotals = (drinkItems?: DrinkItem[]) => {
+    return Array.isArray(drinkItems) && drinkItems.length > 0
+      ? drinkItems.reduce(
+          (total, drinkItem) => total + drinkItem.totalAmount,
+          0
+        )
+      : 0;
+  };
+
+  setTotalWater(calculateDrinkTotals(drinkData?.Water));
+  setTotalAlcohol(calculateDrinkTotals(drinkData?.Alcohol));
+  setTotalCaffeine(calculateDrinkTotals(drinkData?.Caffeine));
+};
+useEffect(() => {
+  if (drinkData) {
+    calculateTotals();
+  }
+}, [drinkData]);
+
+// console.log(selectDate);
+// console.log(drinkData);
+// console.log("total water",totalWater);
+// console.log("dinnerCalorie",dinnerCalorie);
   //  const today = dateFunction;
   return (
     <>
@@ -181,6 +254,20 @@ console.log("dinnerCalorie",dinnerCalorie);
           })}
         </div>
       </div>
+
+       <div >
+          
+      <h2 style={{ marginRight: "1%", marginTop: "5vh", fontSize: "2rem" }}>
+        {" "}
+       {LABEL.DRINK_REPORT}
+      </h2>
+          <DrinkTable
+          showAction = {false}
+          totalWater={totalWater}
+          totalAlcohol={totalAlcohol}
+          totalCaffeine={totalCaffeine}/>
+          
+       </div>
     </>
   );
 };

@@ -22,6 +22,7 @@ import {
   GREETINGS,
   LABEL,
   USER,
+  VALIDATION_REGEX,
 } from "../../../Shared";
 
 // Define types for the user form data
@@ -57,14 +58,23 @@ const UserInfo: React.FC = () => {
       age: userage,
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required(FORM_VALIDATION_MESSAGES().NAME_REQUIRED),
+      userName: Yup.string()
+  .matches(VALIDATION_REGEX.USER_NAME, FORM_VALIDATION_MESSAGES().INVALID_NAME) 
+  .min(2, FORM_VALIDATION_MESSAGES().NAME_TOO_SHORT) 
+  .max(50, FORM_VALIDATION_MESSAGES().NAME_TOO_LONG) 
+  .required(FORM_VALIDATION_MESSAGES().REQUIRED),
+
       height: Yup.number()
         .required(HEIGHT_VALIDATION.REQUIRED)
+        .min(50)
+        .max(300)
         .typeError(HEIGHT_VALIDATION.NUMBER)
         .positive(HEIGHT_VALIDATION.POSITIVE)
         .integer(HEIGHT_VALIDATION.INTEGER),
       gender: Yup.string().required(FORM_VALIDATION_MESSAGES().GENDER_REQUIRED),
       age: Yup.number()
+        .min(0)
+        .max(120)
         .required(AGE_VALIDATION.REQUIRED)
         .typeError(AGE_VALIDATION.NUMBER)
         .positive(AGE_VALIDATION.POSITIVE)

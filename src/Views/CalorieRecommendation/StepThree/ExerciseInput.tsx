@@ -23,12 +23,13 @@ import {
 } from "../../../Shared/Constants";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
 import { Formik } from "formik";
+import './ExerciseInput.css'
 import { ERROR_MESSAGES, GREETINGS, LABEL, NUM } from "../../../Shared";
 
 const activityOptions: OptionType[] = [
   {
     value: ACTIVITY.SEDENTRY,
-    label:ACTIVITY.SEDENTRY,
+    label: ACTIVITY.SEDENTRY,
   },
   {
     value: ACTIVITY.LIGHTLY_ACTIVE,
@@ -36,7 +37,7 @@ const activityOptions: OptionType[] = [
   },
   {
     value: ACTIVITY.MODERATELY_ACTIVE,
-    label:  ACTIVITY.MODERATELY_ACTIVE
+    label: ACTIVITY.MODERATELY_ACTIVE,
   },
   {
     value: ACTIVITY.VERY_ACTIVE,
@@ -98,7 +99,7 @@ const ExerciseInput: React.FC = () => {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age + 5;
     } else {
       bmrCurrent = 10 * weight + 6.25 * height - 5 * age - 161;
-    } 
+    }
 
     const activityMultipliers: Record<string, number> = {
       "Sedentary (little to no exercise)": 1.2,
@@ -124,13 +125,8 @@ const ExerciseInput: React.FC = () => {
   return (
     <>
       <div style={{ height: "430px" }}>
-        <h3
-          style={{
-            fontSize: "2.3rem",
-            color: "#737373",
-            textAlign: "center",
-            marginTop: "5%",
-          }}
+        <h3 
+           className="heading"
         >
           {GREETINGS.ACTIVITY_LABEL}
         </h3>
@@ -156,20 +152,15 @@ const ExerciseInput: React.FC = () => {
                 placeholder={VALIDATION.SELECT_OPTION}
               />
             </div>
-            <div style={{ marginTop: "20px", marginLeft: "5%" }}>
+            <div className="exercise-button">
               <CustomButton
-                type="submit"
-                size={"medium"}
+                type="button"
+                size="medium"
                 onClick={() => navigate(ROUTES_CONFIG.INPUT_WEIGHT.path)}
-                label={"Back"}
-              ></CustomButton>
+                label="Back"
+              />
 
-              <CustomButton
-                type="submit"
-                style={{ marginLeft: "60%" }}
-                size={"medium"}
-                label={"Next"}
-              ></CustomButton>
+              <CustomButton type="submit" size="medium" label="Next" />
             </div>
           </form>
         </div>

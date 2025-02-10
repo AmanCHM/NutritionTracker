@@ -7,10 +7,11 @@ import { Drink } from "../../Dashboard";
 
 
 interface DrinkTableProps {
+  showAction :boolean
   totalWater: number |undefined;
   totalAlcohol: number | undefined;
   totalCaffeine: number | undefined;
-  handleUpdateDrink: (drink: Drink) => void;
+  handleUpdateDrink?: (drink: Drink) => void |undefined;
 }
 
 const drinkType = {
@@ -25,6 +26,7 @@ const DrinkTable: React.FC<DrinkTableProps> = ({
   totalAlcohol,
   totalCaffeine,
   handleUpdateDrink,
+  showAction
 }) => {
   return (
    
@@ -53,11 +55,11 @@ const DrinkTable: React.FC<DrinkTableProps> = ({
                 >
                  {LABEL.DRINK_QUANTITY}
                 </th>
-                <th
+              {showAction ? <th
                   style={DRINK_TABLE_STYLE}
                 >
                 {LABEL.ACTION}
-                </th>
+                </th> : ''}  
               </tr>
             </thead>
             <tbody>
@@ -73,16 +75,16 @@ const DrinkTable: React.FC<DrinkTableProps> = ({
                 <td style={style}>
                   {totalWater} {FORM.ML}
                 </td>
-                <td>
+               {showAction ?  <td>
                   <div style={{ display: "flex" }}>
                     <span
-                      onClick={() => handleUpdateDrink( drinkType.water )}
+                      onClick={() => handleUpdateDrink?.( drinkType.water )}
                       className="icon-button edit"
                     >
                       <FaEdit />
                     </span>
                   </div>
-                </td>
+                </td> : ''}
               </tr>
               <tr style={{ backgroundColor: "#f9f9f9" }}>
                 <td style={style}>
@@ -96,16 +98,16 @@ const DrinkTable: React.FC<DrinkTableProps> = ({
                 <td style={style}>
                   {totalAlcohol} {FORM.ML}
                 </td>
-                <td>
+                {showAction ?  <td>
                   <div style={{ display: "flex" }}>
                     <span
-                      onClick={() => handleUpdateDrink(drinkType.alcohol)}
+                      onClick={() => handleUpdateDrink?.(drinkType.alcohol)}
                       className="icon-button edit"
                     >
                       <FaEdit />
                     </span>
                   </div>
-                </td>
+                </td> : ''}
               </tr>
               <tr>
                 <td style={style}>
@@ -121,16 +123,16 @@ const DrinkTable: React.FC<DrinkTableProps> = ({
                 <td style={style}>
                   {totalCaffeine} {FORM.ML}
                 </td>
-                <td>
+                {showAction ?  <td>
                   <div style={{ display: "flex" }}>
                     <span
-                      onClick={() => handleUpdateDrink(drinkType.caffeine)}
+                      onClick={() => handleUpdateDrink?.( drinkType.caffeine )}
                       className="icon-button edit"
                     >
                       <FaEdit />
                     </span>
                   </div>
-                </td>
+                </td> : ''}
               </tr>
             </tbody>
           </table>

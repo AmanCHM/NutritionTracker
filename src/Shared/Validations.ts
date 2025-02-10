@@ -1,7 +1,7 @@
-import { NUTRIENT } from "./Constants";
+
 
 export const FORM_VALIDATION_MESSAGES = (...args: string[]) => ({
-  REQUIRED: "This is required.",
+  REQUIRED: "This field is required.",
   MIN_LENGTH: `This input required minimum (${args[0]}) character`,
   MAX_LENGTH: `This input exceeded maxLength (${args[0]})`,
   VALID_EMAIL: "Please enter the valid email",
@@ -30,11 +30,14 @@ export const FORM_VALIDATION_MESSAGES = (...args: string[]) => ({
   PASSWORD_LOWERCASE: "Password must contain at least one lowercase letter.",
   PASSWORD_NUMBER: "Password must contain at least one number.",
   PASSWORD_SPECIAL: "Password must contain at least one special character (@, $, !, %, *, ?, &).",
-  // REQUIRED: "This field is required.",
+  INVALID_NAME:  "Invalid Name Format.Name must be in Alphabets",
+  NAME_TOO_SHORT: "Name is too short",
+  NAME_TOO_LONG:"Name is too long",
+  
 });
 
 export const VALIDATION_REGEX = {
-  EMAIL: /^\S+@\S+\.\S+$/, // Validates basic email structure
+  EMAIL: /^[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, 
   NUMBER: /\d+/g, // Matches any sequence of digits
   SPECIAL_CHARACTERS_NOT_ALLOWED: /^[a-zA-Z0-9\s]+$/, // Allows only alphanumeric characters and spaces
   SPECIAL_CHARACTERS_AND_SPACES_NOT_ALLOWED: /^[a-zA-Z0-9]+$/, // Allows only alphanumeric characters
@@ -42,6 +45,8 @@ export const VALIDATION_REGEX = {
   USERNAME: /^[a-z0-9]+$/, // Allows only lowercase letters and digits
   PASSWORD:
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+
+    USER_NAME : /^[a-zA-Z\s]+$/,
 };
 export const ERROR_MESSAGES = (...args: string[]) => ({
   REQUIRED: `This field is required ${args[0]}`,
@@ -198,6 +203,7 @@ export const LABEL = {
  NO_LUNCH:'No lunch items',
  NO_SNACKS:'No Snack items',
  NO_DINNER:'No Dinner items',
+ DRINK_REPORT:'Your  Drink  Record'
 };
 
 
@@ -288,7 +294,7 @@ export const HOME_PAGE = {
       "Simply upload a food photo and get the nutritional information of your meal.Our App is powered by our Food AI API. Food AI API is based on the latest innovations in deep learning and image classification technology to quickly and accurately identify food items.",
   },
   APP_FEATURE: {
-    LABEL: " Improve your nutrition with confidence.",
+    LABEL: " Improve your nutrition with confidence",
     GREET:
       " Nutrition tracker encourages you to not just count your calories but to focus on your nutrition as a whole",
     FIRST_CARDS: {

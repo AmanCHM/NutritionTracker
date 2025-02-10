@@ -53,14 +53,18 @@ GOAL_OPTIONS.MAINTAIN_WEIGHT
     validationSchema: Yup.object({
       goal: Yup.string().required(FORM_VALIDATION_MESSAGES().REQUIRED),
       currentWeight: Yup.number()
-      .typeError(WEIGHT_VALIDATION.CURRENT_WEIGHT.TYPE_ERROR)
-      .min(1, WEIGHT_VALIDATION.CURRENT_WEIGHT.MIN)
-      .required(WEIGHT_VALIDATION.CURRENT_WEIGHT.REQUIRED),
+      .min(10)
+      .max(500)
+      .required(WEIGHT_VALIDATION.REQUIRED)
+      .typeError(WEIGHT_VALIDATION.NUMBER)
+      .positive(WEIGHT_VALIDATION.POSITIVE),
   
     targetWeight: Yup.number()
-      .typeError(WEIGHT_VALIDATION.TARGET_WEIGHT.TYPE_ERROR)
-      .min(1, WEIGHT_VALIDATION.TARGET_WEIGHT.MIN)
-      .required(WEIGHT_VALIDATION.TARGET_WEIGHT.REQUIRED),
+    .min(10)
+    .max(500)
+    .required(WEIGHT_VALIDATION.REQUIRED)
+    .typeError(WEIGHT_VALIDATION.NUMBER)
+    .positive(WEIGHT_VALIDATION.POSITIVE),
     }),
     onSubmit: (values) => {
       const weightDifference = Number(values.targetWeight) - Number(values.currentWeight);

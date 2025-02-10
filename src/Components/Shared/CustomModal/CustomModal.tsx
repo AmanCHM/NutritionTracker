@@ -9,21 +9,20 @@ interface CustomModalProps {
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
   useEffect(() => {
     if (isOpen) {
-      document.body.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.classList.remove("modal-open");
-    }
-  
+      document.body.style.overflow = "auto";
+    } 
     return () => {
-      document.body.classList.remove("modal-open"); 
+      document.body.style.overflow = "auto";
     };
-  }, [isOpen]);
-  
+  }, [isOpen]);  
 
+  
   if (!isOpen) return null;
+
   return (
     <div className="custom-modal-overlay" onClick={onClose}>
       <div  
