@@ -139,7 +139,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       };
       setErrors(newErrors);
 
-      // Only proceed if no errors
       if (!Object.values(newErrors).some((error) => error)) {
         const newData = {
           id: Date.now(),
@@ -389,7 +388,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
                 onChange={(selected) =>
                   setMealCategory(selected?.value as string)
                 }
-                // onBlur={ handleBlur}
+                
               />
               {errors.mealCategory && (
                 <div style={{ color: "red" }}>{errors.mealCategory}</div>
@@ -425,7 +424,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
                 onClick={throttledHandleSaveData}
                 label={LABEL.ADD_MEAL}
                 >
-
               </CustomButton>
             </div>
           </div>
