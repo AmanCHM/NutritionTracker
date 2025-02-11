@@ -10,6 +10,7 @@ import CalorieCalculator from '../Views/BMRCalculator';
 import Home from '../Views/Home';
 import Reports from '../Views/Reports';
 import Contact from '../Views/Contact';
+import EmailVerificationPage from '../Views/Auth/SignUp/EmailVerification/EmailVerificationPage';
 
 
 
@@ -45,6 +46,11 @@ export const PRIVATE_ROUTES: Array<CustomRouter> = [
     path: ROUTES_CONFIG.CONTACT.path,
     element: <Contact />,
     title: ROUTES_CONFIG.CONTACT.title,
+  },
+  {
+    path: `${ROUTES_CONFIG.EMAIL_VERIFICATION.path}`,
+    title: ROUTES_CONFIG.EMAIL_VERIFICATION.title,
+    element: <EmailVerificationPage/>
   },
   {
     path: '*',

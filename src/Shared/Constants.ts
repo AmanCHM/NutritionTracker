@@ -13,6 +13,7 @@ const ROUTES = {
     REPORTS: '/reports',
     IMAGE_SEARCH: '/image-search',  
     RESET_PASSWORD: '/reset-password',
+    EMAIL_VERIFICATION: '/email-verfication'
   };
   
 
@@ -78,6 +79,10 @@ const WILDCARD_ROUTES = {
       path: ROUTES.RESET_PASSWORD,
       title: 'Reset Password',
   },
+  EMAIL_VERIFICATION:{
+    path: ROUTES.EMAIL_VERIFICATION,
+    title: 'Email Verification'
+  }
 } 
   export { WILDCARD_ROUTES, ROUTES_CONFIG };
 

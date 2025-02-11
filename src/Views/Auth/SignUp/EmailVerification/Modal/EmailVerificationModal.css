@@ -1,0 +1,55 @@
+/* EmailVerificationModal.css */
+
+.modal-container {
+    padding-left: 24px;
+    margin-left: 5%;
+    text-align: center;
+
+    background-color: #ffffff;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .modal-text {
+    color: #555;
+    margin-top: 10px;
+  }
+  
+  .modal-info {
+    color: #777;
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+  
+  .resend-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #2563eb; 
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    
+  }
+  
+  .resend-btn:hover {
+    background-color: #1e40af;
+  }
+  
+  .success-text {
+    color: #16a34a;
+    margin-top: 12px;
+    font-weight: 500;
+  }
+  
+  .loading-text {
+    color: #888;
+    margin-top: 12px;
+    font-style: italic;
+  }
+  

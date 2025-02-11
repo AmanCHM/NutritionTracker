@@ -15,6 +15,8 @@ import UserInfo from '../Views/CalorieRecommendation/StepOne/UserInfo';
 import CalorieRecommendation from '../Views/CalorieRecommendation/CalorieRecommedation';
 import ExerciseInput from '../Views/CalorieRecommendation/StepThree/ExerciseInput';
 import WeightInput from '../Views/CalorieRecommendation/StepTwo/WeightInput';
+import EmailVerificationPage from '../Views/Auth/SignUp/EmailVerification/EmailVerificationPage';
+
 
 export const PUBLIC_ROUTES: Array<CustomRouter> = [
   {
@@ -68,6 +70,8 @@ export const PUBLIC_ROUTES: Array<CustomRouter> = [
     title: ROUTES_CONFIG.CALORIE_NEED.title,
     element: <CalorieRecommendation />,
   },
+  
+ 
   {
     path: '*',
     element: <Navigate to={WILDCARD_ROUTES.PUBLIC} />,

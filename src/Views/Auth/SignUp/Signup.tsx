@@ -19,6 +19,7 @@ import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
 import { CustomError } from "../../../Shared/Common";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
+import EmailVerificationPage from "./EmailVerification/EmailVerificationPage";
 
 
 interface SignupFormValues {
@@ -66,18 +67,32 @@ const Signup: React.FC = () => {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
+    
+        // Save initial data in Firestore
         const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
-        await setDoc(userDocRef, { calorie: SET_DRINKS_CALORIE.CALORIE, water: SET_DRINKS_CALORIE.WATER, alcohol: SET_DRINKS_CALORIE.ALOCOHOL, caffeine: SET_DRINKS_CALORIE.CAFFEINE });
-
+        await setDoc(userDocRef, {
+          calorie: SET_DRINKS_CALORIE.CALORIE,
+          water: SET_DRINKS_CALORIE.WATER,
+          alcohol: SET_DRINKS_CALORIE.ALOCOHOL,
+          caffeine: SET_DRINKS_CALORIE.CAFFEINE
+        });
+    
         toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
-        
-        const  currentUser :User | null = auth.currentUser
-        sendEmailVerification(currentUser  as User )
-        navigate(ROUTES_CONFIG.DASHBOARD.path);
-      }  catch (error: CustomError|unknown) {
-        const errorCode = (error as CustomError)?.data?.code ; 
+    
+        // Send email verification
+        const currentUser: User | null = auth.currentUser;
+        if (currentUser) {
+          await sendEmailVerification(currentUser);
+          toast.info("A verification email has been sent. Please verify your email to proceed.");
+        }
+ 
+      
+      navigate(ROUTES_CONFIG.EMAIL_VERIFICATION.path); 
+   
+    
+      } catch (error: CustomError | unknown) {
+        const errorCode = (error as CustomError)?.data?.code;
         const errorMessage = (error as CustomError)?.message;
         toast.error(SUCCESS_MESSAGES().SIGNED_UP_NOT_SUCCESSFULLY);
         console.error(errorCode, errorMessage);
@@ -87,7 +102,10 @@ const Signup: React.FC = () => {
         setSubmitting(false);
       }
     },
+    
   });
+
+
 
   const handleGoogleSignup = async () => {
     formik.setValues({ email: "", password: "", confirmPassword: "" });
@@ -188,6 +206,8 @@ const Signup: React.FC = () => {
         <p className="signup-footer">
           {LABEL.ALREADY_ACC} <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>{LABEL.LOG_IN}</Link>
         </p>
+
+       
       </div>
     </>
   );

@@ -69,8 +69,8 @@ const UserInfo: React.FC = () => {
         .min(50)
         .max(300)
         .typeError(HEIGHT_VALIDATION.NUMBER)
-        .positive(HEIGHT_VALIDATION.POSITIVE)
-        .integer(HEIGHT_VALIDATION.INTEGER),
+        .positive(HEIGHT_VALIDATION.POSITIVE),
+       
       gender: Yup.string().required(FORM_VALIDATION_MESSAGES().GENDER_REQUIRED),
       age: Yup.number()
         .min(0)

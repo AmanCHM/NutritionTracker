@@ -203,7 +203,14 @@ export const LABEL = {
  NO_LUNCH:'No lunch items',
  NO_SNACKS:'No Snack items',
  NO_DINNER:'No Dinner items',
- DRINK_REPORT:'Your  Drink  Record'
+ DRINK_REPORT:'Your  Drink  Record',
+ EMAIL_VERIFIY_REQUIRED :'Email Verification Required',
+ VERIFICATION_MAIL_SENT:'We sent a verification email. Please check your inbox.',
+ RESEND_MSG:'If you havenot received it, you can resend below:',
+ RESEND_MAIL: 'Resend Email',
+EMAIL_VERIFIED: 'Email verified! Redirecting...',
+
+CHECK_VERIFICATION:'Checking verification status...'
 };
 
 
