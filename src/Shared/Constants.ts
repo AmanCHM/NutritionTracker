@@ -20,6 +20,7 @@ const ROUTES = {
 const WILDCARD_ROUTES = {
     PUBLIC: ROUTES.HOMEPAGE,
     PRIVATE: ROUTES.LOGIN,
+    title : 'Rendering wildcard'
   };
   
   const ROUTES_CONFIG = {

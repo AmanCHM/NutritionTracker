@@ -55,6 +55,6 @@ export const PRIVATE_ROUTES: Array<CustomRouter> = [
   {
     path: '*',
     element: <Navigate to={WILDCARD_ROUTES.PRIVATE} />,
-    title: 'Rendering wildcard',
+    title: WILDCARD_ROUTES.title,
   },
 ];

@@ -14,12 +14,7 @@ function DocumentTitle({ isAuthenticated = false }) {
     isAuthenticated ? PRIVATE_ROUTES : AUTH_ROUTES
   );
   
-  // const matchedRoute: CustomRouter | undefined = ROUTES.find(
-  //     (route: CustomRouter) =>
-       
-  //       route.path !== '*' &&
-  //     pathToRegexp(route.path as Path).test(location.pathname)
-  // );
+ 
 
 const matchedRoute: CustomRouter | undefined = ROUTES.find(
   (route: CustomRouter) => {

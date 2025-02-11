@@ -621,9 +621,7 @@ const Dashboard = () => {
     dailyCalorie as number
   );
 
-  // const requiredCalorie =
-  //   validDailyCalorie > 0 ? validDailyCalorie - totalCalories : 0;
-
+  
   const progressPercent: number = dailyCalorie
     ? Math.floor((totalCalories / validDailyCalorie) * NUM.HUNDRED)
     : 0;
@@ -1012,7 +1010,7 @@ const Dashboard = () => {
           />
         </CustomModal>
 
-        {/* Water Progress Line Graph   */}
+      
         <DrinkProgress
           totalWater={totalWater || 0}
           requiredWater={requiredWater as number}
