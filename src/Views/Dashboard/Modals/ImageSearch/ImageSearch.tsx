@@ -175,8 +175,13 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
       const file = e.target.files?.[0];
-      
-      const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
       if (!validImageTypes.includes(file?.type as string)) {
         toast.error(ERROR_MESSAGES().VALID_IMAGE);
         return;
@@ -187,7 +192,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
         reader.readAsDataURL(file);
       }
       setSelectedFile(file ?? null);
-    },  
+    },
     []
   );
 
@@ -257,7 +262,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const fetchNutritionInfo = useCallback(
     async (imageId: string): Promise<void> => {
       const data = { imageId };
-       dispatch(showLoader())
+      dispatch(showLoader());
       try {
         const result = await axios.post(`${NUTRI_INFO_API_URL}`, data, {
           headers: {
@@ -269,9 +274,8 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       } catch (error) {
         toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
         console.error(error);
-      }
-      finally{
-        dispatch(hideLoader())
+      } finally {
+        dispatch(hideLoader());
       }
     },
     []
@@ -298,11 +302,12 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
 
   return (
     <>
-      <CustomButton className="close-button"  label={LABEL.CLOSE} onClick={() => setImageModal(false)}>
-     
-      </CustomButton>
+      <CustomButton
+        className="close-button"
+        label={LABEL.CLOSE}
+        onClick={() => setImageModal(false)}
+      ></CustomButton>
       <div className="image-search-container">
-       
         <h2 className="title"> {LABEL.RECO_FOOD}</h2>
 
         <div className="upload-section">
@@ -388,7 +393,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
                 onChange={(selected) =>
                   setMealCategory(selected?.value as string)
                 }
-                
               />
               {errors.mealCategory && (
                 <div style={{ color: "red" }}>{errors.mealCategory}</div>
@@ -423,8 +427,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
                 size="large"
                 onClick={throttledHandleSaveData}
                 label={LABEL.ADD_MEAL}
-                >
-              </CustomButton>
+              ></CustomButton>
             </div>
           </div>
         )}

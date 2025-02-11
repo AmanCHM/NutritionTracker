@@ -17,7 +17,7 @@ const AppOverview = () => {
     <>
       <div className="overview">
         <span id="header">
-          <h2 style={{fontSize:"2.5rem", color:"grey"}}>{HOME_PAGE.APP_OVERVIEW.LABEL}</h2>
+          <h2 style={{fontSize:"2.5rem", color:colors.greyColor3}}>{HOME_PAGE.APP_OVERVIEW.LABEL}</h2>
           <p style={{fontSize:"1.5rem" ,color:"#a3a3a3"}}>
            {HOME_PAGE.APP_OVERVIEW.DESCRIPTION}
           </p>

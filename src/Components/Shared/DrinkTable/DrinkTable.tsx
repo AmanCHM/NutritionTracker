@@ -1,9 +1,10 @@
 import React from "react";
 import { FaEdit } from "react-icons/fa";
-import { FORM, IMAGES, LABEL } from "../../../Shared";
+import { Drink } from "../../../Views/Dashboard/Dashboard";
 import { DRINK_TYPE } from "../../../Shared/Constants";
 import { DRINK_TABLE_STYLE } from "../../../assets/Css/customStyle";
-import { Drink } from "../../../Views/Dashboard/Dashboard";
+import { FORM, IMAGES, LABEL } from "../../../Shared";
+
 
 
 interface DrinkTableProps {

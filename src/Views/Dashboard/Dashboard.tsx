@@ -69,10 +69,9 @@ import {
 } from "../../Shared/Constants";
 import { DRINK_TABLE_STYLE } from "../../assets/Css/customStyle";
 import colors from "../../assets/Css/color";
-import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
-import Table from "../../Components/Shared/Table";
 
-// import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
+import Table from "../../Components/Shared/Table";
+import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -232,7 +231,7 @@ const Dashboard = () => {
   const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
     undefined
   );
-  const [selectDate, setSelectDate] = useState<string>(dateFunction); 
+  const [selectDate, setSelectDate] = useState<string>(dateFunction);
 
   const [dailyCalorie, setDailyCalorie] = useState<number | null>(null);
 
@@ -252,17 +251,12 @@ const Dashboard = () => {
 
   const dispatch = useDispatch();
 
-  // console.log("drinkData", drinkData);
-  // const [inputValue, setInputValue] = useState<string>('');
   const authUser = auth.currentUser;
   const debouncedInputValue = debounce(
     (value: string) => setInputValue(value),
     300
   );
 
-  console.log("input value",inputValue);
-
- 
   // Food suggestion search bar
   const {
     data: suggestion,
@@ -321,30 +315,27 @@ const Dashboard = () => {
     setModal(true);
   };
 
-  const handleGetData = useCallback(
-    async (user: User): Promise<void> => {
-      try {
-        dispatch(showLoader());
-        if (!user) return;
-        const userId = user.uid;
-        const date = dateFunction;
-        const docRef = doc(
-          db,
-          FIREBASE_DOC_REF.USER,
-          userId,
-          FIREBASE_DOC_REF.DAILY_LOGS,
-          date
-        );
-        const docSnap = await getDoc(docRef);
-        setLogdata(docSnap.exists() ? docSnap.data() : {});
-      } catch (error) {
-        console.error(ERROR_MESSAGES().ERROR_FETCH, error);
-      } finally {
-        dispatch(hideLoader());
-      }
-    },
-    []
-  );
+  const handleGetData = useCallback(async (user: User): Promise<void> => {
+    try {
+      dispatch(showLoader());
+      if (!user) return;
+      const userId = user.uid;
+      const date = dateFunction;
+      const docRef = doc(
+        db,
+        FIREBASE_DOC_REF.USER,
+        userId,
+        FIREBASE_DOC_REF.DAILY_LOGS,
+        date
+      );
+      const docSnap = await getDoc(docRef);
+      setLogdata(docSnap.exists() ? docSnap.data() : {});
+    } catch (error) {
+      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
+    } finally {
+      dispatch(hideLoader());
+    }
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
@@ -489,23 +480,26 @@ const Dashboard = () => {
     );
   }, [logData, dailyRequiredCalorie]);
 
-
   // Check implementation calculateNutrient
-  const calculateNutrient =  useMemo(()=>(
-    selectedFoodData: SelectedFoodData,
-    nutrient: keyof Food,
-    selectquantity: number,
-    quantity: number
-  ) => {
-    const quantityNumber = (selectquantity as number) || 0;
+  const calculateNutrient = useMemo(
+    () =>
+      (
+        selectedFoodData: SelectedFoodData,
+        nutrient: keyof Food,
+        selectquantity: number,
+        quantity: number
+      ) => {
+        const quantityNumber = (selectquantity as number) || 0;
 
-    return selectedFoodData?.foods?.length > 0
-      ? ((selectedFoodData?.foods[0][nutrient] as number) /
-          selectedFoodData?.foods[0].serving_weight_grams) *
-          quantityNumber *
-          quantity
-      : " ";
-  },[selectquantity, quantity]);
+        return selectedFoodData?.foods?.length > 0
+          ? ((selectedFoodData?.foods[0][nutrient] as number) /
+              selectedFoodData?.foods[0].serving_weight_grams) *
+              quantityNumber *
+              quantity
+          : " ";
+      },
+    [selectquantity, quantity]
+  );
 
   const calculateCalories = calculateNutrient(
     selectedFoodData,
@@ -558,7 +552,7 @@ const Dashboard = () => {
   const calculateMealProtein = (mealData: mealData): number =>
     CalculateMealNutrient(mealData, NUTRIENT.PROTEIN);
   const calculateMealCarbs = (mealData: mealData): number =>
-  CalculateMealNutrient(mealData, NUTRIENT.CARBS);
+    CalculateMealNutrient(mealData, NUTRIENT.CARBS);
   const calculateMealFats = (mealData: mealData): number =>
     CalculateMealNutrient(mealData, NUTRIENT.FATS);
 
@@ -595,7 +589,6 @@ const Dashboard = () => {
   const fatsPercent: number = NUM.TWO_FIVE;
 
   const calculateNutrients = (dailyCalorie: number) => {
-    // console.log(dailyCalorie);
     // Calculate calories
     const proteinCalories: number = dailyCalorie * proteinPercent;
     const carbsCalories: number = dailyCalorie * carbsPercent;
@@ -605,7 +598,6 @@ const Dashboard = () => {
     const proteinGrams: number = Math.round(proteinCalories / NUM.FOUR);
     const carbsGrams: number = Math.round(carbsCalories / NUM.FOUR);
     const fatsGrams: number = Math.round(fatsCalories / NUM.NINE);
-    // console.log("proteinGrams",proteinGrams);
 
     return {
       proteinGrams,
@@ -621,7 +613,6 @@ const Dashboard = () => {
     dailyCalorie as number
   );
 
-  
   const progressPercent: number = dailyCalorie
     ? Math.floor((totalCalories / validDailyCalorie) * NUM.HUNDRED)
     : 0;
@@ -637,22 +628,29 @@ const Dashboard = () => {
 
   //Doughnut Data
 
-  
-  const doughnutdata = useMemo(() => ({
-    labels: [MEALTYPE.BREAKFAST, MEALTYPE.LUNCH, MEALTYPE.SNACK, MEALTYPE.DINNER],
-    datasets: [
-      {
-        data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
-        backgroundColor: [
-          colors.berakfast_color,
-          colors.lunch_color,
-          colors.snacks_color,
-          colors.dinner_color
-        ],
-        hoverOffset: 1,
-      },
-    ],
-  }), [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
+  const doughnutdata = useMemo(
+    () => ({
+      labels: [
+        MEALTYPE.BREAKFAST,
+        MEALTYPE.LUNCH,
+        MEALTYPE.SNACK,
+        MEALTYPE.DINNER,
+      ],
+      datasets: [
+        {
+          data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
+          backgroundColor: [
+            colors.berakfast_color,
+            colors.lunch_color,
+            colors.snacks_color,
+            colors.dinner_color,
+          ],
+          hoverOffset: 1,
+        },
+      ],
+    }),
+    [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
+  );
 
   const getPercentage = (value: number, total: number): number => {
     return (value / total) * NUM.HUNDRED;
@@ -673,14 +671,14 @@ const Dashboard = () => {
   };
 
   //  Get Drinks
-  const getDrinkData = async (user: User,  selectDate:string) => {
+  const getDrinkData = async (user: User, selectDate: string) => {
     try {
       dispatch(showLoader());
       if (!user) {
         return;
       }
       const userId = user.uid;
-      const date =  selectDate;
+      const date = selectDate;
       const docRef = doc(
         db,
         FIREBASE_DOC_REF.USER,
@@ -705,9 +703,9 @@ const Dashboard = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) {
-        getDrinkData(user ,selectDate);
+        getDrinkData(user, selectDate);
       } else {
-        console.log(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
+        toast.error(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
       }
     });
     return () => unsubscribe();
@@ -742,7 +740,7 @@ const Dashboard = () => {
 
   //energy modal
   const isSignup = useSelector((state: RootState) => state.Auth.signedup);
-  
+
   useEffect(() => {
     if (isSignup === true) {
       setEnergyModal(true);
@@ -755,7 +753,6 @@ const Dashboard = () => {
     setDrinkUpdateModal(true);
   };
 
-  //  console.log("altmeasure",altMeasure);
   const handleModalData = async () => {
     if (!selectquantity || !selectCategory) {
       toast.error(VALIDATION.SELECT_ALL);
@@ -767,7 +764,7 @@ const Dashboard = () => {
     }
     try {
       dispatch(showLoader());
-      // console.log("inside handleModalData2");
+
       const user = auth.currentUser;
       const data: Data = {
         id: Date.now(),
@@ -790,7 +787,6 @@ const Dashboard = () => {
           date
         );
 
-        // console.log("data",data);
         const categorisedData = { [selectCategory]: arrayUnion(data) };
 
         await setDoc(docRef, categorisedData, { merge: true });
@@ -824,7 +820,7 @@ const Dashboard = () => {
           placeholder="Search here ..."
           className="search-bar"
         />
-        <h1 id="header-text">{LABEL.OR}</h1>
+        <h1 style={{ color: "white" }}>{LABEL.OR}</h1>
       </div>
 
       <h2 style={{ padding: "40px" }}>{LABEL.AI_FOOD_VISION}</h2>
@@ -900,7 +896,7 @@ const Dashboard = () => {
 
       {/* Doughnut Data */}
       <div className="total-calorie">
-        <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}>
+        <h2 style={{ marginTop: "2%", color: colors.geyColor_dark, fontSize: "2.5rem" }}>
           {" "}
           {LABEL.YOUR_TODAY_MEAL}
         </h2>
@@ -951,7 +947,7 @@ const Dashboard = () => {
       {/* Drink Section */}
 
       <div className="drink-section">
-        <h2 style={{ color: "darkgrey", fontSize: "2.5rem" }}>
+        <h2 style={{ color: colors.geyColor_dark, fontSize: "2.5rem" }}>
           {LABEL.WATER_AND_BEVERAGE}
         </h2>
         <button
@@ -976,7 +972,7 @@ const Dashboard = () => {
 
         {/* Drinks Table */}
         <DrinkTable
-        showAction = {true}
+          showAction={true}
           totalWater={totalWater}
           totalAlcohol={totalAlcohol}
           totalCaffeine={totalCaffeine}
@@ -1010,7 +1006,6 @@ const Dashboard = () => {
           />
         </CustomModal>
 
-      
         <DrinkProgress
           totalWater={totalWater || 0}
           requiredWater={requiredWater as number}

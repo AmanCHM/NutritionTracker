@@ -14,6 +14,7 @@ import AppOverview from "./components/AppOverview/AppOverview";
 import AIFeature from "./components/AIFeature/AIFeature";
 import Footer from "../../Components/Layouts/Public/Footer";
 import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
+import colors from "../../assets/Css/color";
 
 
 
@@ -33,20 +34,20 @@ const Home = () => {
       <div className="landing-page">
         <section className="hero">
           <div className="content">
-            <b style={{ color: "grey" }}>{GREETINGS.WELCOME_NUTRITRACK}</b>
+            <b style={{ color: colors.greyColor3 }}>{GREETINGS.WELCOME_NUTRITRACK}</b>
             <p>{GREETINGS.TRACK_MEALS}</p>
           </div>
         </section>
 
         <section className="signup">
           <div className="description">
-            <h1 style={{ color: "grey" }}>
-              {" "}
+            <h1 style={{ color: colors.blackColor9 }}>
+              
              {GREETINGS.EAT_SMARTER} <br />
              {GREETINGS.LIVE_BETTER}
             </h1>
 
-            <h4 style={{ color: "grey" }}>
+            <h4 style={{ color: colors.greyColor3,  paddingLeft:'10px'}}>
              {GREETINGS.TRACK_CALORIE}
               <br />
               {GREETINGS.BIOMETRIC_DATA}

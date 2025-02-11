@@ -24,10 +24,10 @@ const DrinkProgress: React.FC<DrinkProgressProps> = ({
   requiredCaffeine,
 }) => {
 
-  // console.log("requiredwater",requiredWater);
+
   return (
     <div className="progress-line" style={{ height: "auto", width: "50vw", marginLeft: "25%" }}>
-      <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
+      <h2 style={{ marginTop: "2%", color: colors.geyColor_dark, fontSize: "2.0rem" }}>
        {LABEL.DRINK_PROGRESS}
       </h2>
 

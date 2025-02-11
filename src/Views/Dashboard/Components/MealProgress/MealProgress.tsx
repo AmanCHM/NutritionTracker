@@ -32,7 +32,7 @@ const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie,
         className="progress-line"
         style={{ height: "auto", width: "50vw", marginLeft: "25%" }}
        >
-        <h2 style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.0rem" }}>
+        <h2 style={{ marginTop: "2%", color: colors.geyColor_dark, fontSize: "2.0rem" }}>
           {LABEL.MEAL_PROGRESS}
         </h2>
         <div style={progressMargin}>

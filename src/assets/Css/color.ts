@@ -29,7 +29,9 @@ const colors = {
    strokeColor_first:"#e15f41",
    strokeColor_second:"#55a630",
    strokeColor_third:"#007bff",
-   strokeColor_fourth:"#52b788"
+   strokeColor_fourth:"#52b788",
+   greyColor3: '#808080',
+   geyColor_dark:'#3d3d3d'
   };
   
   export default colors;

@@ -292,7 +292,7 @@ export const GREETINGS = {
   CALORIE_REQUIREMENT: ", Your Calorie Requirements",
   GREET: "Hi!",
   TRACK_MEALS: "Track your meals and stay healthy!",
-  EAT_SMARTER: " Eat smarter,",
+  EAT_SMARTER: "Eat smarter,",
   LIVE_BETTER: "Live better.",
   TRACK_CALORIE: "Track your calories, exercise,",
   BIOMETRIC_DATA: "biometrics and health data.",

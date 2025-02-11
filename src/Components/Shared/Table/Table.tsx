@@ -3,6 +3,7 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import {  FoodDetail, LogData, MealItem } from "../../../Views/Dashboard/Dashboard";
 import { COLSPAN_VALUE, MEALTYPE, NUTRIENT } from "../../../Shared/Constants";
 import { LABEL } from "../../../Shared";
+import colors from "../../../assets/Css/color";
 
   interface TableProps {
     logData: LogData | undefined;
@@ -26,7 +27,7 @@ const Table: React.FC<TableProps> = ({
       <section className="view-data">
         <div className="meal-log">
           <h2
-            style={{ marginTop: "2%", color: "darkgrey", fontSize: "2.5rem" }}
+            style={{ marginTop: "2%", color: colors.greyColor3, fontSize: "2.5rem" }}
           >
             {" "}
            {LABEL.FOOD_DIARY}

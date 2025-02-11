@@ -46,7 +46,6 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   const [drinkId, setUpdateId] = useState<string | undefined>();
   const dispatch = useDispatch();
 
-  // console.log("drink details",drinkDetails);
   // Delete the drink
 
   const handleDeleteDrink = useCallback(async (drinkType: string, id: string) => {
