@@ -57,7 +57,7 @@ import UpdateDrinkPage from "./Modals/UpdateDrinkPage/UpdateDrinkPage";
 import DrinkProgress from "./Components/DrinkProgress/DrinkProgress";
 import { RootState } from "../../Store";
 import MealProgress from "./Components/MealProgress/MealProgress";
-import SetCalorieModal from "./Modals/SetNutrition /SetCalorie";
+import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
 import { setSignout } from "../../Store/Auth";
 import {
   DRINK_TYPE,
