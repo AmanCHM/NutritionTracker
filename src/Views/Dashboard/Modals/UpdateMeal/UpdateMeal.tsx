@@ -223,14 +223,11 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
         {errors.selectCategory && <div style={{ color: "red" }}>{errors.selectCategory}</div>}
 
         <p className="calorie-info">{LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}</p>
-{/* 
-        <CustomButton className="add-meal-button" label= {LABEL.UPDATE_MEAL} onClick={()=>{handleSubmit}}>
+
+        <CustomButton className="add-meal-button" label= {LABEL.UPDATE_MEAL} onClick={handleSubmit}>
          
-        </CustomButton> */}
-        <button className="add-meal-button" onClick={handleSubmit}>
-          Update Meal
-          {/* {LABEL.UPDATE_MEAL} */}
-        </button>
+        </CustomButton>
+        
 
       </div>
     </>

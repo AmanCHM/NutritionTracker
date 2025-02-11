@@ -34,7 +34,7 @@ import { DrinkData, DrinkItem, LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 import colors from "../../assets/Css/color";
 import { dateFunction } from "../../Helpers/function";
-import DrinkTable from "../Dashboard/Components/DrinkTable/DrinkTable";
+import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
 
 
 

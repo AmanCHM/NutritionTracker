@@ -268,13 +268,12 @@ const MealModal: React.FC<MealModalProps> = ({
         <p className="calorie-info">
           {LABEL.CALORIE_SERVED} {Math.round(calculateCalories as number)}
         </p>
-        {/* <CustomButton className="add-meal-button" label= {LABEL.ADD_MEAL} onClick={()=> {handleSubmit} }>
-          {LABEL.ADD_MEAL}
-        </CustomButton> */}
+        <CustomButton className="add-meal-button" label= {LABEL.ADD_MEAL} onClick={handleSubmit}>
+       
+        </CustomButton>
+     
 
-<button className="add-meal-button" onClick={handleSubmit}>
-          {LABEL.ADD_MEAL}
-        </button>
+
       </div>
     </>
   );

@@ -3,7 +3,11 @@ import "./CustomButton.css";
 
 interface CustomButtonProps {
   label: string;
-  onClick?: () => void;
+
+
+    onClick?: (e: React.MouseEvent<HTMLButtonElement> | React.FormEvent<HTMLFormElement>) => void;
+
+  // onClick?: () => void;
   variant?: "primary" | "secondary" | "danger";
   disabled?: boolean;
   type?: "button" | "submit" | "reset";

@@ -69,7 +69,7 @@ import {
 } from "../../Shared/Constants";
 import { DRINK_TABLE_STYLE } from "../../assets/Css/customStyle";
 import colors from "../../assets/Css/color";
-import DrinkTable from "./Components/DrinkTable/DrinkTable";
+import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
 import Table from "../../Components/Shared/Table";
 
 // import SetCalorieModal from "./Modals/SetNutrition/SetCalorie";
