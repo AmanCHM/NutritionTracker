@@ -179,7 +179,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       
       const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
       if (!validImageTypes.includes(file?.type as string)) {
-        toast.error("Please select a valid image file (JPEG, PNG, GIF, or WebP).");
+        toast.error(ERROR_MESSAGES().VALID_IMAGE);
         return;
       }
       if (file) {
@@ -258,7 +258,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const fetchNutritionInfo = useCallback(
     async (imageId: string): Promise<void> => {
       const data = { imageId };
-
+       dispatch(showLoader())
       try {
         const result = await axios.post(`${NUTRI_INFO_API_URL}`, data, {
           headers: {
@@ -270,6 +270,9 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       } catch (error) {
         toast.error(ERROR_MESSAGES().UPLOAD_FOOD_IMAGE);
         console.error(error);
+      }
+      finally{
+        dispatch(hideLoader())
       }
     },
     []

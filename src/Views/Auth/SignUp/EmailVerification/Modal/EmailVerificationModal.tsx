@@ -8,7 +8,7 @@ import { ROUTES_CONFIG } from "../../../../../Shared/Constants";
 import { auth } from "../../../../../Utils/firebase";
 import { sendEmailVerification } from "firebase/auth";
 import CustomModal from "../../../../../Components/Shared/CustomModal/CustomModal";
-import { LABEL } from "../../../../../Shared";
+import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../../Shared";
 
 const EmailVerificationModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -23,7 +23,7 @@ const EmailVerificationModal: React.FC<{ isOpen: boolean; onClose: () => void }>
         if (currentUser.emailVerified) {
           setIsEmailVerified(true);
           clearInterval(interval);
-          toast.success("Email verified! Redirecting to Dashboard");
+          toast.success(SUCCESS_MESSAGES().EMAIL_VERIFIED);
           setTimeout(() => {
             onClose();
             navigate(ROUTES_CONFIG.DASHBOARD.path);
@@ -41,9 +41,9 @@ const EmailVerificationModal: React.FC<{ isOpen: boolean; onClose: () => void }>
     if (currentUser && !currentUser.emailVerified) {
       try {
         await sendEmailVerification(currentUser);
-        toast.success("Verification email resent! Check your  mail inbox.");
+        toast.success(SUCCESS_MESSAGES().EMAIL_RESEND);
       } catch (error) {
-        toast.error("Failed to resend verification email.");
+        toast.error(ERROR_MESSAGES().VERIFICATION_FAILED);
       }
     }
   };

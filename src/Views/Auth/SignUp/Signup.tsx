@@ -13,7 +13,7 @@ import { doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES, VALIDATION_REGEX } from "../../../Shared";
+import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, INFO_MESSAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES, VALIDATION_REGEX } from "../../../Shared";
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
@@ -84,7 +84,7 @@ const Signup: React.FC = () => {
         const currentUser: User | null = auth.currentUser;
         if (currentUser) {
           await sendEmailVerification(currentUser);
-          toast.info("A verification email has been sent. Please verify your email to proceed.");
+          toast.info(INFO_MESSAGES.EMAIL_VERIFICATION_SENT);
         }
  
       

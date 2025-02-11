@@ -74,6 +74,8 @@ export const ERROR_MESSAGES = (...args: string[]) => ({
   TARGET_MORE_THAN_CURRENT:
     "Target weight must be greater than current weight for weight gain.",
   TARGET_EQUAL: '"Target weight must equal current weight for maintenance."',
+  VERIFICATION_FAILED: "Failed to resend verification email.",
+  VALID_IMAGE:"Please select a valid image file (JPEG, PNG, GIF, or WebP)."
 });
 
 export const SUCCESS_MESSAGES = (...args: string[]) => ({
@@ -93,8 +95,15 @@ export const SUCCESS_MESSAGES = (...args: string[]) => ({
   SUCCESS_ITEM_ADD: "Successfully item added",
   SUCCESS_DRINK_ADDED: "Drink details added successfully!",
   ITEM_EDIT_SUCCESS: "Item edited successfully",
+  EMAIL_VERIFIED:"Email verified! Redirecting to Dashboard",
+  EMAIL_RESEND: "Verification email resent! Check your  mail inbox.",
+
 });
 
+
+export const INFO_MESSAGES ={
+  EMAIL_VERIFICATION_SENT:'A verification email has been sent. Please verify your email to proceed.'
+}
 export const ABOUT = {
   HEADER: "About Nurtition Tracker",
   FIRST_PARA_HEADER: "Who We Are",
