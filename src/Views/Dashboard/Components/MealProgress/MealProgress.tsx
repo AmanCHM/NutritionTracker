@@ -4,11 +4,12 @@ import { progressMargin } from '../../../../assets/Css/customStyle';
 import colors from '../../../../assets/Css/color';
 import { FORM, LABEL, MEAL_TERMS } from '../../../../Shared';
 import { MEALTYPE, NUTRIENT } from '../../../../Shared/Constants';
+import { DailyRequirement } from '../../Dashboard';
 
 
 type MealProgressProps= {
     totalCalories: number;
-    dailyCalorie: number |null;
+    dailyCalorie: number | null;
     progressPercent: number;
     totalProtein: number;
     proteinGrams: number;
@@ -25,7 +26,7 @@ type MealProgressProps= {
 
 const MealProgress: React.FC<MealProgressProps> = ( {totalCalories,dailyCalorie, progressPercent,totalProtein,proteinGrams,proteinPercentage,totalCarbs,carbsGrams,carbsPercentage,totalFats,fatsGrams,fatsPercentage}) => {
 
-  
+  //  console.log("daily calorie" ,dailyCalorie?.calorie);
   return (
    <>
    <div

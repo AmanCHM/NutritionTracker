@@ -30,7 +30,18 @@ import {
   useAddMealMutation,
   useFetchSuggestionsQuery,
 } from "../../Services/Api/module/foodApi";
-import { dateFunction, debounce } from "../../Helpers/function";
+import {
+  calculateDrinkTotals,
+  calculateMealCalories,
+  calculateMealCarbs,
+  calculateMealFats,
+  calculateMealProtein,
+  dateFunction,
+  debounce,
+  getChartData,
+  getPercentage,
+  totalNutrient,
+} from "../../Helpers/function";
 import { hideLoader, showLoader } from "../../Store/Loader";
 import firebaseConfig, { auth, db } from "../../Utils/firebase";
 
@@ -99,7 +110,13 @@ export interface LogData {
   Dinner?: MealItem[];
 }
 
-type mealData = MealItem[];
+export interface DailyRequirement {
+  calorie: number;
+  water: number;
+  alcohol: number;
+  caffeine: number;
+}
+export type mealData = MealItem[];
 
 interface CommonFood {
   tag_id: string;
@@ -224,34 +241,22 @@ const Dashboard = () => {
 
   const [drinkData, setDrinkData] = useState<DrinkData>({});
 
-  const [totalWater, setTotalWater] = useState<number>();
-  const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(
-    undefined
-  );
-  const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
-    undefined
-  );
-  const [selectDate, setSelectDate] = useState<string>(dateFunction);
-
   const [dailyCalorie, setDailyCalorie] = useState<number | null>(null);
-
   const [dataUpdated, setDataUpdated] = useState<boolean>(false);
   const [energyModal, setEnergyModal] = useState<boolean>(false);
-  const [requiredWater, setRequiredWater] = useState<number>();
-  const [requiredAlcohol, setRequiredAlcohol] = useState<number | null>();
-  const [requiredCaffeine, setRequiredCaffeine] = useState<number | null>();
+  const [dailyRequiredData, setDailyRequiredData] =
+    useState<DailyRequirement | null>(null);
   const [updateDrinkName, setUpdateDrinkName] = useState<string>("");
   const [editDrinkModal, setEditDrinkModal] = useState<boolean>(false);
   const [drinkId, setDrinkId] = useState<number | string | undefined>(
     undefined
   );
-  const [drinkName, setDrinkName] = useState<string>(); // it may be undefined
+  const [drinkName, setDrinkName] = useState<string>(""); // it may be undefined
   const [imageModal, setImageModal] = useState<boolean>(false);
   const [altMeasure, setAltMeasure] = useState<string | null>(null);
 
   const dispatch = useDispatch();
 
-  const authUser = auth.currentUser;
   const debouncedInputValue = debounce(
     (value: string) => setInputValue(value),
     300
@@ -329,7 +334,15 @@ const Dashboard = () => {
         date
       );
       const docSnap = await getDoc(docRef);
-      setLogdata(docSnap.exists() ? docSnap.data() : {});
+
+      if (docSnap.exists()) {
+        const getData = docSnap.data();
+        setLogdata(docSnap.data());
+        setDrinkData(getData);
+      } else {
+        setDrinkData({});
+        setLogdata({});
+      }
     } catch (error) {
       console.error(ERROR_MESSAGES().ERROR_FETCH, error);
     } finally {
@@ -340,9 +353,13 @@ const Dashboard = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) handleGetData(user);
+
+      console.log("indside the handelGetData");
     });
     return () => unsubscribe();
-  }, [handleGetData]);
+  }, [handleGetData, dataUpdated]);
+
+  //  console.log( logData);
 
   const handleDeleteLog = async (meal: string, id: string | number) => {
     dispatch(showLoader());
@@ -441,44 +458,36 @@ const Dashboard = () => {
     }
   };
 
-  const dailyRequiredCalorie = useCallback(
-    async (
-      setRequiredWater: (Water: number) => void,
-      setRequiredCaffeine: (Caffeine: number) => void,
-      setRequiredAlcohol: (Alcohol: number) => void,
-      setDailyCalorie: (calorie: number | null) => void
-    ): Promise<void> => {
-      const currentUser = auth.currentUser;
-      const userId = currentUser?.uid;
-      if (userId) {
-        const userDocRef = doc(db, FIREBASE_DOC_REF.USER, userId);
-        try {
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            setRequiredWater(data.water);
-            setRequiredCaffeine(data.caffeine);
-            setRequiredAlcohol(data.alcohol);
-            setDailyCalorie(data.calorie);
-          } else {
-            setDailyCalorie(null);
-          }
-        } catch (error) {
-          console.error(ERROR_MESSAGES().ERROR_FETCH, error);
+  const dailyRequiredCalorie = useCallback(async (): Promise<void> => {
+    const currentUser = auth.currentUser;
+    const userId = currentUser?.uid;
+    if (userId) {
+      const userDocRef = doc(db, FIREBASE_DOC_REF.USER, userId);
+      try {
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+
+          setDailyRequiredData(data as DailyRequirement);
+          setDailyCalorie(data.calorie);
+        } else {
+          setDailyRequiredData(null);
         }
+      } catch (error) {
+        console.error(ERROR_MESSAGES().ERROR_FETCH, error);
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   useEffect(() => {
-    dailyRequiredCalorie(
-      setRequiredWater,
-      setRequiredCaffeine,
-      setRequiredAlcohol,
-      setDailyCalorie
-    );
-  }, [logData, dailyRequiredCalorie]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dailyRequiredCalorie();
+      }
+    });
+    console.log("indside the dailyRequiredCalorie");
+    return () => unsubscribe();
+  }, []);
 
   // Check implementation calculateNutrient
   const calculateNutrient = useMemo(
@@ -528,33 +537,6 @@ const Dashboard = () => {
     selectquantity,
     quantity
   );
-  const calculateMealNutrient = (
-    mealData: mealData,
-    nutrient: string
-  ): number => {
-    return mealData.length > 0
-      ? mealData.reduce(
-          (total: number, item: MealItem) => total + (item[nutrient] as number),
-          0
-        )
-      : 0;
-  };
-
-  const CalculateMealNutrient = (
-    mealData: mealData,
-    nutrient: string
-  ): number => {
-    return useMemo(() => calculateMealNutrient(mealData, nutrient), [mealData]);
-  };
-
-  const calculateMealCalories = (mealData: mealData): number =>
-    CalculateMealNutrient(mealData, NUTRIENT.CALORIE);
-  const calculateMealProtein = (mealData: mealData): number =>
-    CalculateMealNutrient(mealData, NUTRIENT.PROTEIN);
-  const calculateMealCarbs = (mealData: mealData): number =>
-    CalculateMealNutrient(mealData, NUTRIENT.CARBS);
-  const calculateMealFats = (mealData: mealData): number =>
-    CalculateMealNutrient(mealData, NUTRIENT.FATS);
 
   const breakfastCalorie = calculateMealCalories(logData?.Breakfast || []);
   const breakfastProtein = calculateMealProtein(logData?.Breakfast || []);
@@ -577,13 +559,36 @@ const Dashboard = () => {
   const dinnerFats = calculateMealFats(logData?.Dinner || []);
 
   // Calculate totals for the day
-  const totalCalories =
-    breakfastCalorie + lunchCalorie + snackCalorie + dinnerCalorie;
-  const totalProtein =
-    breakfastProtein + lunchProtein + snackProtein + dinnerProtein;
-  const totalCarbs = breakfastCarbs + lunchCarbs + snackCarbs + dinnerCarbs;
-  const totalFats = breakfastFats + lunchFats + snackFats + dinnerFats;
 
+
+  const totalCalories = totalNutrient(
+    breakfastCalorie,
+    lunchCalorie,
+    snackCalorie,
+    dinnerCalorie
+  );
+
+  const totalProtein = totalNutrient(
+    breakfastProtein,
+    lunchProtein,
+    snackProtein,
+    dinnerProtein
+  );
+
+  const totalCarbs = totalNutrient(
+    breakfastCarbs,
+    lunchCarbs,
+    snackCarbs,
+    dinnerCarbs
+  );
+  const totalFats = totalNutrient(
+    breakfastFats,
+    lunchFats,
+    snackFats,
+    dinnerFats
+  );
+
+  // Reference percentage of protein ,carbs and fats in daily Energy(calorie);
   const proteinPercent: number = NUM.TWO_FIVE;
   const carbsPercent: number = NUM.ZERO_FIVE;
   const fatsPercent: number = NUM.TWO_FIVE;
@@ -606,57 +611,24 @@ const Dashboard = () => {
     };
   };
 
-  // Safely access `dailyCalorie.calorie` with null checks
   const validDailyCalorie = dailyCalorie ?? 0;
-
   const { proteinGrams, carbsGrams, fatsGrams } = calculateNutrients(
     dailyCalorie as number
   );
 
-  const progressPercent: number = dailyCalorie
-    ? Math.floor((totalCalories / validDailyCalorie) * NUM.HUNDRED)
-    : 0;
-  const proteinPercentage: number = Math.floor(
-    (totalProtein / proteinGrams) * NUM.HUNDRED
-  );
-  const carbsPercentage: number = Math.floor(
-    (totalCarbs / carbsGrams) * NUM.HUNDRED
-  );
-  const fatsPercentage: number = Math.floor(
-    (totalFats / fatsGrams) * NUM.HUNDRED
-  );
+  const progressPercent = getPercentage(totalCalories, validDailyCalorie);
+  const carbsPercentage = getPercentage(totalCarbs, carbsGrams);
+  const fatsPercentage = getPercentage(totalFats, fatsGrams);
+  const proteinPercentage = getPercentage(totalProtein, proteinGrams);
 
   //Doughnut Data
-
-  const doughnutdata = useMemo(
-    () => ({
-      labels: [
-        MEALTYPE.BREAKFAST,
-        MEALTYPE.LUNCH,
-        MEALTYPE.SNACK,
-        MEALTYPE.DINNER,
-      ],
-      datasets: [
-        {
-          data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
-          backgroundColor: [
-            colors.berakfast_color,
-            colors.lunch_color,
-            colors.snacks_color,
-            colors.dinner_color,
-          ],
-          hoverOffset: 1,
-        },
-      ],
-    }),
+  const chartData = useMemo(
+    () =>
+      getChartData(breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie),
     [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
   );
 
-  const getPercentage = (value: number, total: number): number => {
-    return (value / total) * NUM.HUNDRED;
-  };
-
-  const total = doughnutdata?.datasets[0]?.data.reduce(
+  const total = chartData?.datasets[0]?.data.reduce(
     (sum, value) => sum + value,
     0
   );
@@ -670,73 +642,17 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
-  //  Get Drinks
-  const getDrinkData = async (user: User, selectDate: string) => {
-    try {
-      dispatch(showLoader());
-      if (!user) {
-        return;
-      }
-      const userId = user.uid;
-      const date = selectDate;
-      const docRef = doc(
-        db,
-        FIREBASE_DOC_REF.USER,
-        userId,
-        FIREBASE_DOC_REF.DAILY_LOGS,
-        selectDate
-      );
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const getData = docSnap.data();
-        setDrinkData(getData);
-      } else {
-        setDrinkData({});
-      }
-    } catch (error) {
-      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
-    } finally {
-      dispatch(hideLoader());
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) {
-        getDrinkData(user, selectDate);
-      } else {
-        toast.error(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
-      }
-    });
-    return () => unsubscribe();
-  }, [dataUpdated]);
+  // console.log(drinkData);
 
   const handleDataUpdated = () => {
     setDataUpdated((prev) => !prev);
   };
 
   //Drinks Calculation
-  const calculateTotals = () => {
-    const calculateDrinkTotals = (drinkItems?: DrinkItem[]) => {
-      return Array.isArray(drinkItems) && drinkItems.length > 0
-        ? drinkItems.reduce(
-            (total, drinkItem) => total + drinkItem.totalAmount,
-            0
-          )
-        : 0;
-    };
 
-    setTotalWater(calculateDrinkTotals(drinkData?.Water));
-    setTotalAlcohol(calculateDrinkTotals(drinkData?.Alcohol));
-    setTotalCaffeine(calculateDrinkTotals(drinkData?.Caffeine));
-  };
-
-  // Calculate totals when drinkData changes
-  useEffect(() => {
-    if (drinkData) {
-      calculateTotals();
-    }
-  }, [drinkData]);
+  const totalWater = calculateDrinkTotals(drinkData?.Water);
+  const totalAlcohol = calculateDrinkTotals(drinkData?.Alcohol);
+  const totalCaffeine = calculateDrinkTotals(drinkData?.Caffeine);
 
   //energy modal
   const isSignup = useSelector((state: RootState) => state.Auth.signedup);
@@ -745,6 +661,7 @@ const Dashboard = () => {
     if (isSignup === true) {
       setEnergyModal(true);
       dispatch(setSignout());
+      console.log("indside the  setNutritin modal");
     }
   }, []);
 
@@ -753,6 +670,7 @@ const Dashboard = () => {
     setDrinkUpdateModal(true);
   };
 
+  console.log("rendering times");
   const handleModalData = async () => {
     if (!selectquantity || !selectCategory) {
       toast.error(VALIDATION.SELECT_ALL);
@@ -896,17 +814,23 @@ const Dashboard = () => {
 
       {/* Doughnut Data */}
       <div className="total-calorie">
-        <h2 style={{ marginTop: "2%", color: colors.geyColor_dark, fontSize: "2.5rem" }}>
+        <h2
+          style={{
+            marginTop: "2%",
+            color: colors.geyColor_dark,
+            fontSize: "2.5rem",
+          }}
+        >
           {" "}
           {LABEL.YOUR_TODAY_MEAL}
         </h2>
         <div className="doughnut-data">
           <div className="doughnut-graph">
-            <Doughnut data={doughnutdata} />
+            <Doughnut data={chartData} />
           </div>
           <div className="doughnut-text">
-            {doughnutdata.labels.map((label, index) => {
-              const value = doughnutdata.datasets[0].data[index];
+            {chartData.labels.map((label, index) => {
+              const value = chartData.datasets[0].data[index];
               const percentage =
                 value > 0 ? Math.floor(getPercentage(value, total)) : 0;
               return (
@@ -985,6 +909,7 @@ const Dashboard = () => {
         >
           <UpdateDrinkModal
             setDrinkUpdateModal={setDrinkUpdateModal}
+            drinkDetails={drinkData}
             onDataUpdated={handleDataUpdated}
             updateDrinkName={updateDrinkName}
             editDrinkModal={editDrinkModal}
@@ -1008,11 +933,9 @@ const Dashboard = () => {
 
         <DrinkProgress
           totalWater={totalWater || 0}
-          requiredWater={requiredWater as number}
+          dailyRequirement={dailyRequiredData}
           totalAlcohol={totalAlcohol || 0}
-          requiredAlcohol={requiredAlcohol as number}
           totalCaffeine={totalCaffeine || 0}
-          requiredCaffeine={requiredCaffeine as number}
         />
       </div>
     </>

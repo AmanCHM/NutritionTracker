@@ -31,19 +31,7 @@ interface EditDataModalProps {
   setSelectCategory: React.Dispatch<React.SetStateAction<string>>;
   calculateCalories: number | string;
   handleEditModalData: (
-    selectedFoodData?: FoodData | null,
-    calculateCalories?: number,
-    protein?: number,
-    carbs?: number,
-    fats?: number,
-    altMeasure?: string,
-    selectquantity?: number,
-    editMealName?: keyof LogData,
-    selectedId?: number | string,
-    selectCategory?: string,
-    setLogdata?: (data: LogData) => void,
-    setEditModal?: (value: boolean) => void,
-    setSelectCategory?: () => void
+  
   ) 
     => void;
   mealName: string |undefined;
@@ -179,7 +167,7 @@ const UpdateMeal: React.FC<EditDataModalProps> = ({
         </h3>
 
         <div className="input-container">
-          <label>Choose Quantity</label>
+          <label>{LABEL.CHOOSE_QUANTITY}</label>
           <input
             type="number"
             name="quantity"

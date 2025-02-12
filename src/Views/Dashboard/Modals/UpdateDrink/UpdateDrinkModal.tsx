@@ -13,7 +13,7 @@ import { FIREBASE_DOC_REF } from "../../../../Shared/Constants";
 import { dateFunction } from "../../../../Helpers/function";
 import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
-// Define types for props
+
 interface UpdateDrinkModalProps {
   setDrinkUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
   updateDrinkName: string;
@@ -21,7 +21,8 @@ interface UpdateDrinkModalProps {
   setEditDrinkModal: React.Dispatch<React.SetStateAction<boolean>>;
   editDrinkModal: boolean;
   setDrinkId: React.Dispatch<React.SetStateAction<string | number | undefined>>;
-  setDrinkName: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setDrinkName: React.Dispatch<React.SetStateAction<string | ''>>;
+  drinkDetails:DrinkDetails
 }
 
 interface DrinkDetails {
@@ -40,8 +41,9 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   editDrinkModal,
   setDrinkId,
   setDrinkName,
+  drinkDetails,
 }) => {
-  const [drinkDetails, setDrinkDetails] = useState<DrinkDetails | undefined>();
+ 
   const [drinkData, setDrinkData] = useState<DrinkDetails | undefined>();
   const [drinkId, setUpdateId] = useState<string | undefined>();
   const dispatch = useDispatch();
@@ -83,35 +85,10 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
     setDrinkUpdateModal(false);
   }, []);
   
-  const getDrinkData = useCallback(async (user: User | null) => {
-    try {
-      dispatch(showLoader());
-      if (user) {
-        const userId = user.uid;
-        const date = dateFunction;
-        const docRef = doc(db, FIREBASE_DOC_REF.USER, userId, FIREBASE_DOC_REF.DAILY_LOGS, date);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const getData = docSnap.data();
-          setDrinkDetails(getData);
-        } else {
-          setDrinkDetails({});
-        }
-      }
-    } catch (error) {
-      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
-    } finally {
-      dispatch(hideLoader());
-    }
-  }, [dispatch]);
-  
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      getDrinkData(user);
-    });
-    return () => unsubscribe();
-  }, [getDrinkData]);
-  
+
+
+  console.log("drinkdetails",drinkDetails);
+
 
   return (
     <>

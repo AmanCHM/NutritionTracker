@@ -19,7 +19,6 @@ import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
 import { CustomError } from "../../../Shared/Common";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
-import EmailVerificationPage from "./EmailVerification/EmailVerificationPage";
 
 
 interface SignupFormValues {

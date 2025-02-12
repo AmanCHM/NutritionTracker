@@ -39,7 +39,7 @@ import Table from "../../Components/Shared/Table";
 import { DrinkData, DrinkItem, LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 import colors from "../../assets/Css/color";
-import { dateFunction } from "../../Helpers/function";
+import { calculateCalories, calculateDrinkTotals, dateFunction, getChartData, getPercentage } from "../../Helpers/function";
 import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
 import { toast } from "react-toastify";
 
@@ -48,18 +48,11 @@ const Reports: React.FC = () => {
   const dispatch = useDispatch();
   const [logData, setLogdata] = useState<LogData | undefined>();
   const [selectDate, setSelectDate] = useState<string>(
-    new Date().toISOString().split("T")[0]
+    dateFunction
   );
   const [drinkData, setDrinkData] = useState<DrinkData>({});
-  const [totalWater, setTotalWater] = useState<number>();
-  const [totalAlcohol, setTotalAlcohol] = useState<number | undefined>(
-    undefined
-  );
-  const [totalCaffeine, setTotalCaffeine] = useState<number | undefined>(
-    undefined
-  );
-
   // Loader from Redux
+
   const loader = useSelector((state: RootState) => state.Loader.loading);
 
   // Fetch User Data from Firestore
@@ -84,10 +77,12 @@ const Reports: React.FC = () => {
 
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const mealData = docSnap.data() as LogData;
-          setLogdata(mealData);
+          const getData = docSnap.data() ;
+          setLogdata(getData);
+          setDrinkData(getData);
         } else {
           setLogdata({});
+          setDrinkData({});
         }
       } catch (error) {
         console.error(ERROR_MESSAGES().ERROR_FETCH, error);
@@ -112,107 +107,34 @@ const Reports: React.FC = () => {
     return () => unsubscribe();
   }, [handleGetData]);
 
-  // Calculate meal calories
-  const calculateMealCalories = (mealData?: { calories: number }[]): number => {
-    return mealData?.length
-      ? mealData.reduce((total, item) => total + item.calories, 0)
-      : 0;
-  };
 
   // Calorie calculations
-  const breakfastCalorie = calculateMealCalories(logData?.Breakfast);
-  const lunchCalorie = calculateMealCalories(logData?.Lunch);
-  const snackCalorie = calculateMealCalories(logData?.Snack);
-  const dinnerCalorie = calculateMealCalories(logData?.Dinner);
+  const breakfastCalorie = calculateCalories(logData?.Breakfast);
+  const lunchCalorie = calculateCalories(logData?.Lunch);
+  const snackCalorie = calculateCalories(logData?.Snack);
+  const dinnerCalorie = calculateCalories(logData?.Dinner);
 
   const totalCalories = useMemo(() => {
     return breakfastCalorie + lunchCalorie + snackCalorie + dinnerCalorie;
   }, [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
-  // Set the donut chart data
-  const chartData = useMemo(
-    () => ({
-      labels: [
-        MEALTYPE.BREAKFAST,
-        MEALTYPE.LUNCH,
-        MEALTYPE.SNACK,
-        MEALTYPE.DINNER,
-      ],
-      datasets: [
-        {
-          data: [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie],
-          backgroundColor: [
-            colors.berakfast_color,
-            colors.lunch_color,
-            colors.snacks_color,
-            colors.dinner_color,
-          ],
-          hoverOffset: 1,
-        },
-      ],
-    }),
-    [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
+// Using the function inside useMemo
+const chartData = useMemo(
+  () => getChartData(breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie),
+  [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
+);
+
+
+  const total = chartData?.datasets[0]?.data.reduce(
+    (sum, value) => sum + value,
+    0
   );
 
-  const getDrinkData = async (user: User, selectDate: string) => {
-    try {
-      dispatch(showLoader());
-      if (!user) {
-        return;
-      }
-      const userId = user.uid;
-      const date = selectDate;
-      const docRef = doc(
-        db,
-        FIREBASE_DOC_REF.USER,
-        userId,
-        FIREBASE_DOC_REF.DAILY_LOGS,
-        selectDate
-      );
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const getData = docSnap.data();
-        setDrinkData(getData);
-      } else {
-        setDrinkData({});
-      }
-    } catch (error) {
-      console.error(ERROR_MESSAGES().ERROR_FETCH, error);
-    } finally {
-      dispatch(hideLoader());
-    }
-  };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) {
-        getDrinkData(user, selectDate);
-      } else {
-        toast.info(FORM_VALIDATION_MESSAGES().USER_NOT_AUTHENTICATED);
-      }
-    });
-    return () => unsubscribe();
-  }, [selectDate]);
+  const totalWater = calculateDrinkTotals(drinkData?.Water);
+  const totalAlcohol = calculateDrinkTotals(drinkData?.Alcohol);
+  const totalCaffeine = calculateDrinkTotals(drinkData?.Caffeine);
 
-  const calculateTotals = () => {
-    const calculateDrinkTotals = (drinkItems?: DrinkItem[]) => {
-      return Array.isArray(drinkItems) && drinkItems.length > 0
-        ? drinkItems.reduce(
-            (total, drinkItem) => total + drinkItem.totalAmount,
-            0
-          )
-        : 0;
-    };
-
-    setTotalWater(calculateDrinkTotals(drinkData?.Water));
-    setTotalAlcohol(calculateDrinkTotals(drinkData?.Alcohol));
-    setTotalCaffeine(calculateDrinkTotals(drinkData?.Caffeine));
-  };
-  useEffect(() => {
-    if (drinkData) {
-      calculateTotals();
-    }
-  }, [drinkData]);
 
   return (
     <>
@@ -258,10 +180,11 @@ const Reports: React.FC = () => {
         <div className="dashboard-text">
           {chartData.labels.map((label, index) => {
             const value = chartData.datasets[0].data[index];
-
+            const percentage =
+            value > 0 ? Math.floor(getPercentage(value, total)) : 0;
             return (
               <div key={index} className="dashboard-text-item">
-                <strong>{label}:</strong> {value} {FORM.KCAL}
+               <strong>{label}:</strong> {value} {FORM.KCAL} ({percentage}%)
               </div>
             );
           })}

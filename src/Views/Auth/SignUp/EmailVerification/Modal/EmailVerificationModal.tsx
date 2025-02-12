@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { toast } from "react-toastify";
-
 import "./EmailVerificationModal.css"; 
 import { ROUTES_CONFIG } from "../../../../../Shared/Constants";
 import { auth } from "../../../../../Utils/firebase";
 import { sendEmailVerification } from "firebase/auth";
 import CustomModal from "../../../../../Components/Shared/CustomModal/CustomModal";
 import { ERROR_MESSAGES, LABEL, SUCCESS_MESSAGES } from "../../../../../Shared";
+
+
 
 const EmailVerificationModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);

@@ -1,19 +1,27 @@
 import React from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import {  FoodDetail, LogData, MealItem } from "../../../Views/Dashboard/Dashboard";
+import {
+  FoodDetail,
+  LogData,
+  MealItem,
+} from "../../../Views/Dashboard/Dashboard";
 import { COLSPAN_VALUE, MEALTYPE, NUTRIENT } from "../../../Shared/Constants";
 import { LABEL } from "../../../Shared";
 import colors from "../../../assets/Css/color";
 
-  interface TableProps {
-    logData: LogData | undefined;
-    handleNutritionModal: (foodDetail: FoodDetail) => void;
+interface TableProps {
+  logData: LogData | undefined;
+  handleNutritionModal: (foodDetail: FoodDetail) => void;
 
-    handleEditLog: ( meal: keyof LogData, name: string,id: number | string) => void;
+  handleEditLog: (
+    meal: keyof LogData,
+    name: string,
+    id: number | string
+  ) => void;
 
-    handleDeleteLog: (meal: string, id: string) => void;
-    showFeature: boolean;
-  }
+  handleDeleteLog: (meal: string, id: string) => void;
+  showFeature: boolean;
+}
 
 const Table: React.FC<TableProps> = ({
   logData,
@@ -22,15 +30,20 @@ const Table: React.FC<TableProps> = ({
   handleDeleteLog,
   showFeature,
 }) => {
+  // console.log("logdata",logData);
   return (
     <>
       <section className="view-data">
         <div className="meal-log">
           <h2
-            style={{ marginTop: "2%", color: colors.greyColor3, fontSize: "2.5rem" }}
+            style={{
+              marginTop: "2%",
+              color: colors.greyColor3,
+              fontSize: "2.5rem",
+            }}
           >
             {" "}
-           {LABEL.FOOD_DIARY}
+            {LABEL.FOOD_DIARY}
           </h2>
 
           <div className="meal-section">
@@ -58,11 +71,7 @@ const Table: React.FC<TableProps> = ({
                     logData.Breakfast.map((item, index) => (
                       <tr key={`breakfast-${index}`}>
                         <td>
-                          <span
-                            onClick={() =>
-                              handleNutritionModal(item)
-                            }
-                          >
+                          <span onClick={() => handleNutritionModal(item)}>
                             <strong>
                               {" "}
                               {item.name?.charAt(0).toUpperCase() +
@@ -87,7 +96,7 @@ const Table: React.FC<TableProps> = ({
                               </span>
                               <span
                                 onClick={() =>
-                                  handleEditLog('Breakfast', item.name, item.id)
+                                  handleEditLog("Breakfast", item.name, item.id)
                                 }
                                 className="icon-button edit"
                               >
@@ -115,12 +124,12 @@ const Table: React.FC<TableProps> = ({
             <table className="meal-table">
               <thead>
                 <tr>
-                <th>{LABEL.FOOD_NAME}</th>
-                    <th>{NUTRIENT.PROTEIN_GM}</th>
-                    <th>{NUTRIENT.CARBS_GM}</th>
-                    <th>{NUTRIENT.FATS_GM}</th>
-                    <th>{NUTRIENT.CALORIE_KCAL}</th>
-                    {showFeature && <th>{LABEL.ACTION}</th>}
+                  <th>{LABEL.FOOD_NAME}</th>
+                  <th>{NUTRIENT.PROTEIN_GM}</th>
+                  <th>{NUTRIENT.CARBS_GM}</th>
+                  <th>{NUTRIENT.FATS_GM}</th>
+                  <th>{NUTRIENT.CALORIE_KCAL}</th>
+                  {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -183,12 +192,12 @@ const Table: React.FC<TableProps> = ({
             <table className="meal-table">
               <thead>
                 <tr id="header-color">
-                <th>{LABEL.FOOD_NAME}</th>
-                    <th>{NUTRIENT.PROTEIN_GM}</th>
-                    <th>{NUTRIENT.CARBS_GM}</th>
-                    <th>{NUTRIENT.FATS_GM}</th>
-                    <th>{NUTRIENT.CALORIE_KCAL}</th>
-                    {showFeature && <th>{LABEL.ACTION}</th>}
+                  <th>{LABEL.FOOD_NAME}</th>
+                  <th>{NUTRIENT.PROTEIN_GM}</th>
+                  <th>{NUTRIENT.CARBS_GM}</th>
+                  <th>{NUTRIENT.FATS_GM}</th>
+                  <th>{NUTRIENT.CALORIE_KCAL}</th>
+                  {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>
@@ -251,12 +260,12 @@ const Table: React.FC<TableProps> = ({
             <table className="meal-table">
               <thead>
                 <tr>
-                <th>{LABEL.FOOD_NAME}</th>
-                    <th>{NUTRIENT.PROTEIN_GM}</th>
-                    <th>{NUTRIENT.CARBS_GM}</th>
-                    <th>{NUTRIENT.FATS_GM}</th>
-                    <th>{NUTRIENT.CALORIE_KCAL}</th>
-                    {showFeature && <th>{LABEL.ACTION}</th>}
+                  <th>{LABEL.FOOD_NAME}</th>
+                  <th>{NUTRIENT.PROTEIN_GM}</th>
+                  <th>{NUTRIENT.CARBS_GM}</th>
+                  <th>{NUTRIENT.FATS_GM}</th>
+                  <th>{NUTRIENT.CALORIE_KCAL}</th>
+                  {showFeature && <th>{LABEL.ACTION}</th>}
                 </tr>
               </thead>
               <tbody>

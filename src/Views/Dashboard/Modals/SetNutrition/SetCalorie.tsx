@@ -98,9 +98,11 @@ const SetCalorieModal: React.FC<SetCalorieModalProps> = ({
               </li>
             </ul>
           </div>
-          <CustomButton className="submit-button" onClick={handlesetCalorie} label= {LABEL.SET_CALORIE}>
-           
-          </CustomButton>
+          <CustomButton
+            className="submit-button"
+            onClick={handlesetCalorie}
+            label={LABEL.SET_CALORIE}
+          ></CustomButton>
 
           <p style={{ marginTop: "15px", fontSize: "14px", color: "#627373" }}>
             {LABEL.CUSTOMISE_NUTRI_PLAN}

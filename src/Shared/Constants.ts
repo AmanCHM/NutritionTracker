@@ -231,7 +231,10 @@ export const NUTRIENT={
   CALORIE_KCAL: 'Calories (Kcal)',
   PROTEIN_GM: 'proteins (g)',
   CARBS_GM:'carbs (g)',
-  FATS_GM:'fats(g)'
+  FATS_GM:'fats(g)',
+  NF_CALORIES:"nf_calories",
+  
+
 }
 
 
