@@ -1,8 +1,16 @@
-import { useMemo } from "react";
-import { NUM } from "../Shared";
-import { DrinkItem, MealItem, mealData } from "../Views/Dashboard/Dashboard";
-import { MEALTYPE, NUTRIENT } from "../Shared/Constants";
+import {  useMemo, useState } from "react";
+import { FORM_VALIDATION_MESSAGES, NUM } from "../Shared";
+import {
+  DrinkItem,
+  FoodData,
+  MealItem,
+  SelectedFoodData,
+  mealData,
+} from "../Views/Dashboard/Dashboard";
+import { MEALTYPE, NUTRIENT, VALIDATION } from "../Shared/Constants";
 import colors from "../assets/Css/color";
+import { ChartData } from "../Shared/Common";
+
 
 export const capitalizeFirstLetter = (text?: string): string => {
   if (!text) return "";
@@ -85,7 +93,8 @@ const calculateDrinkTotals = (drinkItems?: DrinkItem[]) => {
     : 0;
 };
 
-//  function to generate chart data
+//function to generate chart data
+
 const getChartData = (
   breakfastCalorie: number,
   lunchCalorie: number,
@@ -116,6 +125,82 @@ const totalNutrient = (
   return lunchNutrient + snackNutrient + breakfastNutrient + dinnerNutrient;
 };
 
+const validateQuantity = (value: number): string => {
+  if (!value || value <= 0) {
+    return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
+  }
+  return "";
+};
+
+const validateSelectQuantity = (value: number): string => {
+  if (!value || value <= 0) {
+    return FORM_VALIDATION_MESSAGES().VALID_SERVING_SIZE;
+  }
+  return "";
+};
+
+const validateMealCategory = (value: string): string => {
+  if (!value) {
+    return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
+  }
+  return "";
+};
+
+// export const [errors, setErrors] = useState<{
+//   quantity: string;
+//   selectquantity: string;
+//   selectCategory: string;
+// }>({
+//   quantity: "",
+//   selectquantity: "",
+//   selectCategory: "",
+// });
+
+
+// export const handleBlur = (
+//   e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
+// ): void => {
+//   const { name, value } = e.target;
+//   const newErrors = { ...errors };
+
+//   // Trigger validation on blur
+//   if (name === VALIDATION.QUANTITY) {
+//     newErrors.quantity = validateQuantity(Number(value));
+//   }
+//   if (name === VALIDATION.SELECT_QUANTITY) {
+//     newErrors.selectquantity = validateSelectQuantity(Number(value));
+//   }
+//   if (name === VALIDATION.SELECT_CATEGORY) {
+//     newErrors.selectCategory = validateMealCategory(value);
+//   }
+
+//   setErrors(newErrors);
+// };
+
+const getSliceOptions = (selectedFoodData: SelectedFoodData) => {
+  return (
+    selectedFoodData?.foods?.flatMap((food, foodIndex) =>
+      food.alt_measures.map((measure, index) => ({
+        value: measure.serving_weight,
+        label: measure.measure,
+        key: `${foodIndex}-${index}`,
+      }))
+    ) || []
+  );
+};
+
+const getImage = (selectedFoodData: SelectedFoodData) => {
+  return selectedFoodData?.foods.length > 0
+    ? selectedFoodData?.foods[0]?.photo?.thumb
+    : "no data";
+};
+
+const getTotalFromChartData = (chartData?:ChartData): number => {
+  return chartData?.datasets?.[0]?.data?.reduce(
+    (sum: number, value: number) => sum + value, 
+    0
+  ) ?? 0;
+};
 
 export {
   calculateMealCalories,
@@ -125,4 +210,10 @@ export {
   calculateDrinkTotals,
   getChartData,
   totalNutrient,
+  validateMealCategory,
+  validateQuantity,
+  validateSelectQuantity,
+  getImage,
+  getSliceOptions,
+  getTotalFromChartData,
 };

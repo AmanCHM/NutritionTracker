@@ -10,9 +10,9 @@ import CustomSelect, {
 } from "../../../../Components/Shared/CustomSelect/CustomSelect";
 import { SelectedFoodData } from "../../Dashboard";
 import { User } from "firebase/auth";
-import { MEALTYPE, VALIDATION } from "../../../../Shared/Constants";
+import { MEALTYPE, VALIDATION, mealOptions } from "../../../../Shared/Constants";
 import { FORM_VALIDATION_MESSAGES, LABEL } from "../../../../Shared";
-import { capitalizeFirstLetter } from "../../../../Helpers/function";
+import { capitalizeFirstLetter, getImage, getSliceOptions,  validateMealCategory, validateQuantity, validateSelectQuantity } from "../../../../Helpers/function";
 import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 interface Measure {
@@ -74,29 +74,13 @@ const MealModal: React.FC<MealModalProps> = ({
   selectCategory,
   setAltMeasure,
 }) => {
-  // const [food ,setFood] = useState<();
-  const sliceOptions =
-    selectedFoodData?.foods.flatMap((food, foodIndex) =>
-      food.alt_measures.map((measure, index) => ({
-        value: measure.serving_weight,
-        label: measure.measure,
-        key: `${foodIndex}-${index}`,
-      }))
-    ) || [];
 
-  const mealOptions = [
-    { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-    { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
-    { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
-    { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
-  ];
-
+const sliceOptions = getSliceOptions(selectedFoodData);
+ 
   // Fetch image
-  const image =
-    selectedFoodData?.foods.length > 0
-      ? selectedFoodData?.foods[0]?.photo?.thumb
-      : "no data";
+  const image = getImage(selectedFoodData)
 
+ 
   const [errors, setErrors] = useState<{
     quantity: string;
     selectquantity: string;
@@ -107,50 +91,26 @@ const MealModal: React.FC<MealModalProps> = ({
     selectCategory: "",
   });
 
-  // Validate Quantity
-  const validateQuantity = (value: number): string => {
-    if (!value || value <= 0) {
-      return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
-    }
-    return "";
-  };
-
-  // Validate Select Quantity
-  const validateSelectQuantity = (value: number): string => {
-    if (!value || value <= 0) {
-      return FORM_VALIDATION_MESSAGES().VALID_SERVING_SIZE;
-    }
-    return "";
-  };
-
-  // Validate Meal Category
-  const validateMealCategory = (value: string): string => {
-    if (!value) {
-      return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
-    }
-    return "";
-  };
-
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>
   ): void => {
     const { name, value } = e.target;
     const newErrors = { ...errors };
-
+  
     // Trigger validation on blur
     if (name === VALIDATION.QUANTITY) {
-      newErrors.quantity = validateQuantity(quantity);
+      newErrors.quantity = validateQuantity(Number(value));
     }
     if (name === VALIDATION.SELECT_QUANTITY) {
-      newErrors.selectquantity = validateSelectQuantity(selectquantity);
+      newErrors.selectquantity = validateSelectQuantity(Number(value));
     }
     if (name === VALIDATION.SELECT_CATEGORY) {
       newErrors.selectCategory = validateMealCategory(value);
     }
-
+  
     setErrors(newErrors);
   };
-
+  
   // Set the meal modal
   const handleSubmit = (e: FormEvent): void => {
     e.preventDefault();

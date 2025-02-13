@@ -1,3 +1,5 @@
+import { OptionType } from "../Components/Shared/CustomSelect/CustomSelect";
+
 const ROUTES = {
     HOMEPAGE: '/',
     LOGIN: '/login',
@@ -105,16 +107,6 @@ const WILDCARD_ROUTES = {
     EXTRA_ACTIVE: { value: 1.9, label: "Extra active (very hard exercise or a physical job)" },
   };
   
-
-// constants.ts
-export const ACTIVITY= {
-
-  SEDENTRY:'Sedentary (little to no exercise)',
-  LIGHTLY_ACTIVE:"Lightly active (light exercise 1-3 days/week)",
-  MODERATELY_ACTIVE:"Moderately active (moderate exercise 3-5 days/week)",
-  VERY_ACTIVE:"Very active (hard exercise 6-7 days/week)",
-  EXTRA_ACTIVE: "Extra active (very hard exercise or a physical job)",
-}
 
   export  const COLSPAN_VALUE = 6;
 
@@ -243,3 +235,26 @@ export const GENDER_OPTION={
   FEMALE:'Female'
 }
 
+// enum GENDER_OPTION {
+//   MALE='Male',
+//   FEMALE='Female'
+// }
+export const mealOptions = [
+  { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
+  { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
+  { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
+  { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
+];
+
+
+export const containerOptions = [
+  { value: CONTAINER_OPTION.SMALLGLASS, label: CONTAINER_OPTION.SMALLGLASS },
+  { value: CONTAINER_OPTION.MEDIUMGLASS, label: CONTAINER_OPTION.MEDIUMGLASS },
+  { value: CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
+];
+
+export const drinkTypeOptions = [
+  { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
+  { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
+  { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
+];

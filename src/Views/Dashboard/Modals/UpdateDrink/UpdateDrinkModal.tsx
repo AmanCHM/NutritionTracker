@@ -87,7 +87,7 @@ const UpdateDrinkModal: React.FC<UpdateDrinkModalProps> = ({
   
 
 
-  console.log("drinkdetails",drinkDetails);
+ 
 
 
   return (

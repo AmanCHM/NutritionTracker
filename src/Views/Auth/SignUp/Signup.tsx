@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendEmailVerification, signInWithPopup, User } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  sendEmailVerification,
+  signInWithPopup,
+  User,
+} from "firebase/auth";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, useFormik, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -10,16 +17,23 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 
-
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../../../Utils/firebase";
-import { ERROR_MESSAGES, FORM_VALIDATION_MESSAGES, IMAGES, INFO_MESSAGES, LABEL, SET_DRINKS_CALORIE, SUCCESS_MESSAGES, VALIDATION_REGEX } from "../../../Shared";
+import {
+  ERROR_MESSAGES,
+  FORM_VALIDATION_MESSAGES,
+  IMAGES,
+  INFO_MESSAGES,
+  LABEL,
+  SET_DRINKS_CALORIE,
+  SUCCESS_MESSAGES,
+  VALIDATION_REGEX,
+} from "../../../Shared";
 import { FIREBASE_DOC_REF, ROUTES_CONFIG } from "../../../Shared/Constants";
 import { hideLoader, showLoader } from "../../../Store/Loader";
 import { loggedin, setSignup } from "../../../Store/Auth";
 import { CustomError } from "../../../Shared/Common";
 import CustomButton from "../../../Components/Shared/CustomButton/CustomButton";
-
 
 interface SignupFormValues {
   email: string;
@@ -31,13 +45,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const dispatch = useDispatch();
-  const provider = new GoogleAuthProvider(); 
+  const provider = new GoogleAuthProvider();
 
   const formik = useFormik<SignupFormValues>({
     initialValues: {
@@ -46,50 +59,55 @@ const Signup: React.FC = () => {
       confirmPassword: "",
     },
 
-    validationSchema :Yup.object({
+    validationSchema: Yup.object({
       email: Yup.string()
-        .email(ERROR_MESSAGES().INVALID_EMAIL) 
-        .matches(VALIDATION_REGEX.EMAIL, ERROR_MESSAGES().INVALID_EMAIL) 
+        .email(ERROR_MESSAGES().INVALID_EMAIL)
+        .matches(VALIDATION_REGEX.EMAIL, ERROR_MESSAGES().INVALID_EMAIL)
         .required(ERROR_MESSAGES().REQUIRED),
-      
+
       password: Yup.string()
-        .min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD) 
-        .max(20, FORM_VALIDATION_MESSAGES().PASSWORD_TOO_LONG) 
-      
+        .min(8, FORM_VALIDATION_MESSAGES().VALID_PASSWORD)
+        .max(20, FORM_VALIDATION_MESSAGES().PASSWORD_TOO_LONG)
+
         .required(FORM_VALIDATION_MESSAGES().REQUIRED),
-        confirmPassword: Yup.string().required(FORM_VALIDATION_MESSAGES().REQUIRED),
+      confirmPassword: Yup.string().required(
+        FORM_VALIDATION_MESSAGES().REQUIRED
+      ),
     }),
-   
-    onSubmit: async (values, { setSubmitting }: FormikHelpers<SignupFormValues>) => {
+
+    onSubmit: async (
+      values,
+      { setSubmitting }: FormikHelpers<SignupFormValues>
+    ) => {
       dispatch(showLoader());
       const { email, password } = values;
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         const user = userCredential.user;
-    
+
         // Save initial data in Firestore
         const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
         await setDoc(userDocRef, {
           calorie: SET_DRINKS_CALORIE.CALORIE,
           water: SET_DRINKS_CALORIE.WATER,
           alcohol: SET_DRINKS_CALORIE.ALOCOHOL,
-          caffeine: SET_DRINKS_CALORIE.CAFFEINE
+          caffeine: SET_DRINKS_CALORIE.CAFFEINE,
         });
-    
+
         toast.success(SUCCESS_MESSAGES().SIGNED_UP_SUCCESSFULLY);
         dispatch(loggedin());
-    
-        // Send email verification
+
         const currentUser: User | null = auth.currentUser;
         if (currentUser) {
           await sendEmailVerification(currentUser);
           toast.info(INFO_MESSAGES.EMAIL_VERIFICATION_SENT);
         }
- 
-      
-      navigate(ROUTES_CONFIG.EMAIL_VERIFICATION.path); 
-   
-    
+
+        navigate(ROUTES_CONFIG.EMAIL_VERIFICATION.path);
       } catch (error: CustomError | unknown) {
         const errorCode = (error as CustomError)?.data?.code;
         const errorMessage = (error as CustomError)?.message;
@@ -101,10 +119,7 @@ const Signup: React.FC = () => {
         setSubmitting(false);
       }
     },
-    
   });
-
-
 
   const handleGoogleSignup = async () => {
     formik.setValues({ email: "", password: "", confirmPassword: "" });
@@ -115,15 +130,20 @@ const Signup: React.FC = () => {
 
       const userDocRef = doc(db, FIREBASE_DOC_REF.USER, user.uid);
 
-      await setDoc(userDocRef, { calorie: SET_DRINKS_CALORIE.CALORIE, water: SET_DRINKS_CALORIE.WATER, alcohol: SET_DRINKS_CALORIE.ALOCOHOL, caffeine: SET_DRINKS_CALORIE.CAFFEINE });
+      await setDoc(userDocRef, {
+        calorie: SET_DRINKS_CALORIE.CALORIE,
+        water: SET_DRINKS_CALORIE.WATER,
+        alcohol: SET_DRINKS_CALORIE.ALOCOHOL,
+        caffeine: SET_DRINKS_CALORIE.CAFFEINE,
+      });
 
       toast.success(SUCCESS_MESSAGES().GOOGLE_SIGNEDUP_SUCCESS);
-    //   dispatch(loggedin());
+      //   dispatch(loggedin());
       navigate(ROUTES_CONFIG.DASHBOARD.path);
-    } catch (error: CustomError|unknown) {
-      const errorCode = (error as CustomError)?.data?.code ; 
+    } catch (error: CustomError | unknown) {
+      const errorCode = (error as CustomError)?.data?.code;
       const errorMessage = (error as CustomError)?.message;
-      toast.error(ERROR_MESSAGES().GOOGLE_SIGNEDUP_FAIL)
+      toast.error(ERROR_MESSAGES().GOOGLE_SIGNEDUP_FAIL);
       console.error(errorCode, errorMessage);
     } finally {
       dispatch(hideLoader());
@@ -132,11 +152,12 @@ const Signup: React.FC = () => {
 
   return (
     <>
-   
       <div className="signup-container">
         <h2 className="signup-title">{LABEL.SIGN_UP}</h2>
         <form className="signup-form" onSubmit={formik.handleSubmit}>
-          <label className="signup-label" htmlFor="email">{LABEL.EMAIL}</label>
+          <label className="signup-label" htmlFor="email">
+            {LABEL.EMAIL}
+          </label>
           <input
             id="email"
             className="signup-input"
@@ -150,7 +171,9 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.email}</div>
           ) : null}
 
-          <label className="signup-label" htmlFor="password">{LABEL.PASSWORD}</label>
+          <label className="signup-label" htmlFor="password">
+            {LABEL.PASSWORD}
+          </label>
           <div className="password-wrapper">
             <input
               id="password"
@@ -172,7 +195,9 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.password}</div>
           ) : null}
 
-          <label className="signup-label" htmlFor="confirmPassword">{LABEL.CONFIRM_PASS}</label>
+          <label className="signup-label" htmlFor="confirmPassword">
+            {LABEL.CONFIRM_PASS}
+          </label>
           <div className="password-wrapper">
             <input
               id="confirmPassword"
@@ -194,19 +219,28 @@ const Signup: React.FC = () => {
             <div className="error-message">{formik.errors.confirmPassword}</div>
           ) : null}
 
-          <CustomButton className="signup-button" type="submit" label={LABEL.SIGN_UP}></CustomButton>
+          <CustomButton
+            className="signup-button"
+            type="submit"
+            label={LABEL.SIGN_UP}
+          ></CustomButton>
         </form>
         <p className="login-footer">Or</p>
         <button className="signup-button" onClick={handleGoogleSignup}>
-          <img src={IMAGES.googleLogo} alt="Google Logo" className="google-logo" />
+          <img
+            src={IMAGES.googleLogo}
+            alt="Google Logo"
+            className="google-logo"
+          />
           {LABEL.SIGN_IN_GOOGLE}
         </button>
 
         <p className="signup-footer">
-          {LABEL.ALREADY_ACC} <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>{LABEL.LOG_IN}</Link>
+          {LABEL.ALREADY_ACC}{" "}
+          <Link className="signup-link" to={ROUTES_CONFIG.LOGIN.path}>
+            {LABEL.LOG_IN}
+          </Link>
         </p>
-
-       
       </div>
     </>
   );

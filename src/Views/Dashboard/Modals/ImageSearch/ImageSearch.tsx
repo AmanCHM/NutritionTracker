@@ -18,7 +18,12 @@ import * as Yup from "yup";
 import { hideLoader, showLoader } from "../../../../Store/Loader";
 import { auth, db } from "../../../../Utils/firebase";
 import CustomSelect from "../../../../Components/Shared/CustomSelect/CustomSelect";
-import { Throttle, dateFunction } from "../../../../Helpers/function";
+import {
+  Throttle,
+  dateFunction,
+  validateMealCategory,
+  validateQuantity,
+} from "../../../../Helpers/function";
 import {
   FIREBASE_DOC_REF,
   IMAGE_ID_API_URL,
@@ -26,6 +31,7 @@ import {
   NUTRIENT,
   NUTRI_INFO_API_URL,
   VALIDATION,
+  mealOptions,
 } from "../../../../Shared/Constants";
 import {
   ERROR_MESSAGES,
@@ -57,13 +63,6 @@ interface NutritionInfo {
   };
 }
 
-const mealOptions = [
-  { value: MEALTYPE.BREAKFAST, label: MEALTYPE.BREAKFAST },
-  { value: MEALTYPE.LUNCH, label: MEALTYPE.LUNCH },
-  { value: MEALTYPE.SNACK, label: MEALTYPE.SNACK },
-  { value: MEALTYPE.DINNER, label: MEALTYPE.DINNER },
-];
-
 const ImageSearch: React.FC<ImageSearchProps> = ({
   setImageModal,
   setImageData,
@@ -73,7 +72,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [mealCategory, setMealCategory] = useState<string | undefined>();
+  const [mealCategory, setMealCategory] = useState<string>();
   const dispatch = useDispatch();
   const [name, setName] = useState<string>("");
   const [calories, setCalories] = useState<number>(0);
@@ -94,21 +93,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     mealCategory: "",
   });
 
-  // Validate Quantity
-  const validateQuantity = (value: number): string => {
-    if (!value || value <= 0) {
-      return FORM_VALIDATION_MESSAGES().VALID_QUANTITY;
-    }
-    return "";
-  };
-
-  // Validate Meal Category
-  const validateMealCategory = (value: string | undefined): string => {
-    if (!value) {
-      return FORM_VALIDATION_MESSAGES().CHOOSE_MEAL_CATEGORY;
-    }
-    return "";
-  };
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     const newErrors = { ...errors };
@@ -125,8 +109,6 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
     setErrors(newErrors);
   };
 
-  // Save the meal details into Firebase
-
   const handleSaveData = useCallback(
     (e: React.FormEvent): void => {
       e.preventDefault();
@@ -135,7 +117,7 @@ const ImageSearch: React.FC<ImageSearchProps> = ({
       // Validate fields and set errors
       const newErrors = {
         quantity: validateQuantity(quantity),
-        mealCategory: validateMealCategory(mealCategory),
+        mealCategory: validateMealCategory(mealCategory as string),
       };
       setErrors(newErrors);
 

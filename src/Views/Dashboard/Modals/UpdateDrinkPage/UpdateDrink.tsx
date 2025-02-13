@@ -16,6 +16,8 @@ import {
   FIREBASE_DOC_REF,
   QUANTITY_VALIDATION,
   VALIDATION,
+  containerOptions,
+  drinkTypeOptions,
 } from "../../../../Shared/Constants";
 import {
   ERROR_MESSAGES,
@@ -34,18 +36,9 @@ interface UpdateMealProps {
   onDataUpdated: () => void;
 }
 
-const drinkTypeOptions = [
-  { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
-  { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
-  { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
-];
 
-const containerOptions = [
-  { value: CONTAINER_OPTION.SMALLGLASS, label: CONTAINER_OPTION.SMALLGLASS },
-  { value: CONTAINER_OPTION.MEDIUMGLASS, label: CONTAINER_OPTION.MEDIUMGLASS },
-  { value: CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
-];
-const UpdateDrinkPage: React.FC<UpdateMealProps> = ({
+
+const UpdateDrink: React.FC<UpdateMealProps> = ({
   setEditDrinkModal,
   drinkName,
   drinkId,
@@ -202,14 +195,14 @@ const UpdateDrinkPage: React.FC<UpdateMealProps> = ({
           )}
         </div>
 
-
-
-        <CustomButton type="submit" className="submit-button" label={LABEL.SUBMIT}>
-        
-        </CustomButton>
+        <CustomButton
+          type="submit"
+          className="submit-button"
+          label={LABEL.SUBMIT}
+        ></CustomButton>
       </form>
     </>
   );
 };
 
-export default UpdateDrinkPage;
+export default UpdateDrink;

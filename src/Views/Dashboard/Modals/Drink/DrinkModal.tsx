@@ -16,6 +16,8 @@ import {
   FIREBASE_DOC_REF,
   QUANTITY_VALIDATION,
   VALIDATION,
+  containerOptions,
+  drinkTypeOptions,
 } from "../../../../Shared/Constants";
 import {
   ERROR_MESSAGES,
@@ -42,17 +44,6 @@ interface FormValues {
   quantity: number;
 }
 
-const drinkTypeOptions: OptionType[] = [
-  { value: DRINK_TYPE.WATER, label: DRINK_TYPE.WATER },
-  { value: DRINK_TYPE.ALCOHOL, label: DRINK_TYPE.ALCOHOL },
-  { value: DRINK_TYPE.CAFFEINE, label: DRINK_TYPE.CAFFEINE },
-];
-
-const containerOptions: OptionType[] = [
-  { value: CONTAINER_OPTION.SMALLGLASS, label: CONTAINER_OPTION.SMALLGLASS },
-  { value: CONTAINER_OPTION.MEDIUMGLASS, label: CONTAINER_OPTION.MEDIUMGLASS },
-  { value: CONTAINER_OPTION.LARGEGLASS, label: CONTAINER_OPTION.LARGEGLASS },
-];
 const DrinkModal: React.FC<DrinkModalProps> = ({
   setShowDrinkModal,
   onDataUpdated,

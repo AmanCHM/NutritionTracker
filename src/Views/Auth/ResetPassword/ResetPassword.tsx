@@ -56,7 +56,7 @@ const ResetPassword: React.FC = () => {
             onBlur={formik.handleBlur}
             required
           />
-          {/* Error handling */}
+      
           {formik.touched.email && formik.errors.email && (
             <p className="error-message">{formik.errors.email}</p>
           )}

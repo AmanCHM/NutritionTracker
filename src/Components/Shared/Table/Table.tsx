@@ -30,7 +30,7 @@ const Table: React.FC<TableProps> = ({
   handleDeleteLog,
   showFeature,
 }) => {
-  // console.log("logdata",logData);
+
   return (
     <>
       <section className="view-data">

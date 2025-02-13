@@ -3,7 +3,7 @@ import "../Meal/MealModal.css";
 import { SelectedFoodData } from "../../Dashboard";
 import { FORM, LABEL } from "../../../../Shared";
 import { NUTRIENT } from "../../../../Shared/Constants";
-import { capitalizeFirstLetter } from "../../../../Helpers/function";
+import { capitalizeFirstLetter, getImage } from "../../../../Helpers/function";
 import CustomButton from "../../../../Components/Shared/CustomButton/CustomButton";
 
 interface NutritionModalProps {
@@ -25,7 +25,8 @@ const NutritionModal: React.FC<NutritionModalProps> = ({
   const carbs = foodItem?.nf_total_carbohydrate || 0;
   const fats = foodItem?.nf_total_fat || 0;
   const serving = foodItem?.serving_unit || 0;
-  const image = foodItem?.photo?.thumb || " ";
+  const image  = getImage(selectedFoodData)
+
 
   const tableStyle = { padding: "8px" };
 

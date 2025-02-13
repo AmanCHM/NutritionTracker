@@ -39,7 +39,14 @@ import Table from "../../Components/Shared/Table";
 import { DrinkData, DrinkItem, LogData } from "../Dashboard/Dashboard";
 import { FIREBASE_DOC_REF, MEALTYPE } from "../../Shared/Constants";
 import colors from "../../assets/Css/color";
-import { calculateCalories, calculateDrinkTotals, dateFunction, getChartData, getPercentage } from "../../Helpers/function";
+import {
+  calculateCalories,
+  calculateDrinkTotals,
+  dateFunction,
+  getChartData,
+  getPercentage,
+  getTotalFromChartData,
+} from "../../Helpers/function";
 import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
 import { toast } from "react-toastify";
 
@@ -47,9 +54,7 @@ const Reports: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [logData, setLogdata] = useState<LogData | undefined>();
-  const [selectDate, setSelectDate] = useState<string>(
-    dateFunction
-  );
+  const [selectDate, setSelectDate] = useState<string>(dateFunction);
   const [drinkData, setDrinkData] = useState<DrinkData>({});
   // Loader from Redux
 
@@ -77,7 +82,7 @@ const Reports: React.FC = () => {
 
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const getData = docSnap.data() ;
+          const getData = docSnap.data();
           setLogdata(getData);
           setDrinkData(getData);
         } else {
@@ -107,7 +112,6 @@ const Reports: React.FC = () => {
     return () => unsubscribe();
   }, [handleGetData]);
 
-
   // Calorie calculations
   const breakfastCalorie = calculateCalories(logData?.Breakfast);
   const lunchCalorie = calculateCalories(logData?.Lunch);
@@ -118,23 +122,16 @@ const Reports: React.FC = () => {
     return breakfastCalorie + lunchCalorie + snackCalorie + dinnerCalorie;
   }, [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]);
 
-// Using the function inside useMemo
-const chartData = useMemo(
-  () => getChartData(breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie),
-  [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
-);
-
-
-  const total = chartData?.datasets[0]?.data.reduce(
-    (sum, value) => sum + value,
-    0
+  const chartData = useMemo(
+    () =>
+      getChartData(breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie),
+    [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
   );
 
-
+  const total = getTotalFromChartData(chartData);
   const totalWater = calculateDrinkTotals(drinkData?.Water);
   const totalAlcohol = calculateDrinkTotals(drinkData?.Alcohol);
   const totalCaffeine = calculateDrinkTotals(drinkData?.Caffeine);
-
 
   return (
     <>
@@ -181,10 +178,10 @@ const chartData = useMemo(
           {chartData.labels.map((label, index) => {
             const value = chartData.datasets[0].data[index];
             const percentage =
-            value > 0 ? Math.floor(getPercentage(value, total)) : 0;
+              value > 0 ? Math.floor(getPercentage(value, total)) : 0;
             return (
               <div key={index} className="dashboard-text-item">
-               <strong>{label}:</strong> {value} {FORM.KCAL} ({percentage}%)
+                <strong>{label}:</strong> {value} {FORM.KCAL} ({percentage}%)
               </div>
             );
           })}

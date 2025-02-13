@@ -1,13 +1,11 @@
-
 import React from "react";
 import { useSelector } from "react-redux";
- // Import RootState type
+// Import RootState type
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../Store";
 import { ROUTES_CONFIG, WEIGHT } from "../../Shared/Constants";
 import CustomButton from "../../Components/Shared/CustomButton/CustomButton";
 import { GREETINGS, LABEL } from "../../Shared";
-
 
 // Define types for Redux state slices
 interface CalorieGoalState {
@@ -18,10 +16,14 @@ interface CalorieGoalState {
 }
 
 const CalorieRecommendation: React.FC = () => {
-  const calories = useSelector((state: RootState) => state.Nutrition.requiredCalorie);
+  const calories = useSelector(
+    (state: RootState) => state.Nutrition.requiredCalorie
+  );
   const goal = useSelector((state: RootState) => state.Nutrition.goal);
   const username = useSelector((state: RootState) => state.Nutrition.userName);
-  const difference = useSelector((state: RootState) => state.Nutrition.weightDifference);
+  const difference = useSelector(
+    (state: RootState) => state.Nutrition.weightDifference
+  );
 
   const navigate = useNavigate();
 
@@ -41,8 +43,6 @@ const CalorieRecommendation: React.FC = () => {
 
   return (
     <>
-
-
       <h3
         style={{
           fontSize: "2.3rem",
@@ -54,11 +54,15 @@ const CalorieRecommendation: React.FC = () => {
         {GREETINGS.WEEKLY_GOAL}
       </h3>
       <h3 style={{ textAlign: "center", color: "#627373" }}>
-       {GREETINGS.WEEKLY_HEALTH} <br /> {GREETINGS.SLOW_AND_STEADY_BEST}
+        {GREETINGS.WEEKLY_HEALTH} <br /> {GREETINGS.SLOW_AND_STEADY_BEST}
       </h3>
 
       <div className="calorie-container" style={{ height: "300px" }}>
-        <h2>{GREETINGS.GREET}{username}{GREETINGS.CALORIE_REQUIREMENT}</h2>
+        <h2>
+          {GREETINGS.GREET}
+          {username}
+          {GREETINGS.CALORIE_REQUIREMENT}
+        </h2>
         <div className="calorie-data">
           <ul>
             <p
@@ -69,7 +73,8 @@ const CalorieRecommendation: React.FC = () => {
                 marginTop: "10px",
               }}
             >
-              {goalDescription.charAt(0).toUpperCase() + goalDescription.slice(1)}
+              {goalDescription.charAt(0).toUpperCase() +
+                goalDescription.slice(1)}
             </p>
 
             <p
@@ -80,42 +85,35 @@ const CalorieRecommendation: React.FC = () => {
                 marginTop: "10px",
               }}
             >
-              <strong>{LABEL.RECOMMENDED_CALORIE}</strong> {recommendedCalories} {LABEL.KCAL_PER_DAY}
+              <strong>{LABEL.RECOMMENDED_CALORIE}</strong> {recommendedCalories}{" "}
+              {LABEL.KCAL_PER_DAY}
             </p>
-            
           </ul>
         </div>
 
-      
-          <div
-            style={{
-              marginTop: "20px",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-            >
-           
-            <CustomButton
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <CustomButton
             type="submit"
             size={"medium"}
-            onClick={() =>  navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}
+            onClick={() => navigate(ROUTES_CONFIG.INPUT_WORKOUT.path)}
             label={"Back"}
-             >
-            </CustomButton>
-           
-            <CustomButton
+          ></CustomButton>
+
+          <CustomButton
             type="submit"
             style={{ marginLeft: "20" }}
             size={"medium"}
-            onClick={() =>  navigate(ROUTES_CONFIG.REGISTER.path)}
+            onClick={() => navigate(ROUTES_CONFIG.REGISTER.path)}
             label={"Create Your Account"}
-             >
-            
-             </CustomButton>
-          </div>
+          ></CustomButton>
         </div>
-     
-
+      </div>
     </>
   );
 };

@@ -20,14 +20,14 @@ import Loader from "./Components/Loader";
 
 const router = createBrowserRouter(
   createRoutesFromElements(<Route path="*" element={<RootRouter />} />)
-  // { basename: baseName }
+
 );
 
 const App = () => {
   return (
     <>
       <ErrorBoundary fallback={<ErrorFallback />}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader/>}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <Loader />

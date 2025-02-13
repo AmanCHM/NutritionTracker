@@ -15,7 +15,8 @@ import CustomSelect, {
   OptionType,
 } from "../../../Components/Shared/CustomSelect/CustomSelect";
 import {
-  ACTIVITY,
+  
+  ACTIVITY_OPTIONS,
   GENDER_OPTION,
   ROUTES_CONFIG,
   VALIDATION,
@@ -28,24 +29,24 @@ import { ERROR_MESSAGES, GREETINGS, LABEL, NUM } from "../../../Shared";
 
 const activityOptions: OptionType[] = [
   {
-    value: ACTIVITY.SEDENTRY,
-    label: ACTIVITY.SEDENTRY,
+    value: ACTIVITY_OPTIONS.SEDENTARY.label,
+    label: ACTIVITY_OPTIONS.SEDENTARY.label,
   },
   {
-    value: ACTIVITY.LIGHTLY_ACTIVE,
-    label: ACTIVITY.LIGHTLY_ACTIVE,
+    value: ACTIVITY_OPTIONS.LIGHTLY_ACTIVE.label,
+    label: ACTIVITY_OPTIONS.LIGHTLY_ACTIVE.label
   },
   {
-    value: ACTIVITY.MODERATELY_ACTIVE,
-    label: ACTIVITY.MODERATELY_ACTIVE,
+    value: ACTIVITY_OPTIONS.MODERATELY_ACTIVE.label,
+    label: ACTIVITY_OPTIONS.MODERATELY_ACTIVE.label,
   },
   {
-    value: ACTIVITY.VERY_ACTIVE,
-    label: ACTIVITY.VERY_ACTIVE,
+    value: ACTIVITY_OPTIONS.VERY_ACTIVE.label,
+    label: ACTIVITY_OPTIONS.VERY_ACTIVE.label,
   },
   {
-    value: ACTIVITY.EXTRA_ACTIVE,
-    label: ACTIVITY.EXTRA_ACTIVE,
+    value: ACTIVITY_OPTIONS.EXTRA_ACTIVE.label,
+    label: ACTIVITY_OPTIONS.EXTRA_ACTIVE.label
   },
 ];
 const ExerciseInput: React.FC = () => {

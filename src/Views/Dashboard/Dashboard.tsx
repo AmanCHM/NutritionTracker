@@ -40,6 +40,7 @@ import {
   debounce,
   getChartData,
   getPercentage,
+  getTotalFromChartData,
   totalNutrient,
 } from "../../Helpers/function";
 import { hideLoader, showLoader } from "../../Store/Loader";
@@ -64,7 +65,7 @@ import MealModal from "./Modals/Meal/MealModal";
 import UpdateMeal from "./Modals/UpdateMeal/UpdateMeal";
 import NutritionModal from "./Modals/Nutrition/NutritionModal";
 import UpdateDrinkModal from "./Modals/UpdateDrink/UpdateDrinkModal";
-import UpdateDrinkPage from "./Modals/UpdateDrinkPage/UpdateDrinkPage";
+
 import DrinkProgress from "./Components/DrinkProgress/DrinkProgress";
 import { RootState } from "../../Store";
 import MealProgress from "./Components/MealProgress/MealProgress";
@@ -83,6 +84,7 @@ import colors from "../../assets/Css/color";
 
 import Table from "../../Components/Shared/Table";
 import DrinkTable from "../../Components/Shared/DrinkTable/DrinkTable";
+import UpdateDrink from "./Modals/UpdateDrinkPage/UpdateDrink";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -354,13 +356,12 @@ const Dashboard = () => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       if (user) handleGetData(user);
 
-      console.log("indside the handelGetData");
+      
     });
     return () => unsubscribe();
   }, [handleGetData, dataUpdated]);
 
-  //  console.log( logData);
-
+  
   const handleDeleteLog = async (meal: string, id: string | number) => {
     dispatch(showLoader());
     try {
@@ -485,7 +486,7 @@ const Dashboard = () => {
         dailyRequiredCalorie();
       }
     });
-    console.log("indside the dailyRequiredCalorie");
+   
     return () => unsubscribe();
   }, []);
 
@@ -628,10 +629,7 @@ const Dashboard = () => {
     [breakfastCalorie, lunchCalorie, snackCalorie, dinnerCalorie]
   );
 
-  const total = chartData?.datasets[0]?.data.reduce(
-    (sum, value) => sum + value,
-    0
-  );
+  const total  = getTotalFromChartData(chartData);
 
   const handleNutritionModal = (foodDetail: FoodDetail): void => {
     addMeal(foodDetail?.name);
@@ -642,7 +640,7 @@ const Dashboard = () => {
     setIsModalOpen(false);
   };
 
-  // console.log(drinkData);
+
 
   const handleDataUpdated = () => {
     setDataUpdated((prev) => !prev);
@@ -661,7 +659,7 @@ const Dashboard = () => {
     if (isSignup === true) {
       setEnergyModal(true);
       dispatch(setSignout());
-      console.log("indside the  setNutritin modal");
+   
     }
   }, []);
 
@@ -670,7 +668,7 @@ const Dashboard = () => {
     setDrinkUpdateModal(true);
   };
 
-  console.log("rendering times");
+  
   const handleModalData = async () => {
     if (!selectquantity || !selectCategory) {
       toast.error(VALIDATION.SELECT_ALL);
@@ -923,7 +921,7 @@ const Dashboard = () => {
           isOpen={editDrinkModal}
           onClose={() => setEditDrinkModal(false)}
         >
-          <UpdateDrinkPage
+          <UpdateDrink
             setEditDrinkModal={setEditDrinkModal}
             onDataUpdated={handleDataUpdated}
             drinkName={drinkName || ""}

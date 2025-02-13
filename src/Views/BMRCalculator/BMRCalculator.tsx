@@ -59,21 +59,21 @@ const CalorieCalculator: React.FC = () => {
         .required(HEIGHT_VALIDATION.REQUIRED)
         .typeError(HEIGHT_VALIDATION.NUMBER)
         .positive(HEIGHT_VALIDATION.POSITIVE),
-        // .integer(HEIGHT_VALIDATION.INTEGER),
+       
       weight: Yup.number()
       .min(10)
       .max(500)
       .required(WEIGHT_VALIDATION.REQUIRED)
       .typeError(WEIGHT_VALIDATION.NUMBER)
       .positive(WEIGHT_VALIDATION.POSITIVE),
-      // .integer(WEIGHT_VALIDATION.INTEGER),
+      
       age: Yup.number()
       .min(0)
       .max(120)
       .required(AGE_VALIDATION.REQUIRED)
       .typeError(AGE_VALIDATION.NUMBER)
       .positive(AGE_VALIDATION.POSITIVE)
-      // .integer(AGE_VALIDATION.INTEGER)
+      
     }),
     onSubmit: (values: FormValues) => {
       const totalCalories = calculateCalorieIntake(values);
@@ -112,7 +112,7 @@ const CalorieCalculator: React.FC = () => {
         toast.success(SUCCESS_MESSAGES().CALORIE_SAVED_SUCCESSFULLY);
         dispatch(setSignout());
       } catch (error) {
-        // console.error("Error saving data", error);
+       
         toast.error(ERROR_MESSAGES().ERROR_SAVING_DATA);
       }
     } else {
@@ -215,7 +215,7 @@ const CalorieCalculator: React.FC = () => {
           </>
         )}
       </div>
-      {/* <Footer /> */}
+    
     </>
   );
 };
